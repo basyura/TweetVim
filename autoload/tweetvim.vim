@@ -21,12 +21,6 @@ function! tweetvim#timeline(method, ...)
 
   let tweets = s:get_tweets(a:method, a:000)
 
-  for t in tweets
-    for key in ['id', 'screen_name', 'text', 'created_at', 'in_reply_to_status_id']
-      let t[key] = t.find(key).value()
-    endfor
-  endfor
-
   call s:load_timeline(
         \ a:method,
         \ a:000,
@@ -81,8 +75,16 @@ endfunction
 "
 function! s:get_tweets(method, args)
   let twibill = s:twibill()
-  let Fn  = twibill[a:method]
-  return call(Fn, a:args, twibill).childNodes()
+  let Fn      = twibill[a:method]
+  let tweets  = call(Fn, a:args, twibill).childNodes()
+
+  for t in tweets
+    for key in ['id', 'screen_name', 'text', 'created_at', 'in_reply_to_status_id']
+      let t[key] = t.find(key).value()
+    endfor
+  endfor
+
+  return tweets
 endfunction
 "
 "
