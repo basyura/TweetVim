@@ -137,6 +137,12 @@ endfunction
 "
 "
 "
+function! s:reload()
+  call s:timeline(b:tweetvim_method)
+endfunction
+"
+"
+"
 function! s:bufnr()
   return bufexists(substitute(substitute(s:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
 endfunction
@@ -183,6 +189,7 @@ augroup END
 function! s:tweetvim_settings()
   nmap <silent> <buffer> <CR> :call <SID>tweetvim_action_enter()<CR>
   nmap <silent> <buffer> <Leader>r :call <SID>tweetvim_action_reply()<CR>
+  nmap <silent> <buffer> <Leader><Leader> :call <SID>reload()<CR>
 endfunction
 "
 "
