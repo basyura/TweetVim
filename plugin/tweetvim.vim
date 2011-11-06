@@ -69,7 +69,13 @@ function! s:timeline(method)
   endif
 
   let xml    = s:twibill()[a:method]()
-  let tweets = xml.childNodes('status')
+  let tweets = xml.childNodes()
+
+  for t in tweets
+    for key in ['id', 'screen_name', 'text', 'created_at', 'in_reply_to_status_id']
+      let t[key] = t.find(key).value()
+    endfor
+  endfor
 
   call s:load_timeline(
         \ a:method,
@@ -99,18 +105,18 @@ function! s:load_timeline(method, title, tweets)
   let b:tweetvim_status_cache = {}
 
   if len(a:tweets) != 0
-    let s:since_id = a:tweets[0].find('id').value()
+    let s:since_id = a:tweets[0].id
   endif
   call extend(s:cache, a:tweets, 0)
 
   for status in s:cache
-    let text = status.find('text').value()
+    let text = status.text
     let text = substitute(text , '' , '' , 'g')
     let text = substitute(text , '\n' , '' , 'g')
     let text = s:unescape(text)
 
     call append(line('$') - 1, s:separator('-'))
-    let str  = s:padding(status.find('screen_name').value(), 15) . ' : '
+    let str  = s:padding(status.screen_name, 15) . ' : '
     let str .= text
     "let str .= ' - ' . status.find('created_at').value()
     "let str .= ' [' . status.find('id').value() . ']'
@@ -175,14 +181,24 @@ augroup END
 "
 "
 function! s:tweetvim_settings()
-  nmap <silent> <buffer> <CR> :call <SID>tweetvim_buffer_action()<CR>
+  nmap <silent> <buffer> <CR> :call <SID>tweetvim_action_enter()<CR>
+  nmap <silent> <buffer> <Leader>r :call <SID>tweetvim_action_reply()<CR>
 endfunction
 "
 "
-function! s:tweetvim_buffer_action()
+function! s:tweetvim_action_enter()
   let matched = matchlist(expand('<cWORD>') , 'https\?://\S\+')
   if len(matched) != 0
     execute "OpenBrowser " . matched[0]
     return
   endif
+endfunction
+"
+"
+"
+function! s:tweetvim_action_reply()
+  let tweet = b:tweetvim_status_cache[line('.')]
+  let screen_name = tweet.screen_name
+  let status_id   = tweet.id
+  echo screen_name . ' ' . status_id
 endfunction
