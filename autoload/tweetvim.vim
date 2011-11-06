@@ -113,10 +113,12 @@ function! s:load_timeline(method, args, title, tweets)
     let s:since_id = a:tweets[0].id
   endif
 
-  call s:append_tweets(a:tweets, tweetvim#util#separator('-'), b:tweetvim_status_cache)
+  let separator = tweetvim#util#separator('-')
+
+  call s:append_tweets(a:tweets, separator, b:tweetvim_status_cache)
   normal dd 
   call append(line('$') - 1, tweetvim#util#separator(' '))
-  call s:append_tweets(s:cache,  tweetvim#util#separator('-'), b:tweetvim_status_cache)
+  call s:append_tweets(s:cache, separator, b:tweetvim_status_cache)
 
   call extend(s:cache, a:tweets, 0)
 
@@ -125,7 +127,7 @@ function! s:load_timeline(method, args, title, tweets)
   let title .= ' : bufno ' . bufno
 
   call append(0, title)
-  call append(1, tweetvim#util#separator('-'))
+  call append(1, separator)
   normal dd
   :0
   setlocal nomodified
