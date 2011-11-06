@@ -19,8 +19,7 @@ function! tweetvim#timeline(method, ...)
     let param["since_id"] = s:since_id
   endif
 
-  let xml    = s:twibill()[a:method]()
-  let tweets = xml.childNodes()
+  let tweets = s:get_tweets(a:method, a:000)
 
   for t in tweets
     for key in ['id', 'screen_name', 'text', 'created_at', 'in_reply_to_status_id']
@@ -30,7 +29,8 @@ function! tweetvim#timeline(method, ...)
 
   call s:load_timeline(
         \ a:method,
-        \ 'home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])', 
+        \ a:000,
+        \ join(split(a:method, '_'), ' ') . ' (' . split(reltimestr(reltime(start)))[0] . ' [s])', 
         \ tweets)
 endfunction
 "
@@ -56,7 +56,7 @@ endfunction
 "
 "
 function! tweetvim#reload()
-  call tweetvim#timeline(b:tweetvim_method)
+  let ret = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
 endfunction
 "
 "
@@ -79,7 +79,15 @@ endfunction
 "
 "
 "
-function! s:load_timeline(method, title, tweets)
+function! s:get_tweets(method, args)
+  let twibill = s:twibill()
+  let Fn  = twibill[a:method]
+  return call(Fn, a:args, twibill).childNodes()
+endfunction
+"
+"
+"
+function! s:load_timeline(method, args, title, tweets)
   let start = reltime()
   let bufno = s:bufnr()
   if bufno > 0
@@ -96,6 +104,7 @@ function! s:load_timeline(method, title, tweets)
   silent %delete _
 
   let b:tweetvim_method = a:method
+  let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
   if len(a:tweets) != 0
