@@ -4,11 +4,15 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 let s:config_path = expand('~/.tweetvim')
 
 let s:buf_name = '[tweetvim]'
-
-
+"
+"
+"
 command! TweetVimAccessToken  :call <SID>access_token()
-command! TweetVimHomeTimeline :call <SID>home_timeline()
-
+command! TweetVimHomeTimeline :call <SID>timeline('home_timeline')
+command! TweetVimMentions     :call <SID>timeline('mentions')
+"
+"
+"
 function! s:access_token()
 
   if filereadable(s:config_path)
@@ -25,7 +29,9 @@ function! s:access_token()
 
   return tokens
 endfunction
-
+"
+"
+"
 function! s:config()
   let tokens = s:access_token()
   return {
@@ -35,7 +41,9 @@ function! s:config()
     \ 'access_token_secret' : tokens[1] ,
     \ }
 endfunction
-
+"
+"
+"
 function! s:twibill()
   let t = twibill#new(s:config())
   return t
@@ -45,10 +53,14 @@ function! s:twibill()
   let s:twibill_cache = twibill#new(s:config())
   return s:twibill_cache
 endfunction
-
+"
+"
+"
 let s:cache = []
-
-function! s:home_timeline()
+"
+"
+"
+function! s:timeline(method)
   let start = reltime()
   
   let param = {}
@@ -56,15 +68,17 @@ function! s:home_timeline()
     let param["since_id"] = s:since_id
   endif
 
-  let xml    = s:twibill().home_timeline()
+  let xml    = s:twibill()[a:method]()
   let tweets = xml.childNodes('status')
 
   call s:load_timeline(
-        \ 'home_timeline', 
+        \ a:method,
         \ 'home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])', 
         \ tweets)
 endfunction
-
+"
+"
+"
 function! s:load_timeline(method, title, tweets)
   let start = reltime()
   let bufno = s:bufnr()
@@ -114,11 +128,15 @@ function! s:load_timeline(method, title, tweets)
   setlocal nomodified
   setlocal nomodifiable
 endfunction
-
+"
+"
+"
 function! s:bufnr()
   return bufexists(substitute(substitute(s:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
 endfunction
-
+"
+"
+"
 function! s:unescape(msg)
   let msg = a:msg
   let msg = substitute(msg, '&quot;', '"', 'g')
@@ -126,7 +144,9 @@ function! s:unescape(msg)
   let msg = substitute(msg, '&gt;'  , '>', 'g')
   return msg
 endfunction
-
+"
+"
+"
 function! s:padding(msg, length)
   let msg = a:msg
   while len(msg) < a:length
@@ -134,7 +154,9 @@ function! s:padding(msg, length)
   endwhile
   return msg
 endfunction
-
+"
+"
+"
 function! s:separator(s)
   let sep = ""
   while len(sep) + 4 < winwidth(0)
@@ -142,12 +164,16 @@ function! s:separator(s)
   endwhile
   return sep
 endfunction
-
+"
+"
+"
 augroup tweetvim
   autocmd!
   autocmd FileType tweetvim call s:tweetvim_settings()
 augroup END  
-
+"
+"
+"
 function! s:tweetvim_settings()
   nmap <silent> <buffer> <CR> :call <SID>tweetvim_buffer_action()<CR>
 endfunction
