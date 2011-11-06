@@ -57,14 +57,14 @@ function! s:home_timeline()
   endif
 
   "let xml = s:twibill().list_statuses('basyura', 'friends', {'per_page' : 50}) 
-  let xml = s:twibill().list_statuses('basyura', 'all') 
-  "let xml = s:twibill().home_timeline() 
+  "let xml = s:twibill().list_statuses('basyura', 'all') 
+  let xml = s:twibill().home_timeline() 
   "let xml = s:twibill().mentions()
 
   "let bufno = bufexists(s:buf_name)
   "if bufno != 0 
-  let bufno = bufnr(s:buf_name . '$')
-  if bufno != -1
+  let bufno = s:bufnr()
+  if bufno > 0
     execute 'buffer ' . bufno
   else
     execute 'edit! ' . s:buf_name
@@ -85,16 +85,29 @@ function! s:home_timeline()
 
 
   for status in s:cache
-    call append(line('$') - 1, s:separator())
-    let str  =  s:padding(status.find('screen_name').value(), 15) . ' : ' . status.find('text').value()
+    call append(line('$') - 1, s:separator('_'))
+    let str  = s:padding(status.find('screen_name').value(), 15) . ' :' 
+    let str .= s:unescape(status.find('text').value())
     let str .= ' - ' . status.find('created_at').value()
     let str .= ' [' . status.find('id').value() . ']'
     call append(line('$') - 1, str)
   endfor
-  call append(0, '[tweetvim] - home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])')
+  call append(0, '[tweetvim] ' . bufno . ' - home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])')
   :0
   setlocal nomodified
   setlocal nomodifiable
+endfunction
+
+function! s:bufnr()
+  return bufexists(substitute(substitute(s:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
+endfunction
+
+function! s:unescape(msg)
+  let msg = a:msg
+  let msg = substitute(msg, '&quot;', '"', 'g')
+  let msg = substitute(msg, '&lt;'  , '<', 'g')
+  let msg = substitute(msg, '&gt;'  , '>', 'g')
+  return msg
 endfunction
 
 function! s:padding(msg, length)
@@ -105,10 +118,10 @@ function! s:padding(msg, length)
   return msg
 endfunction
 
-function! s:separator()
+function! s:separator(s)
   let sep = ""
   while len(sep) + 4 < winwidth(0)
-    let sep = sep . "-"
+    let sep .= a:s
   endwhile
   return sep
 endfunction
