@@ -17,11 +17,13 @@ syntax match tweetvim_screen_name "^[0-9A-Za-z_]\{-1,} "
 
 syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+"
 
-syntax match tweetvim_link "\<https\?://\S\+"
+"syntax match tweetvim_link "\<https\?://\S\+"
+"syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
+syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
 
 syntax match tweetvim_hash_tag "\#[0-9A-Za-z_]\+"
 
-syntax match tweetvim_separator "^_\+$"
+syntax match tweetvim_separator "^-\+$"
 
 "syntax match uiki_strong /|[^|]\+|/ contains=uiki_strong_bar
 "syntax match uiki_page_block /\[\[/ contained conceal

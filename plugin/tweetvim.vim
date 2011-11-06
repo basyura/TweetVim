@@ -56,13 +56,17 @@ function! s:home_timeline()
     let param["since_id"] = s:since_id
   endif
 
-  "let xml = s:twibill().list_statuses('basyura', 'friends', {'per_page' : 50}) 
-  "let xml = s:twibill().list_statuses('basyura', 'all') 
-  let xml = s:twibill().home_timeline() 
-  "let xml = s:twibill().mentions()
+  let xml    = s:twibill().home_timeline()
+  let tweets = xml.childNodes('status')
 
-  "let bufno = bufexists(s:buf_name)
-  "if bufno != 0 
+  call s:load_timeline(
+        \ 'home_timeline', 
+        \ 'home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])', 
+        \ tweets)
+endfunction
+
+function! s:load_timeline(method, title, tweets)
+  let start = reltime()
   let bufno = s:bufnr()
   if bufno > 0
     execute 'buffer ' . bufno
@@ -77,22 +81,35 @@ function! s:home_timeline()
 
   silent %delete _
 
-  let nodes = xml.childNodes('status')
-  if len(nodes) != 0
-    let s:since_id = nodes[0].find('id').value()
-  endif
-  call extend(s:cache, nodes, 0)
+  let b:tweetvim_method = a:method
+  let b:tweetvim_status_cache = {}
 
+  if len(a:tweets) != 0
+    let s:since_id = a:tweets[0].find('id').value()
+  endif
+  call extend(s:cache, a:tweets, 0)
 
   for status in s:cache
-    call append(line('$') - 1, s:separator('_'))
-    let str  = s:padding(status.find('screen_name').value(), 15) . ' :' 
-    let str .= s:unescape(status.find('text').value())
-    let str .= ' - ' . status.find('created_at').value()
-    let str .= ' [' . status.find('id').value() . ']'
+    let text = status.find('text').value()
+    let text = substitute(text , '' , '' , 'g')
+    let text = substitute(text , '\n' , '' , 'g')
+    let text = s:unescape(text)
+
+    call append(line('$') - 1, s:separator('-'))
+    let str  = s:padding(status.find('screen_name').value(), 15) . ' : '
+    let str .= text
+    "let str .= ' - ' . status.find('created_at').value()
+    "let str .= ' [' . status.find('id').value() . ']'
     call append(line('$') - 1, str)
+    let b:tweetvim_status_cache[line(".")] = status
   endfor
-  call append(0, '[tweetvim] ' . bufno . ' - home timeline (' . split(reltimestr(reltime(start)))[0] . ' [s])')
+
+  let title  = '[tweetvim]  - ' . a:title
+  let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
+  let title .= ' : bufno ' . bufno
+
+  call append(0, title)
+  normal dd
   :0
   setlocal nomodified
   setlocal nomodifiable
@@ -124,4 +141,22 @@ function! s:separator(s)
     let sep .= a:s
   endwhile
   return sep
+endfunction
+
+augroup tweetvim
+  autocmd!
+  autocmd FileType tweetvim call s:tweetvim_settings()
+augroup END  
+
+function! s:tweetvim_settings()
+  nmap <silent> <buffer> <CR> :call <SID>tweetvim_buffer_action()<CR>
+endfunction
+"
+"
+function! s:tweetvim_buffer_action()
+  let matched = matchlist(expand('<cWORD>') , 'https\?://\S\+')
+  if len(matched) != 0
+    execute "OpenBrowser " . matched[0]
+    return
+  endif
 endfunction
