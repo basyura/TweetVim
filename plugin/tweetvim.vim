@@ -107,32 +107,43 @@ function! s:load_timeline(method, title, tweets)
   if len(a:tweets) != 0
     let s:since_id = a:tweets[0].id
   endif
+
+  call s:append_tweets(a:tweets, s:separator('-'), b:tweetvim_status_cache)
+  normal dd 
+  call append(line('$') - 1, s:separator(' '))
+  call s:append_tweets(s:cache,  s:separator('-'), b:tweetvim_status_cache)
+
   call extend(s:cache, a:tweets, 0)
-
-  for status in s:cache
-    let text = status.text
-    let text = substitute(text , '' , '' , 'g')
-    let text = substitute(text , '\n' , '' , 'g')
-    let text = s:unescape(text)
-
-    call append(line('$') - 1, s:separator('-'))
-    let str  = s:padding(status.screen_name, 15) . ' : '
-    let str .= text
-    "let str .= ' - ' . status.find('created_at').value()
-    "let str .= ' [' . status.find('id').value() . ']'
-    call append(line('$') - 1, str)
-    let b:tweetvim_status_cache[line(".")] = status
-  endfor
 
   let title  = '[tweetvim]  - ' . a:title
   let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
   let title .= ' : bufno ' . bufno
 
   call append(0, title)
+  call append(1, s:separator('-'))
   normal dd
   :0
   setlocal nomodified
   setlocal nomodifiable
+endfunction
+"
+"
+"
+function! s:append_tweets(tweets, separator, cache)
+  for tweet in a:tweets
+    let text = tweet.text
+    let text = substitute(text , '' , '' , 'g')
+    let text = substitute(text , '\n' , '' , 'g')
+    let text = s:unescape(text)
+
+    let str  = s:padding(tweet.screen_name, 15) . ' : '
+    let str .= text
+    "let str .= ' - ' . status.find('created_at').value()
+    "let str .= ' [' . status.find('id').value() . ']'
+    call append(line('$') - 1, str)
+    call append(line('$') - 1, a:separator)
+    let a:cache[line(".")] = tweet
+  endfor
 endfunction
 "
 "
