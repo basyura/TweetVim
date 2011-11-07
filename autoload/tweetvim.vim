@@ -76,15 +76,8 @@ endfunction
 function! s:get_tweets(method, args)
   let twibill = s:twibill()
   let Fn      = twibill[a:method]
-  let tweets  = call(Fn, a:args, twibill).childNodes()
-
-  for t in tweets
-    for key in ['id', 'screen_name', 'text', 'created_at', 'in_reply_to_status_id']
-      let t[key] = t.find(key).value()
-    endfor
-  endfor
-
-  return tweets
+  
+  return call(Fn, a:args, twibill)
 endfunction
 "
 "
@@ -167,7 +160,7 @@ function! s:append_tweets(tweets, separator, cache)
     let text = substitute(text , '\n' , '' , 'g')
     let text = tweetvim#util#unescape(text)
 
-    let str  = tweetvim#util#padding(tweet.screen_name, 15) . ' : '
+    let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
     let str .= text
     "let str .= ' - ' . status.find('created_at').value()
     "let str .= ' [' . status.find('id').value() . ']'
