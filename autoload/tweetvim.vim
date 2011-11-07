@@ -55,7 +55,7 @@ endfunction
 "
 "
 function! tweetvim#action_enter()
-  let matched = matchlist(expand('<cWORD>') , 'https\?://\S\+')
+  let matched = matchlist(expand('<cWORD>') , 'https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+')
   if len(matched) != 0
     execute "OpenBrowser " . matched[0]
     return
@@ -66,9 +66,9 @@ endfunction
 "
 function! tweetvim#action_reply()
   let tweet = b:tweetvim_status_cache[line('.')]
-  let screen_name = tweet.screen_name
+  let screen_name = tweet.user.screen_name
   let status_id   = tweet.id
-  echo screen_name . ' ' . status_id
+  echo screen_name . ' ' . status_id . ' ' . tweet.text
 endfunction
 "
 "

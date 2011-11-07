@@ -19,7 +19,7 @@ syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+"
 
 "syntax match tweetvim_link "\<https\?://\S\+"
 "syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
-syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
+syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
 
 syntax match tweetvim_hash_tag "\#[0-9A-Za-z_]\+"
 
