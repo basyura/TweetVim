@@ -14,12 +14,17 @@ let s:cache = []
 function! tweetvim#timeline(method, ...)
   let start = reltime()
   
-  let param = {}
+  let param = {'per_page' : 50, 'count' : 50}
   if exists('s:since_id')
     let param["since_id"] = s:since_id
   endif
 
-  let tweets = s:get_tweets(a:method, a:000)
+  let tweets = s:get_tweets(a:method, s:merge_params(a:000, param))
+
+  if type(tweets) == 4 && has_key(tweets, 'error')
+    echohl Error | echo tweets.error | echohl None
+    return
+  endif
 
   call s:load_timeline(
         \ a:method,
@@ -103,7 +108,7 @@ function! s:load_timeline(method, args, title, tweets)
   let b:tweetvim_status_cache = {}
 
   if len(a:tweets) != 0
-    let s:since_id = a:tweets[0].id
+    let s:since_id = a:tweets[0].id_str
   endif
 
   let separator = tweetvim#util#separator('-')
@@ -174,4 +179,20 @@ endfunction
 "
 function! s:bufnr()
   return bufexists(substitute(substitute(s:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
+endfunction
+"
+"
+"
+function! s:merge_params(list_param, hash_param)
+  if empty(a:list_param)
+    return [a:hash_param]
+  endif
+
+  let param = a:list_param
+
+  if type(param[-1]) == 4
+    return extend(param[-1], a:hash_param)
+  endif
+
+  return param + [a:hash_param]
 endfunction
