@@ -7,19 +7,10 @@ let s:buf_name = '[tweetvim]'
 "
 "
 "
-let s:cache = []
-"
-"
-"
 function! tweetvim#timeline(method, ...)
   let start = reltime()
-  
-  let param = {'per_page' : 50, 'count' : 50}
-  if exists('s:since_id')
-    let param["since_id"] = s:since_id
-  endif
 
-  let tweets = s:get_tweets(a:method, s:merge_params(a:000, param))
+  let tweets = s:get_tweets(a:method, a:000)
 
   if type(tweets) == 4 && has_key(tweets, 'error')
     echohl Error | echo tweets.error | echohl None
@@ -79,10 +70,15 @@ endfunction
 "
 "
 function! s:get_tweets(method, args)
+
+  let param = {'per_page' : 50, 'count' : 50}
+
+  let args = s:merge_params(a:args, param)
+
   let twibill = s:twibill()
   let Fn      = twibill[a:method]
   
-  return call(Fn, a:args, twibill)
+  return call(Fn, args, twibill)
 endfunction
 "
 "
@@ -107,18 +103,12 @@ function! s:load_timeline(method, args, title, tweets)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  if len(a:tweets) != 0
-    let s:since_id = a:tweets[0].id_str
-  endif
-
   let separator = tweetvim#util#separator('-')
 
-  call s:append_tweets(a:tweets, separator, b:tweetvim_status_cache)
+  call s:append_tweets(a:tweets[0], separator, b:tweetvim_status_cache)
   normal dd 
   call append(line('$') - 1, tweetvim#util#separator(' '))
-  call s:append_tweets(s:cache, separator, b:tweetvim_status_cache)
-
-  call extend(s:cache, a:tweets, 0)
+  call s:append_tweets(a:tweets[1], separator, b:tweetvim_status_cache)
 
   let title  = '[tweetvim]  - ' . a:title
   let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
@@ -141,14 +131,13 @@ function! s:config()
     \ 'consumer_secret'     : s:consumer_secret ,
     \ 'access_token'        : tokens[0] ,
     \ 'access_token_secret' : tokens[1] ,
+    \ 'cache'               : 1
     \ }
 endfunction
 "
 "
 "
 function! s:twibill()
-  let t = twibill#new(s:config())
-  return t
   if exists('s:twibill_cache')
     return s:twibill_cache
   endif
@@ -166,6 +155,9 @@ function! s:append_tweets(tweets, separator, cache)
     let text = tweetvim#util#unescape(text)
 
     let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
+    if tweet.favorited
+      let str .= '★ '
+    endif
     let str .= text
     "let str .= ' - ' . status.find('created_at').value()
     "let str .= ' [' . status.find('id').value() . ']'

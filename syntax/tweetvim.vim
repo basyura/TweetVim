@@ -26,6 +26,8 @@ syntax match tweetvim_hash_tag "\#[0-9A-Za-z_]\+"
 syntax match tweetvim_separator "^-\+$"
 syntax match tweetvim_new_separator "^\s\+$"
 
+syntax match tweetvim_star " ★ "
+
 "syntax match uiki_strong /|[^|]\+|/ contains=uiki_strong_bar
 "syntax match uiki_page_block /\[\[/ contained conceal
 "syntax match uiki_page_block /\]\]/ contained conceal
@@ -57,6 +59,8 @@ highlight tweetvim_hash_tag guifg=yellow
 
 highlight tweetvim_separator guifg=#444444
 highlight tweetvim_new_separator guifg=orange gui=undercurl
+
+highlight tweetvim_star guifg=yellow
 
 let b:current_syntax = 'tweetvim'
 
