@@ -1,3 +1,9 @@
+if exists('g:loaded_tweetvim')
+  finish
+endif
+
+let s:save_cpo = &cpo
+set cpo&vim
 "
 "
 "
@@ -5,6 +11,7 @@ command! TweetVimAccessToken  :call tweetvim#access_token()
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
 command! -nargs=+ TweetVimListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
+command! TweetVimUpdate       :call tweetvim#update()
 
 
 command!          HomeTimeline :call tweetvim#timeline('home_timeline')
@@ -28,3 +35,9 @@ function! s:tweetvim_settings()
   nnoremap <silent> <buffer> <Leader>r        :call tweetvim#action_reply()<CR>
   nnoremap <silent> <buffer> <Leader><Leader> :call tweetvim#reload()<CR>
 endfunction
+
+
+let g:loaded_tweetvim = 1
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
