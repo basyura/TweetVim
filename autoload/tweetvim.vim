@@ -62,9 +62,8 @@ endfunction
 "
 function! tweetvim#action_reply()
   let tweet = b:tweetvim_status_cache[line('.')]
-  let screen_name = tweet.user.screen_name
-  let status_id   = tweet.id
-  echo screen_name . ' ' . status_id . ' ' . tweet.text
+  let param = {'in_reply_to_status_id' : tweet.id_str}
+  call tweetvim#say#open('@' . tweet.user.screen_name . ' ', param)
 endfunction
 "
 "

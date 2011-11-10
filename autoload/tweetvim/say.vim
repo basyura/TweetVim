@@ -1,7 +1,10 @@
 "
 "
 "
-function! tweetvim#say#open()
+function! tweetvim#say#open(...)
+  let text  = a:0 > 0 ? a:1 : ''
+  let param = a:0 > 1 ? a:2 : {}
+  
   let bufnr = bufwinnr('tweetvim-say')
   if bufnr > 0
     exec bufnr.'wincmd w'
@@ -11,6 +14,8 @@ function! tweetvim#say#open()
   endif
   setlocal modifiable
   silent %delete _
+  call append(0, text)
+  let b:tweetvim_post_param = param
   let &filetype = 'tweetvim-say'
   startinsert!
 endfunction
@@ -82,7 +87,7 @@ function! s:post_tweet()
   endif
   redraw | echo 'sending ... ' | sleep 1
   try
-    let param = exists("b:post_param") ? b:post_param : {}
+    let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
     call tweetvim#update(text, param)
   catch
     echoerr v:exception
