@@ -5,7 +5,7 @@ function! tweetvim#say#open(...)
   let text  = a:0 > 0 ? a:1 : ''
   let param = a:0 > 1 ? a:2 : {}
   
-  let bufnr = bufwinnr('tweetvim-say')
+  let bufnr = bufwinnr('tweetvim_say')
   if bufnr > 0
     exec bufnr.'wincmd w'
   else
@@ -16,16 +16,16 @@ function! tweetvim#say#open(...)
   silent %delete _
   call append(0, text)
   let b:tweetvim_post_param = param
-  let &filetype = 'tweetvim-say'
+  let &filetype = 'tweetvim_say'
   startinsert!
 endfunction
 "
 "
 "
-augroup tweetvim-say
-  autocmd! tweetvim-say
-  autocmd FileType    tweetvim-say call s:tweetvim_say_settings()
-  autocmd BufWinLeave tweetvim-say call s:tweetvim_say_leave()
+augroup tweetvim_say
+  autocmd! tweetvim_say
+  autocmd FileType    tweetvim_say call s:tweetvim_say_settings()
+  autocmd BufWinLeave tweetvim_say call s:tweetvim_say_leave()
 augroup END
 
 
