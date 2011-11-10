@@ -141,7 +141,7 @@ function! s:twibill()
   if exists('s:twibill_cache')
     return s:twibill_cache
   endif
-  let s:twibill_cache = twibill#new(s:config())
+  let s:twibill_cache = tweetvim#twibill#new(s:config())
   return s:twibill_cache
 endfunction
 "
