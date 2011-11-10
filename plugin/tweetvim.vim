@@ -11,7 +11,7 @@ command! TweetVimAccessToken  :call tweetvim#access_token()
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
 command! -nargs=+ TweetVimListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
-command! TweetVimUpdate       :call tweetvim#update()
+command! TweetVimSay          :call tweetvim#say#open()
 
 
 command!          HomeTimeline :call tweetvim#timeline('home_timeline')
