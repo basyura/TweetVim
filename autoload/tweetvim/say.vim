@@ -9,7 +9,7 @@ function! tweetvim#say#open(...)
   if bufnr > 0
     exec bufnr.'wincmd w'
   else
-    execute 'below split unite_twitter' 
+    execute 'below split tweetvim_say' 
     execute '2 wincmd _'
   endif
   setlocal modifiable
