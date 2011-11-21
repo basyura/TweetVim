@@ -49,6 +49,12 @@ function! s:tweetvim_say_settings()
   endif
 endfunction
 
+function! s:tweetvim_say_leave()
+  if &filetype != 'tweetvim_say'
+    return
+  endif
+endfunction
+
 " for recovery tweet
 let s:history = []
 

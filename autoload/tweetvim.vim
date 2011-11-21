@@ -20,7 +20,7 @@ function! tweetvim#timeline(method, ...)
   call s:load_timeline(
         \ a:method,
         \ a:000,
-        \ join(split(a:method, '_'), ' ') . ' (' . split(reltimestr(reltime(start)))[0] . ' [s])', 
+        \ join(split(a:method, '_'), ' '), 
         \ tweets)
 endfunction
 "
@@ -120,8 +120,8 @@ function! s:load_timeline(method, args, title, tweets)
   call s:append_tweets(a:tweets[1], separator, b:tweetvim_status_cache)
 
   let title  = '[tweetvim]  - ' . a:title
-  let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
-  let title .= ' : bufno ' . bufno
+  "let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
+  "let title .= ' : bufno ' . bufno
 
   call append(0, title)
   call append(1, separator)
