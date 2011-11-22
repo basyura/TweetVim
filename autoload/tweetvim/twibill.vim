@@ -6,7 +6,7 @@ function! tweetvim#twibill#new(config)
   "
   " @override
   "
-  function! twibill.get(url, ctx, param)
+  function! twibill.get(url, param)
 
     let param = a:param
 
@@ -14,8 +14,20 @@ function! tweetvim#twibill#new(config)
       let param.since_id = self['cache_since_id_' . a:url]
     endif
 
-    let res    = oauth#get(a:url, a:ctx, {}, a:param)
+    let res    = oauth#get(a:url, self.ctx(), {}, a:param)
     let tweets = json#decode(res.content)
+
+    if a:url =~ "search.json"
+      let results = tweets['results']
+      unlet tweets
+      let tweets = results
+      for tweet in tweets
+        let tweet.user = {'screen_name' : tweet.from_user}
+        let tweet.favorited = 0
+      endfor
+      return [tweets, []]
+    endif
+
     if self.config.cache && type(tweets) == 3
       let cache = tweets + get(self, 'cache_tweets_' . a:url, []) 
       if empty(tweets)
