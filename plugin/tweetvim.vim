@@ -14,12 +14,12 @@ command! -nargs=+ TweetVimListStatuses :call tweetvim#timeline('list_statuses', 
 command! TweetVimSay          :call tweetvim#say#open()
 
 
-command!          HomeTimeline :call tweetvim#timeline('home_timeline')
-command!          Mentions     :call tweetvim#timeline('mentions')
-command! -nargs=+ ListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
-command! -nargs=1 UserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
-command! -nargs=1 Favorites    :call tweetvim#timeline('favorites'    , <f-args>)
-command! -nargs=1 SearchTweets :call tweetvim#timeline('search'       , <f-args>)
+"command!          HomeTimeline :call tweetvim#timeline('home_timeline')
+"command!          Mentions     :call tweetvim#timeline('mentions')
+"command! -nargs=+ ListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
+"command! -nargs=1 UserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
+"command! -nargs=1 Favorites    :call tweetvim#timeline('favorites'    , <f-args>)
+"command! -nargs=1 SearchTweets :call tweetvim#timeline('search'       , <f-args>)
 
 "
 "
