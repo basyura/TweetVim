@@ -32,9 +32,9 @@ augroup END
 "
 "
 function! s:tweetvim_settings()
-  nnoremap <silent> <buffer> <CR>             :call tweetvim#action_enter()<CR>
-  nnoremap <silent> <buffer> <Leader>r        :call tweetvim#action_reply()<CR>
-  nnoremap <silent> <buffer> <Leader><Leader> :call tweetvim#reload()<CR>
+  nnoremap <silent> <buffer> <CR>             :call tweetvim#action#enter()<CR>
+  nnoremap <silent> <buffer> <Leader>r        :call tweetvim#action#reply()<CR>
+  nnoremap <silent> <buffer> <Leader><Leader> :call tweetvim#action#reload()<CR>
 endfunction
 
 

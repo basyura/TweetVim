@@ -24,6 +24,7 @@ function! tweetvim#twibill#new(config)
       for tweet in tweets
         let tweet.user = {'screen_name' : tweet.from_user}
         let tweet.favorited = 0
+        let tweet.is_new    = 1
       endfor
       return tweets
     endif
