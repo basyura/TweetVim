@@ -10,14 +10,14 @@ let s:buf_name = '[tweetvim]'
 function! tweetvim#timeline(method, ...)
   let start = reltime()
 
-  let tweets = s:get_tweets(a:method, a:000)
+  let tweets = tweetvim#get_tweets(a:method, a:000)
 
   if type(tweets) == 4 && has_key(tweets, 'error')
     echohl Error | echo tweets.error | echohl None
     return
   endif
 
-  call s:load_timeline(
+  call tweetvim#load_timeline(
         \ a:method,
         \ a:000,
         \ join(split(a:method, '_'), ' '), 
@@ -51,7 +51,7 @@ endfunction
 "
 "
 "
-function! s:get_tweets(method, args)
+function! tweetvim#get_tweets(method, args)
 
   let param = {'per_page' : 50, 'count' : 50}
 
@@ -65,13 +65,20 @@ endfunction
 "
 "
 "
-function! s:load_timeline(method, args, title, tweets)
+function! tweetvim#load_timeline(method, args, title, tweets, ...)
+  let param = a:0 ? a:1 : {}
+  let buf_name = get(param, 'buf_name', s:buf_name)
+
   let start = reltime()
-  let bufno = s:bufnr()
+  let bufno = s:bufnr(buf_name)
   if bufno > 0
     execute 'buffer ' . bufno
   else
-    execute 'edit! ' . s:buf_name
+    " TODO
+    if get(param, 'split', 0)
+      split
+    endif
+    execute 'edit! ' . buf_name
   endif
 
   setlocal noswapfile
@@ -91,6 +98,10 @@ function! s:load_timeline(method, args, title, tweets)
   call append(0, title)
   normal dd
   :0
+
+  if get(param, 'split', 0)
+    execute string(len(a:tweets) * 2 + 2) . 'wincmd _'
+  endif
 
   setlocal nomodified
   setlocal nomodifiable
@@ -154,8 +165,8 @@ endfunction
 "
 "
 "
-function! s:bufnr()
-  return bufexists(substitute(substitute(s:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
+function! s:bufnr(buf_name)
+  return bufexists(substitute(substitute(a:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
 endfunction
 "
 "
