@@ -94,7 +94,7 @@ function! s:post_tweet()
   redraw | echo 'sending ... ' | sleep 1
   try
     let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
-    call tweetvim#update(text, param)
+    call tweetvim#action#update(text, param)
   catch
     echoerr v:exception
     return

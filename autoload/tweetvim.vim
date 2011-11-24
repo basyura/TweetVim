@@ -10,7 +10,7 @@ let s:buf_name = '[tweetvim]'
 function! tweetvim#timeline(method, ...)
   let start = reltime()
 
-  let tweets = tweetvim#get_tweets(a:method, a:000)
+  let tweets = tweetvim#request(a:method, a:000)
 
   if type(tweets) == 4 && has_key(tweets, 'error')
     echohl Error | echo tweets.error | echohl None
@@ -45,13 +45,7 @@ endfunction
 "
 "
 "
-function! tweetvim#update(text, param)
-    return s:twibill().update(a:text, a:param)
-endfunction
-"
-"
-"
-function! tweetvim#get_tweets(method, args)
+function! tweetvim#request(method, args)
 
   let param = {'per_page' : 50, 'count' : 50}
 
@@ -59,7 +53,7 @@ function! tweetvim#get_tweets(method, args)
 
   let twibill = s:twibill()
   let Fn      = twibill[a:method]
-  
+
   return call(Fn, args, twibill)
 endfunction
 "
@@ -179,7 +173,8 @@ function! s:merge_params(list_param, hash_param)
   let param = a:list_param
 
   if type(param[-1]) == 4
-    return extend(param[-1], a:hash_param)
+    call extend(param[-1], a:hash_param)
+    return param
   endif
 
   return param + [a:hash_param]

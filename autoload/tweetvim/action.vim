@@ -43,11 +43,16 @@ function! tweetvim#action#in_reply_to()
     if id == ''
       break
     endif
-    let tweet = tweetvim#get_tweets('show', [id])
+    let tweet = tweetvim#request('show', [id])
   endwhile
   
   call tweetvim#load_timeline(
         \ 'in_reply_to', [], 'in reply to', list, 
         \ {'buf_name' : '[tweetvim - in_reply_to]', 'split' : 1 })
 endfunction
-
+"
+"
+"
+function! tweetvim#action#update(text, param)
+  return tweetvim#request('update', [a:text, a:param])
+endfunction
