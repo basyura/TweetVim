@@ -25,17 +25,23 @@ function! tweetvim#twibill#new(config)
         let tweet.user = {'screen_name' : tweet.from_user}
         let tweet.favorited = 0
       endfor
-      return [tweets, []]
+      return tweets
     endif
 
     if self.config.cache && type(tweets) == 3
       let cache = tweets + get(self, 'cache_tweets_' . a:url, []) 
       if empty(tweets)
-        return [[],cache]
+        return cache
       else
         let self['cache_since_id_' . a:url] = tweets[0].id_str
         let self['cache_tweets_'   . a:url] = cache
-        return [cache[:len(tweets) - 1],cache[len(tweets):]]
+
+        let copied = deepcopy(tweets)
+        for t in copied
+          let t.is_new = 1
+        endfor
+
+        return copied + cache[len(tweets):]
       endif
     endif
     return tweets

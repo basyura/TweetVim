@@ -112,21 +112,13 @@ function! s:load_timeline(method, args, title, tweets)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let separator = tweetvim#util#separator('-')
-
-  call s:append_tweets(a:tweets[0], separator, b:tweetvim_status_cache)
-  normal dd 
-  call append(line('$') - 1, tweetvim#util#separator(' '))
-  call s:append_tweets(a:tweets[1], separator, b:tweetvim_status_cache)
+  call s:append_tweets(a:tweets, b:tweetvim_status_cache)
 
   let title  = '[tweetvim]  - ' . a:title
-  "let title .= ' (' . split(reltimestr(reltime(start)))[0] . ' [s])'
-  "let title .= ' : bufno ' . bufno
-
   call append(0, title)
-  call append(1, separator)
   normal dd
   :0
+
   setlocal nomodified
   setlocal nomodifiable
 endfunction
@@ -156,8 +148,18 @@ endfunction
 "
 "
 "
-function! s:append_tweets(tweets, separator, cache)
+function! s:append_tweets(tweets, cache)
+  let separator = tweetvim#util#separator('-')
+  let is_new    = 1
   for tweet in a:tweets
+    " add new or default separator
+    if is_new && !has_key(tweet, 'is_new')
+      call append(line('$') - 1, tweetvim#util#separator(' '))
+      let is_new = 0
+    else
+      call append(line('$') - 1, separator)
+    endif
+
     let text = tweet.text
     let text = substitute(text , '' , '' , 'g')
     let text = substitute(text , '\n' , '' , 'g')
@@ -171,9 +173,10 @@ function! s:append_tweets(tweets, separator, cache)
     "let str .= ' - ' . status.find('created_at').value()
     "let str .= ' [' . status.find('id').value() . ']'
     call append(line('$') - 1, str)
-    call append(line('$') - 1, a:separator)
+    " cache tweet by line no
     let a:cache[line(".")] = tweet
   endfor
+
 endfunction
 "
 "
