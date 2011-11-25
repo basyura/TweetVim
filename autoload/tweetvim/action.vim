@@ -63,3 +63,20 @@ function! tweetvim#action#user_timeline()
   let tweet = b:tweetvim_status_cache[line('.')]
   call tweetvim#timeline('user_timeline', tweet.user.screen_name)
 endfunction
+"
+"
+"
+function! tweetvim#action#retweet()
+  let tweet = b:tweetvim_status_cache[line('.')]
+  echo tweet.user.screen_name . ' ' . tweet.text
+  if input('retweet ? [y/n] : ') != 'y'
+    return
+  endif
+  let ret = tweetvim#request('retweet', tweet.id_str)
+  redraw
+  if has_key(ret, 'errors')
+    echohl ErrorMsg | echo ret.errors | echohl None
+  else
+    echo 'retweeted'
+  endif
+endfunction
