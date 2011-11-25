@@ -56,3 +56,10 @@ endfunction
 function! tweetvim#action#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
 endfunction
+"
+"
+"
+function! tweetvim#action#user_timeline()
+  let tweet = b:tweetvim_status_cache[line('.')]
+  call tweetvim#timeline('user_timeline', tweet.user.screen_name)
+endfunction
