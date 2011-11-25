@@ -37,6 +37,7 @@ function! s:tweetvim_settings()
   nnoremap <silent> <buffer> <Leader>i        :call tweetvim#action#in_reply_to()<CR>
   nnoremap <silent> <buffer> <Leader>u        :call tweetvim#action#user_timeline()<CR>
   nnoremap <silent> <buffer> <Leader>f        :call tweetvim#action#favorite()<CR>
+  nnoremap <silent> <buffer> <Leader>uf       :call tweetvim#action#remove_favoite()<CR>
   nnoremap <silent> <buffer> <Leader><leader>r :call tweetvim#action#retweet()<CR>
   nnoremap <silent> <buffer> <Leader><leader>q :call tweetvim#action#qt()<CR>
   nnoremap <silent> <buffer> <Leader><Leader> :call tweetvim#action#reload()<CR>
