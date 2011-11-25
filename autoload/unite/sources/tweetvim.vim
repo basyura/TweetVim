@@ -32,18 +32,21 @@ endfunction
 
 
 function! s:source.gather_candidates(args, context)
-  return [
-        \ {
-        \  'word'           : 'retweet',
-        \  'source__tweet'  : a:context.source__tweet,
-        \  'source__action' : 'retweet',
-        \ }
-        \ ]
+  let rel_path = 'autoload/tweetvim/action/*.vim'
+  let actions  = map(split(globpath(&runtimepath, rel_path), "\<NL>") , 
+                     \ 'fnamemodify(v:val , ":t:r")')
+
+  return map(actions, '{
+        \ "word"          : v:val ,
+        \ "source__tweet" : a:context.source__tweet
+        \ }')
+
 endfunction
 
 
 let s:source.action_table.execute = {'description' : 'execute action'}
 function! s:source.action_table.execute.func(candidate)
-  echo a:candidate.source__tweet
+  let Fn = function('tweetvim#action#' . a:candidate.word . '#execute')
+  call Fn()
 endfunction
 
