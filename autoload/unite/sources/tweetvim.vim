@@ -35,17 +35,33 @@ function! s:source.gather_candidates(args, context)
   let actions  = map(split(globpath(&runtimepath, rel_path), "\<NL>") , 
                      \ 'fnamemodify(v:val , ":t:r")')
 
-  return map(actions, '{
-        \ "word"          : v:val ,
-        \ "source__tweet" : a:context.source__tweet
-        \ }')
+  let list = []
+  for v in actions
+    let Fn = function('tweetvim#action#' . v . '#define')
+    let candidate = Fn()
+    " do not list to candidates
+    if get(candidate, 'source__is__list', 1) == 0
+      continue
+    endif
+    if !has_key(candidate, 'word')
+      let candidate.word = v
+    endif
+    if has_key(candidate, 'description')
+      let candidate.abbr = tweetvim#util#padding(candidate.word, 15) 
+                                              \ . ' - ' . candidate.description
+    endif
+    let candidate.source__action = v
+    let candidate.source__tweet  = a:context.source__tweet
+    call add(list, candidate)
+  endfor
 
+  return list
 endfunction
 
 
 let s:source.action_table.execute = {'description' : 'execute action'}
 function! s:source.action_table.execute.func(candidate)
-  let Fn = function('tweetvim#action#' . a:candidate.word . '#execute')
+  let Fn = function('tweetvim#action#' . a:candidate.source__action . '#execute')
   call Fn(a:candidate.source__tweet)
 endfunction
 

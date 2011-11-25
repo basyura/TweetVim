@@ -1,6 +1,14 @@
 "
 "
 "
+function! tweetvim#action#in_reply_to#define()
+  return {
+        \ 'description' : 'show conversation',
+        \ }
+endfunction
+"
+"
+"
 function! tweetvim#action#in_reply_to#execute(tweet)
   let tweet = a:tweet
   let list  = []

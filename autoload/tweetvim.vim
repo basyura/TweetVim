@@ -44,7 +44,6 @@ endfunction
 "
 "
 function! tweetvim#request(method, args)
-
   let args  = type(a:args) == 3 ? a:args : [a:args]
   let param = {'per_page' : 50, 'count' : 50}
   let args  = s:merge_params(args, param)
@@ -53,6 +52,12 @@ function! tweetvim#request(method, args)
   let Fn      = twibill[a:method]
 
   return call(Fn, args, twibill)
+endfunction
+"
+"
+"
+function! tweetvim#update(text, param)
+  return tweetvim#request('update', [a:text, a:param])
 endfunction
 "
 "

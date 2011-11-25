@@ -1,6 +1,14 @@
 "
 "
 "
+function! tweetvim#action#retweet#define()
+  return {
+        \ 'description' : 'retweet',
+        \ }
+endfunction
+"
+"
+"
 function! tweetvim#action#retweet#execute(tweet)
   echo a:tweet.user.screen_name . ' ' . a:tweet.text
   if input('retweet ? [y/n] : ') != 'y'

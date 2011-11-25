@@ -1,6 +1,14 @@
 "
 "
 "
+function! tweetvim#action#favorite#define()
+  return {
+        \ 'description' : 'favorite tweet',
+        \ }
+endfunction
+"
+"
+"
 function! tweetvim#action#favorite#execute(tweet)
   echo a:tweet.user.screen_name . ' ' . a:tweet.text
   if input('favorite ? [y/n] : ') != 'y'

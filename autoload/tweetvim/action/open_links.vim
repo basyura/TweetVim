@@ -1,6 +1,14 @@
 "
 "
 "
+function! tweetvim#action#open_links#define()
+  return {
+        \ 'description' : 'open links in tweet',
+        \ }
+endfunction
+"
+"
+"
 function! tweetvim#action#open_links#execute(tweet)
   let text  = a:tweet.text
   while 1
