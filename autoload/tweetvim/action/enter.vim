@@ -10,7 +10,7 @@ endfunction
 "
 "
 "
-function! tweetvim#action#enter#execute()
+function! tweetvim#action#enter#execute(tweet)
   let matched = matchlist(expand('<cWORD>') , 'https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+')
   if len(matched) != 0
     execute "OpenBrowser " . matched[0]

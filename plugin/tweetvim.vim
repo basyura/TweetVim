@@ -32,7 +32,7 @@ augroup END
 "
 "
 function! s:tweetvim_settings()
-  nnoremap <silent> <buffer> <CR>       :call tweetvim#action#enter()<CR>
+  nnoremap <silent> <buffer> <CR>       :call tweetvim#action('enter')<CR>
   nnoremap <silent> <buffer> <Leader>r  :call tweetvim#action('reply')<CR>
   nnoremap <silent> <buffer> <Leader>i  :call tweetvim#action('in_reply_to')<CR>
   nnoremap <silent> <buffer> <Leader>u  :call tweetvim#action('user_timeline')<CR>
@@ -40,7 +40,7 @@ function! s:tweetvim_settings()
   nnoremap <silent> <buffer> <Leader>uf :call tweetvim#action('remove_favoite')<CR>
   nnoremap <silent> <buffer> <Leader><leader>r :call tweetvim#action('retweet')<CR>
   nnoremap <silent> <buffer> <Leader><leader>q :call tweetvim#action('qt')<CR>
-  nnoremap <silent> <buffer> <Leader><Leader>  :call tweetvim#action#reload()<CR>
+  nnoremap <silent> <buffer> <Leader><Leader>  :call tweetvim#action('reload')<CR>
 
   nnoremap <silent> <buffer> a :call unite#sources#tweetvim#start()<CR>
 endfunction

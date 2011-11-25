@@ -10,7 +10,7 @@ endfunction
 "
 "
 "
-function! tweetvim#action#reload#execute()
+function! tweetvim#action#reload#execute(tweet)
   try
     let ret = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
   catch
