@@ -41,6 +41,8 @@ function! s:tweetvim_settings()
   nnoremap <silent> <buffer> <Leader><leader>r :call tweetvim#action#retweet()<CR>
   nnoremap <silent> <buffer> <Leader><leader>q :call tweetvim#action#qt()<CR>
   nnoremap <silent> <buffer> <Leader><Leader> :call tweetvim#action#reload()<CR>
+
+  nnoremap <silent> <buffer> <Leader>a       :call unite#sources#tweetvim#start()<CR>
 endfunction
 
 
