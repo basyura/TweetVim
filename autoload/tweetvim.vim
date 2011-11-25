@@ -63,7 +63,7 @@ function! tweetvim#action(name)
     echo 'no action'
     return
   endif
-  let Fn = function('tweetvim#action#' . name . '#execute')
+  let Fn = function('tweetvim#action#' . a:name . '#execute')
   call Fn(tweet)
 endfunction
 "
