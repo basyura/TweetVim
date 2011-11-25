@@ -36,14 +36,22 @@ endfunction
 function! tweetvim#action#in_reply_to()
   let tweet = b:tweetvim_status_cache[line('.')]
 
-  let list = []
+  let list  = []
+  let guard = 0
   while 1
     call add(list, tweet)
     let id = tweet.in_reply_to_status_id_str
     if id == ''
       break
     endif
+    redraw
+    echo 'get ... ' . id
     let tweet = tweetvim#request('show', [id])
+    let guard += 1
+    if guard > 10
+      echohl ErrorMsg | echo 'count over' | echohl None
+      break
+    endif
   endwhile
   
   call tweetvim#buffer#load(
@@ -79,4 +87,14 @@ function! tweetvim#action#retweet()
   else
     echo 'retweeted'
   endif
+endfunction
+"
+"
+"
+function! tweetvim#action#qt()
+  let tweet = b:tweetvim_status_cache[line('.')]
+  let text  = ' QT @' . tweet.user.screen_name . ':' . tweet.text
+  let param = {'in_reply_to_status_id' : tweet.id_str}
+  call tweetvim#say#open(text, param)
+  execute "normal 0"
 endfunction
