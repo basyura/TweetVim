@@ -18,10 +18,9 @@ function! unite#sources#tweetvim#start()
     return ''
   endif
 
-
   let tweet = get(b:tweetvim_status_cache, line('.'), {})
   if empty(tweet)
-    echo "no cache"
+    echo "no action"
     return ''
   endif
 
@@ -47,6 +46,6 @@ endfunction
 let s:source.action_table.execute = {'description' : 'execute action'}
 function! s:source.action_table.execute.func(candidate)
   let Fn = function('tweetvim#action#' . a:candidate.word . '#execute')
-  call Fn()
+  call Fn(a:candidate.source__tweet)
 endfunction
 

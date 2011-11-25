@@ -57,6 +57,18 @@ endfunction
 "
 "
 "
+function! tweetvim#action(name)
+  let tweet = get(b:tweetvim_status_cache, line('.'), {})
+  if empty(tweet)
+    echo 'no action'
+    return
+  endif
+  let Fn = function('tweetvim#action#' . name . '#execute')
+  call Fn(tweet)
+endfunction
+"
+"
+"
 function! s:config()
   let tokens = tweetvim#access_token()
   return {

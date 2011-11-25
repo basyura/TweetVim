@@ -1,9 +1,8 @@
 "
 "
 "
-function! tweetvim#action#open_links#execute()
-  let tweet = b:tweetvim_status_cache[line('.')]
-  let text  = tweet.text
+function! tweetvim#action#open_links#execute(tweet)
+  let text  = a:tweet.text
   while 1
     let matched = matchlist(text, 'https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+')
     if len(matched) == 0

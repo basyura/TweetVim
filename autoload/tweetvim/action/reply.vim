@@ -1,12 +1,7 @@
 "
 "
 "
-function! tweetvim#action#reply#execute(...)
-  let line = line('.')
-  if !has_key(b:tweetvim_status_cache, line)
-    return
-  endif
-  let tweet = b:tweetvim_status_cache[line]
-  let param = {'in_reply_to_status_id' : tweet.id_str}
-  call tweetvim#say#open('@' . tweet.user.screen_name . ' ', param)
+function! tweetvim#action#reply#execute(tweet)
+  let param = {'in_reply_to_status_id' : a:tweet.id_str}
+  call tweetvim#say#open('@' . a:tweet.user.screen_name . ' ', param)
 endfunction

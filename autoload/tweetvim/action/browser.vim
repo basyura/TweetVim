@@ -1,8 +1,7 @@
 "
 "
 "
-function! tweetvim#action#browser#execute()
-  let tweet = b:tweetvim_status_cache[line('.')]
-  let url   = 'https://twitter.com/\#!/' . tweet.user.screen_name . '/status/' . tweet.id_str
+function! tweetvim#action#browser#execute(tweet)
+  let url   = 'https://twitter.com/\#!/' . a:tweet.user.screen_name . '/status/' . a:tweet.id_str
   execute "OpenBrowser " . url
 endfunction

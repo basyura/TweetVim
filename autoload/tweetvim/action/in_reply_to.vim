@@ -1,9 +1,8 @@
 "
 "
 "
-function! tweetvim#action#in_reply_to#execute()
-  let tweet = b:tweetvim_status_cache[line('.')]
-
+function! tweetvim#action#in_reply_to#execute(tweet)
+  let tweet = a:tweet
   let list  = []
   let guard = 0
   while 1
