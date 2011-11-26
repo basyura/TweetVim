@@ -31,6 +31,10 @@ endfunction
 
 
 function! s:source.gather_candidates(args, context)
+  if !has_key(a:context, 'source__tweet')
+    return []
+  endif
+
   let rel_path = 'autoload/tweetvim/action/*.vim'
   let actions  = map(split(globpath(&runtimepath, rel_path), "\<NL>") , 
                      \ 'fnamemodify(v:val , ":t:r")')
