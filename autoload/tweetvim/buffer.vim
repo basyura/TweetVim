@@ -59,19 +59,7 @@ function! s:append_tweets(tweets, cache)
       call append(line('$') - 1, separator)
     endif
 
-    let text = tweet.text
-    let text = substitute(text , '' , '' , 'g')
-    let text = substitute(text , '\n' , '' , 'g')
-    let text = tweetvim#util#unescape(text)
-
-    let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
-    if tweet.favorited
-      let str .= '★ '
-    endif
-    let str .= text
-    "let str .= ' - ' . status.find('created_at').value()
-    "let str .= ' [' . status.find('id').value() . ']'
-    call append(line('$') - 1, str)
+    call append(line('$') - 1, s:format(tweet))
     " cache tweet by line no
     let a:cache[line(".")] = tweet
   endfor
@@ -82,4 +70,21 @@ endfunction
 "
 function! s:bufnr(buf_name)
   return bufexists(substitute(substitute(a:buf_name, '[', '\\[', 'g'), ']', '\\]', 'g') . '$')
+endfunction
+"
+"
+"
+function! s:format(tweet)
+  let text = a:tweet.text
+  let text = substitute(text , '' , '' , 'g')
+  let text = substitute(text , '\n' , '' , 'g')
+  let text = tweetvim#util#unescape(text)
+
+  let str  = tweetvim#util#padding(a:tweet.user.screen_name, 15) . ' : '
+  if a:tweet.favorited
+    let str .= '★ '
+  endif
+  let str .= text
+
+  return str
 endfunction
