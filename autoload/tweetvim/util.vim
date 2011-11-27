@@ -23,9 +23,10 @@ endfunction
 "
 function! tweetvim#util#unescape(msg)
   let msg = a:msg
-  let msg = substitute(msg, '&quot;', '"', 'g')
-  let msg = substitute(msg, '&lt;'  , '<', 'g')
-  let msg = substitute(msg, '&gt;'  , '>', 'g')
+  let msg = substitute(msg, '&quot;' , '"', 'g')
+  let msg = substitute(msg, '&lt;'   , '<', 'g')
+  let msg = substitute(msg, '&gt;'   , '>', 'g')
+  let msg = substitute(msg, '&#039;' , "'", 'g')
   return msg
 endfunction
 "
