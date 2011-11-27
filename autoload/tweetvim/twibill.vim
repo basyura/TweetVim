@@ -29,6 +29,8 @@ function! tweetvim#twibill#new(config)
       return tweets
     endif
 
+    return tweets
+
     if self.config.cache && type(tweets) == 3
       let cache = tweets + get(self, 'cache_tweets_' . a:url, []) 
       if empty(tweets)
