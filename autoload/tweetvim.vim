@@ -79,7 +79,7 @@ function! tweetvim#verify_credentials()
   if !exists('s:credencidals')
      let s:credencidals = tweetvim#request('verify_credentials', [])
   endif
-  return s:credencidals
+  return copy(s:credencidals)
 endfunction
 "
 "
@@ -89,7 +89,7 @@ function! tweetvim#lists()
     let s:cache_lists = tweetvim#request(
           \ 'lists', [tweetvim#verify_credentials().screen_name]).lists
   endif
-  return s:cache_lists
+  return copy(s:cache_lists)
 endfunction
 "
 "

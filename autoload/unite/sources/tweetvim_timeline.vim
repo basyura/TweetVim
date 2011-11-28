@@ -21,23 +21,49 @@ function! unite#sources#tweetvim_timeline#start()
 endfunction
 
 function! s:source.gather_candidates(args, context)
+
   let list = []
-  "TODO : list , and arguments
-  for v in ['home_timeline', 'mentions']
-    call add(list, {'word' : v , 'source__method' : v})
-  endfor
-
-  unlet v
-
-  for v in tweetvim#lists()
-    call add(list, {
-          \ 'word' : v.full_name ,
-          \ 'source__method' : 'list_statuses',
-          \ 'source__args'   : [v.user.name, v.name],
-          \ })
-  endfor
+  " TODO : refactor
+  call extend(list, s:candidates_time_lines())
+  call extend(list, s:candidates_time_lines_user())
+  call extend(list, s:candidates_lists())
 
   return list
+endfunction
+
+function! s:candidates_time_lines()
+  let list = [
+        \ 'home_timeline', 
+        \ 'mentions', 
+        \ 'retweeted_by_me', 
+        \ 'retweeted_to_me', 
+        \ 'retweets_of_me', 
+        \ ]
+
+  return map(list, '{
+        \ "word"           : v:val,
+        \ "source__method" : v:val
+        \ }')
+endfunction
+
+function! s:candidates_time_lines_user()
+  let credential = tweetvim#verify_credentials()
+  let list = ['favorites']
+
+  return map(list, '{
+        \ "word" : v:val ,
+        \ "source__method" : v:val,
+        \ "source__args"   : [credential.screen_name],
+        \ }')
+endfunction
+
+function! s:candidates_lists()
+  return map(tweetvim#lists(), '{
+        \ "word"           : v:val.full_name ,
+        \ "source__method" : "list_statuses",
+        \ "source__args"   : [v:val.user.name, v:val.name],
+        \ }')
+  endfor
 endfunction
 
 let s:source.action_table.execute = {'description' : 'show timeline'}
