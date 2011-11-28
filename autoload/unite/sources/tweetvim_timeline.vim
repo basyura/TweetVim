@@ -27,8 +27,14 @@ function! s:source.gather_candidates(args, context)
     call add(list, {'word' : v , 'source__method' : v})
   endfor
 
+  unlet v
+
   for v in tweetvim#lists()
-    call add(list, {'word' : v , 'source__method' : 'list_statuses'})
+    call add(list, {
+          \ 'word' : v.full_name ,
+          \ 'source__method' : 'list_statuses',
+          \ 'source__args'   : [v.user.name, v.name],
+          \ })
   endfor
 
   return list
@@ -36,5 +42,6 @@ endfunction
 
 let s:source.action_table.execute = {'description' : 'show timeline'}
 function! s:source.action_table.execute.func(candidate)
-  call tweetvim#timeline(a:candidate.source__method)
+  let args = get(a:candidate, 'source__args', [])
+  call tweetvim#timeline(a:candidate.source__method, args)
 endfunction

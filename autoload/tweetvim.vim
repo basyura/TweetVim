@@ -6,9 +6,10 @@ let s:config_path = expand('~/.tweetvim')
 "
 "
 function! tweetvim#timeline(method, ...)
-  let start = reltime()
+  " TODO - for list_statuses at tweetvim/timeline action
+  let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
 
-  let tweets = tweetvim#request(a:method, a:000)
+  let tweets = tweetvim#request(a:method, args)
 
   if type(tweets) == 4 && has_key(tweets, 'error')
     echohl Error | echo tweets.error | echohl None
@@ -85,11 +86,8 @@ endfunction
 "
 function! tweetvim#lists()
   if !exists('s:cache_lists')
-    let lists = tweetvim#request('lists', [tweetvim#verify_credentials().screen_name]).lists
-    let s:cache_lists = []
-    for v in lists
-      call add(s:cache_lists, v.full_name)
-    endfor
+    let s:cache_lists = tweetvim#request(
+          \ 'lists', [tweetvim#verify_credentials().screen_name]).lists
   endif
   return s:cache_lists
 endfunction
