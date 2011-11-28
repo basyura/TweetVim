@@ -4,7 +4,7 @@ function! unite#sources#tweetvim_timeline#define()
 endfunction
 
 let s:source = {
-      \ 'name': 'tweetvim/timeline',
+      \ 'name': 'tweetvim',
       \ 'hooks' : {},
       \ 'action_table' : {},
       \ 'default_action' : {'common' : 'execute'},
@@ -17,7 +17,7 @@ function! unite#sources#tweetvim_timeline#start()
     return ''
   endif
 
-  return unite#start(['tweetvim/timeline'])
+  return unite#start(['tweetvim'])
 endfunction
 
 function! s:source.gather_candidates(args, context)
