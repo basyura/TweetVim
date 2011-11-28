@@ -27,6 +27,10 @@ function! s:source.gather_candidates(args, context)
     call add(list, {'word' : v , 'source__method' : v})
   endfor
 
+  for v in tweetvim#lists()
+    call add(list, {'word' : v , 'source__method' : 'list_statuses'})
+  endfor
+
   return list
 endfunction
 

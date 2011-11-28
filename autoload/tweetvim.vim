@@ -74,6 +74,28 @@ endfunction
 "
 "
 "
+function! tweetvim#verify_credentials()
+  if !exists('s:credencidals')
+     let s:credencidals = tweetvim#request('verify_credentials', [])
+  endif
+  return s:credencidals
+endfunction
+"
+"
+"
+function! tweetvim#lists()
+  if !exists('s:cache_lists')
+    let lists = tweetvim#request('lists', [tweetvim#verify_credentials().screen_name]).lists
+    let s:cache_lists = []
+    for v in lists
+      call add(s:cache_lists, v.full_name)
+    endfor
+  endif
+  return s:cache_lists
+endfunction
+"
+"
+"
 function! s:config()
   let tokens = tweetvim#access_token()
   return {
