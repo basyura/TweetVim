@@ -54,7 +54,7 @@ function! s:tweetvim_settings()
   nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
   nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
-  nnoremap <silent> <buffer> a :call unite#sources#tweetvim#start()<CR>
+  nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
 endfunction
 
 
