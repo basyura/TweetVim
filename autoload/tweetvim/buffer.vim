@@ -5,11 +5,16 @@ let s:buf_name = '[tweetvim]'
 "
 function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let param = a:0 ? a:1 : {}
-  let buf_name = get(param, 'buf_name', s:buf_name)
-
-  let start = reltime()
-
-
+  call s:switch_buffer(param)
+  call s:pre_process(param)
+  call s:process(a:method, a:args, a:title, a:tweets, param)
+  call s:post_process(param)
+endfunction
+"
+"
+"
+function! s:switch_buffer(param)
+  let buf_name = get(a:param, 'buf_name', s:buf_name)
   " TODO : find window or buffer
   let winnr = 1
   let exist_win = 0
@@ -28,20 +33,27 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
       execute 'buffer ' . bufno
     else
       " TODO
-      if get(param, 'split', 0)
+      if get(a:param, 'split', 0)
         split
       endif
       execute 'edit! ' . buf_name
     endif
   endif
-
+endfunction
+"
+"
+"
+function! s:pre_process(param)
   setlocal noswapfile
   setlocal modifiable
   setlocal buftype=nofile
   setfiletype tweetvim
-
   silent %delete _
-
+endfunction
+"
+"
+"
+function! s:process(method, args, title, tweets, param)
   let b:tweetvim_method = a:method
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
@@ -53,10 +65,14 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   normal dd
   :0
 
-  if get(param, 'split', 0)
+  if get(a:param, 'split', 0)
     execute string(len(a:tweets) * 2 + 2) . 'wincmd _'
   endif
-
+endfunction
+"
+"
+"
+function! s:post_process(param)
   setlocal nomodified
   setlocal nomodifiable
 endfunction
