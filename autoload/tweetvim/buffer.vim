@@ -8,15 +8,31 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let buf_name = get(param, 'buf_name', s:buf_name)
 
   let start = reltime()
-  let bufno = s:bufnr(buf_name)
-  if bufno > 0
-    execute 'buffer ' . bufno
-  else
-    " TODO
-    if get(param, 'split', 0)
-      split
+
+
+  " TODO : find window or buffer
+  let winnr = 1
+  let exist_win = 0
+  while winnr <= winnr('$')
+    if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
+      execute winnr 'wincmd w'
+      let exist_win = 1
+      break
     endif
-    execute 'edit! ' . buf_name
+    let winnr += 1
+  endwhile
+
+  if !exist_win
+    let bufno = s:bufnr(escape(buf_name, '*[]?{},'))
+    if bufno > 0
+      execute 'buffer ' . bufno
+    else
+      " TODO
+      if get(param, 'split', 0)
+        split
+      endif
+      execute 'edit! ' . buf_name
+    endif
   endif
 
   setlocal noswapfile
