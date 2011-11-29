@@ -15,17 +15,21 @@ endfunction
 "
 function! s:switch_buffer(param)
   let buf_name = get(a:param, 'buf_name', s:buf_name)
-  " TODO : find window or buffer
-  let winnr = 1
   let exist_win = 0
-  while winnr <= winnr('$')
-    if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
-      execute winnr 'wincmd w'
-      let exist_win = 1
-      break
-    endif
-    let winnr += 1
-  endwhile
+
+  " TODO : find window or buffer
+  " buf_name is [tweetvim] or [tweetvim - in_replly_to]
+  if buf_name == s:buf_name
+    let winnr = 1
+    while winnr <= winnr('$')
+      if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
+        execute winnr 'wincmd w'
+        let exist_win = 1
+        break
+      endif
+      let winnr += 1
+    endwhile
+  endif
 
   if !exist_win
     let bufno = s:bufnr(escape(buf_name, '*[]?{},'))
