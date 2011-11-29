@@ -1,14 +1,43 @@
 
+let s:backup = []
+
 let s:buf_name = '[tweetvim]'
 "
 "
 "
 function! tweetvim#buffer#load(method, args, title, tweets, ...)
+
   let param = a:0 ? a:1 : {}
   call s:switch_buffer(param)
   call s:pre_process(param)
   call s:process(a:method, a:args, a:title, a:tweets, param)
   call s:post_process(param)
+
+  call s:backup(a:method, a:args, a:title, a:tweets, param)
+endfunction
+"
+"
+"
+function! tweetvim#buffer#previous()
+  if len(s:backup) < 2
+    echo 'no backup'
+    return
+  endif
+  let pre = s:backup[-2]
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
+  let s:backup = s:backup[0:-3]
+endfunction
+"
+"
+"
+function! s:backup(method, args, title, tweets, param)
+  call add(s:backup, {
+        \ 'method' : a:method,
+        \ 'args'   : a:args,
+        \ 'title'  : a:title,
+        \ 'tweets' : a:tweets,
+        \ 'param'  : a:param,
+        \ })
 endfunction
 "
 "
