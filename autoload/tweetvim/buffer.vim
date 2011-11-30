@@ -14,18 +14,45 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   call s:post_process(param)
 
   call s:backup(a:method, a:args, a:title, a:tweets, param)
+
+  let b:tweetvim_bufno = -1
+
 endfunction
 "
 "
 "
 function! tweetvim#buffer#previous()
-  if len(s:backup) < 2
-    echo 'no backup'
+  if len(s:backup) <= (b:tweetvim_bufno * -1)
+    echo 'no previous'
     return
   endif
-  let pre = s:backup[-2]
+
+  let bufno = b:tweetvim_bufno - 1
+  let pre   = s:backup[bufno]
+
   call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
-  let s:backup = s:backup[0:-3]
+  " TODO
+  let s:backup = s:backup[0:-2]
+  let b:tweetvim_bufno = bufno
+  echo 'previous : ' . string(b:tweetvim_bufno)
+endfunction
+"
+"
+"
+function! tweetvim#buffer#next()
+  if b:tweetvim_bufno == -1
+    echo 'no next'
+    return
+  endif
+
+  let bufno = b:tweetvim_bufno + 1
+  let pre   = s:backup[bufno]
+
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
+  " TODO
+  let s:backup = s:backup[0:-2]
+  let b:tweetvim_bufno = bufno
+  echo 'next : ' . string(b:tweetvim_bufno)
 endfunction
 "
 "
@@ -38,6 +65,10 @@ function! s:backup(method, args, title, tweets, param)
         \ 'tweets' : a:tweets,
         \ 'param'  : a:param,
         \ })
+  " truncate
+  if len(s:backup) > 5
+    let s:backup = s:backup[1:]
+  endif
 endfunction
 "
 "
