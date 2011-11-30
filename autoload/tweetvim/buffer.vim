@@ -13,7 +13,9 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   call s:process(a:method, a:args, a:title, a:tweets, param)
   call s:post_process(param)
 
-  call s:backup(a:method, a:args, a:title, a:tweets, param)
+  if !has_key(param, 'split')
+    call s:backup(a:method, a:args, a:title, a:tweets, param)
+  endif
 
   let b:tweetvim_bufno = -1
 

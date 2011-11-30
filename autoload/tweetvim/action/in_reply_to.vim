@@ -29,7 +29,5 @@ function! tweetvim#action#in_reply_to#execute(tweet)
     endif
   endwhile
   
-  call tweetvim#buffer#load(
-        \ 'in_reply_to', [], 'in reply to', list, 
-        \ {'buf_name' : '[tweetvim - in_reply_to]', 'split' : 1 })
+  call tweetvim#buffer#load('in_reply_to', [], 'in reply to', list)
 endfunction
