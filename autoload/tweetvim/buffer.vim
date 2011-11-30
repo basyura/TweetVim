@@ -147,7 +147,8 @@ endfunction
 "
 function! s:append_tweets(tweets, cache)
   let separator = tweetvim#util#separator('-')
-  let is_new    = 1
+  " TODO : new separator
+  let is_new    = 0
   for tweet in a:tweets
     " add new or default separator
     if is_new && !has_key(tweet, 'is_new')
