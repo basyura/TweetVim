@@ -59,6 +59,18 @@ endfunction
 "
 "
 "
+function! tweetvim#buffer#replace(lineno, tweet)
+  let colno = col('.')
+  setlocal modifiable
+  normal dd
+  call append(a:lineno - 1, s:format(a:tweet))
+  setlocal nomodified
+  setlocal nomodifiable
+  call cursor(a:lineno, colno)
+endfunction
+"
+"
+"
 function! s:backup(method, args, title, tweets, param)
   call add(s:backup, {
         \ 'method' : a:method,

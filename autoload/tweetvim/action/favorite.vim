@@ -10,15 +10,18 @@ endfunction
 "
 "
 function! tweetvim#action#favorite#execute(tweet)
-  echo a:tweet.user.screen_name . ' ' . a:tweet.text
+  let tweet = a:tweet
+  echo tweet.user.screen_name . ' ' . tweet.text
   if input('favorite ? [y/n] : ') != 'y'
     return
   endif
-  let ret = tweetvim#request('favorite', a:tweet.id_str)
+  let ret = tweetvim#request('favorite', tweet.id_str)
   redraw
   if has_key(ret, 'errors')
     echohl ErrorMsg | echo ret.errors | echohl None
   else
+    let  tweet.favorited = 1
+    call tweetvim#buffer#replace(line("."), tweet)
     echo 'favorited'
   endif
 endfunction
