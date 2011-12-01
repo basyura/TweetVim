@@ -138,7 +138,14 @@ function! s:process(method, args, title, tweets, param)
 
   call s:append_tweets(a:tweets, b:tweetvim_status_cache)
 
-  let title  = '[tweetvim]  - ' . a:title
+  let title = '[tweetvim]  - ' . a:title
+  " add page no
+  if !empty(b:tweetvim_args) && type(b:tweetvim_args[-1]) == 4
+    let page = get(b:tweetvim_args[-1], 'page', 1)
+    if page != 1
+      let title .= ' : page ' . string(page)
+    endif
+  endif
   call append(0, title)
   normal dd
   :0

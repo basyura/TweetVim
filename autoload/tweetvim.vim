@@ -65,7 +65,8 @@ endfunction
 "
 function! tweetvim#action(name)
   let tweet = get(b:tweetvim_status_cache, line('.'), {})
-  if a:name != 'reload' && empty(tweet)
+  " TODO
+  if a:name != 'reload' && a:name != 'page_next' && a:name != 'page_previous' && empty(tweet)
     echo 'no action'
     return
   endif

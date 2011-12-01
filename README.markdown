@@ -12,7 +12,6 @@ twitter client for vim
 
 ## TODO
 
-- 次ページ、前ページ
 - filter
 - history of tweets ( unite & command )
 - buffer の進戻るの改善
@@ -23,4 +22,5 @@ twitter client for vim
 
 ### 済
 
+- 次ページ、前ページ
 - fav したときに ★ を付ける
