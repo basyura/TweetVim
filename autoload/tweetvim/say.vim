@@ -39,6 +39,10 @@ function! s:tweetvim_say_settings()
   nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>0
   inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>0
   nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+
+  if exists(':TweetVimBitly')
+    inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
+  endif
   
   :0
   startinsert!

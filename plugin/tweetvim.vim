@@ -13,6 +13,32 @@ command! TweetVimMentions     :call tweetvim#timeline('mentions')
 command! -nargs=+ TweetVimListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
 command! TweetVimSay          :call tweetvim#say#open()
 
+if globpath(&runtimepath, 'autoload/bitly.vim') != ''
+  command -nargs=? TweetVimBitly :call <SID>shorten_url()
+endif
+
+function! s:shorten_url()
+
+  if &filetype != 'tweetvim_say'
+    echo 'tweetvim_say buffer only'
+    return
+  endif
+
+  let url = input("URL to shorten: ")
+  if url == ""
+    echo "No URL provided."
+    return
+  endif
+
+  let shorturl = bitly#shorten(url).url
+  let content = http#get(url).content
+  let charset = matchstr(content , 'charset=\zs.\{-}\ze".\{-}>')
+  let title = iconv(matchstr(content , '<title>\zs.\{-}\ze</title>') ,
+        \ charset , 'utf-8')
+  let shorturl = '> ' . title . ' ' . shorturl
+  execute "normal! a".shorturl."\<esc>"
+endfunction
+
 
 "command!          HomeTimeline :call tweetvim#timeline('home_timeline')
 "command!          Mentions     :call tweetvim#timeline('mentions')
