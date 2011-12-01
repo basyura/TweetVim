@@ -1,19 +1,16 @@
 
-TweetVim
-========
+# TweetVim
 
 twitter client for vim
 
-dependent
-------------
+## dependent
 
 - [webapi-vim](https://github.com/mattn/webapi-vim)
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
-TODO
-----
+## TODO
 
 - 次ページ、前ページ
 - filter
