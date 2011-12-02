@@ -33,7 +33,7 @@ function! tweetvim#buffer#previous()
   let pre   = s:backup[bufno]
 
   call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
-  " TODO
+  " TODO delete duprecate backup
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
   echo 'previous : ' . string(b:tweetvim_bufno)
@@ -140,8 +140,8 @@ function! s:process(method, args, title, tweets, param)
 
   let title = '[tweetvim]  - ' . a:title
   " add page no
-  if !empty(b:tweetvim_args) && type(b:tweetvim_args[-1]) == 4
-    let page = get(b:tweetvim_args[-1], 'page', 1)
+  if !empty(a:args) && type(a:args[-1]) == 4
+    let page = get(a:args[-1], 'page', 1)
     if page != 1
       let title .= ' : page ' . string(page)
     endif

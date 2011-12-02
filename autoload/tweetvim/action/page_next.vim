@@ -14,7 +14,7 @@ function! tweetvim#action#page_next#execute(tweet, ...)
   let next = a:0 ? a:1 : 1
 
   try
-    let tweetvim_args = copy(b:tweetvim_args)
+    let tweetvim_args = deepcopy(b:tweetvim_args)
     if empty(tweetvim_args)
       call add(tweetvim_args, {})
     endif
@@ -34,8 +34,9 @@ function! tweetvim#action#page_next#execute(tweet, ...)
     let param.page = page
     let b:tweetvim_args = tweetvim_args
 
-    let ret = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
+    let ret = call('tweetvim#timeline', [b:tweetvim_method] + tweetvim_args)
   catch
+    echo v:exception
     echohl ErrorMsg | echo 'can not load next page' | echohl None
   endtry
 endfunction
