@@ -1,5 +1,8 @@
 "
 "
+let s:tweet_history = []
+"
+"
 "
 function! tweetvim#say#open(...)
   let text  = a:0 > 0 ? a:1 : ''
@@ -57,22 +60,19 @@ function! s:tweetvim_say_leave()
   if &filetype != 'tweetvim_say'
     return
   endif
+  call s:save_history_at_leave()
 endfunction
 
-" for recovery tweet
-let s:history = []
-
 function! s:show_history()
-  let no = len(s:history)
-  if(no == 0)
+  if empty(s:tweet_history) || &filetype != 'tweetvim_say'
     return
   endif
-  let no = (exists('b:history_no') ? b:history_no : no) - 1
-  if no == -1
-    let no = len(s:history) - 1
+  let no = exists('b:history_no') ? b:history_no + 1 : 0
+  if no > len(s:tweet_history) - 1
+    let no = 0
   endif
   silent %delete _
-  silent execute 'normal i' . s:history[no]
+  silent execute 'normal i' . s:tweet_history[no]
   let b:history_no = no
 endfunction
 
@@ -81,9 +81,11 @@ function! s:save_history_at_leave()
     return
   endif
   let msg = join(getline(1, "$"))
-  if msg !~ '^\s\?$' && (len(s:history) == 0 || s:history[-1] != msg)
-    call add(s:history , msg)
+  if msg !~ '^\s\?$' && (empty(s:tweet_history) || s:tweet_history[0] != msg)
+    call insert(s:tweet_history , msg)
   endif
+  " truncate
+  let s:tweet_history = s:tweet_history[:10]
 endfunction
 "
 "
