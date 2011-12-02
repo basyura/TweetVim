@@ -15,6 +15,7 @@ function! tweetvim#timeline(method, ...)
     echohl Error | echo tweets.error | echohl None
     return
   endif
+  " TODO:
   " delete cache for previous and next
   " buf no is -1 -2 -3 ... oldest
   let bufno = get(b:, 'tweetvim_bufno', 0)

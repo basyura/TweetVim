@@ -29,5 +29,11 @@ function! tweetvim#action#in_reply_to#execute(tweet)
     endif
   endwhile
   
+  " TODO:
+  let bufno = get(b:, 'tweetvim_bufno', 0)
+  if bufno < -1
+    call tweetvim#buffer#truncate_backup(bufno)
+  endif
+  
   call tweetvim#buffer#load('in_reply_to', [], 'in reply to', list)
 endfunction
