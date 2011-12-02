@@ -84,7 +84,12 @@ endfunction
 "
 function! tweetvim#verify_credentials()
   if !exists('s:credencidals')
-     let s:credencidals = tweetvim#request('verify_credentials', [])
+    let credencidals = tweetvim#request('verify_credentials', [])
+    if has_key(credencidals, 'error')
+      echohl Error | echo credencidals.error | echohl None
+      return {}
+    endif
+    let s:credencidals = credencidals
   endif
   return copy(s:credencidals)
 endfunction
@@ -93,8 +98,11 @@ endfunction
 "
 function! tweetvim#lists()
   if !exists('s:cache_lists')
-    let s:cache_lists = tweetvim#request(
-          \ 'lists', [tweetvim#verify_credentials().screen_name]).lists
+    let info = tweetvim#verify_credentials()
+    if empty(info)
+      return []
+    endif
+    let s:cache_lists = tweetvim#request('lists', [info.screen_name]).lists
   endif
   return copy(s:cache_lists)
 endfunction

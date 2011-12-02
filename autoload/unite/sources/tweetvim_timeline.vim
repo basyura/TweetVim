@@ -48,6 +48,11 @@ endfunction
 
 function! s:candidates_time_lines_user()
   let credential = tweetvim#verify_credentials()
+  " error check
+  if empty(credential)
+    return []
+  endif
+
   let list = ['favorites']
 
   return map(list, '{
