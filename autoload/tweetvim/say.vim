@@ -1,6 +1,9 @@
 "
 "
 let s:tweet_history = []
+function! tweetvim#say#history()
+  return copy(s:tweet_history)
+endfunction
 "
 "
 "
@@ -39,9 +42,12 @@ function! s:tweetvim_say_settings()
   setlocal modifiable
   setlocal nomodified
   nnoremap <buffer> <silent> q :bd!<CR>
-  nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>0
-  inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>0
+  nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
+  inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
   nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+
+  inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+  nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
 
   if exists(':TweetVimBitly')
     inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
@@ -73,6 +79,7 @@ function! s:show_history()
   endif
   silent %delete _
   silent execute 'normal i' . s:tweet_history[no]
+  :0
   let b:history_no = no
 endfunction
 

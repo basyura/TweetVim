@@ -13,7 +13,6 @@ twitter client for vim
 ## TODO
 
 - filter
-- history of tweets ( unite & command )
 - 新規ツイートが分かるように
 - コマンドの補完
 - メッセージバッファでのユーザ名補完
@@ -21,6 +20,7 @@ twitter client for vim
 
 ### 済
 
+- history of tweets ( unite & command )
 - buffer の進戻るの改善
 - ページ遷移して戻った時にタイトルのページが戻らない (バッファに保持してるから)
 - 次ページ、前ページ
