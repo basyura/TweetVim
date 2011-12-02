@@ -69,5 +69,5 @@ endfunction
 let s:source.action_table.execute = {'description' : 'show timeline'}
 function! s:source.action_table.execute.func(candidate)
   let args = get(a:candidate, 'source__args', [])
-  call tweetvim#timeline(a:candidate.source__method, args)
+  let ret  = call('tweetvim#timeline', [a:candidate.source__method] + args)
 endfunction
