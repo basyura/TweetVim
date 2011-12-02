@@ -57,10 +57,11 @@ nnoremap <silent> <Plug>(tweetvim_action_remove_favorite) :<C-U>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_retweet)         :<C-u>call tweetvim#action('retweet')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_qt)              :<C-u>call tweetvim#action('qt')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_reload)          :<C-u>call tweetvim#action('reload')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_page_next)       :<C-u>call tweetvim#action('page_next')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_page_previous)   :<C-u>call tweetvim#action('page_previous')<CR>
+
 nnoremap <silent> <Plug>(tweetvim_buffer_previous)        :<C-u>call tweetvim#buffer#previous()<CR>
 nnoremap <silent> <Plug>(tweetvim_buffer_next)            :<C-u>call tweetvim#buffer#next()<CR>
-nnoremap <silent> <Plug>(tweetvim_page_next)              :<C-u>call tweetvim#action('page_next')<CR>
-nnoremap <silent> <Plug>(tweetvim_page_previous)          :<C-u>call tweetvim#action('page_previous')<CR>
 "
 "
 "
@@ -82,8 +83,8 @@ function! s:tweetvim_settings()
   nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
   nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
-  nmap <silent> <buffer> nn  <Plug>(tweetvim_page_next)
-  nmap <silent> <buffer> pp  <Plug>(tweetvim_page_previous)
+  nmap <silent> <buffer> nn  <Plug>(tweetvim_action_page_next)
+  nmap <silent> <buffer> pp  <Plug>(tweetvim_action_page_previous)
 
   nmap <silent> <buffer> H  <Plug>(tweetvim_buffer_previous)
   nmap <silent> <buffer> L  <Plug>(tweetvim_buffer_next)
