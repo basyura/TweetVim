@@ -5,17 +5,16 @@ let s:buf_name = '[tweetvim]'
 "
 "
 "
-function! tweetvim#buffer#load(method, args, title, tweets, ...)
+function! tweetvim#buffer#load(method, args, title, tweets)
 
-  let param = a:0 ? a:1 : {}
-  call s:switch_buffer(param)
-  call s:pre_process(param)
-  call s:process(a:method, a:args, a:title, a:tweets, param)
-  call s:post_process(param)
+  let args = copy(a:args)
 
-  if !has_key(param, 'split')
-    call s:backup(a:method, a:args, a:title, a:tweets, param)
-  endif
+  call s:switch_buffer()
+  call s:pre_process()
+  call s:process(a:method, args, a:title, a:tweets)
+  call s:post_process()
+
+  call s:backup(a:method, args, a:title, a:tweets)
 
   let b:tweetvim_bufno = -1
 
@@ -32,7 +31,7 @@ function! tweetvim#buffer#previous()
   let bufno = b:tweetvim_bufno - 1
   let pre   = s:backup[bufno]
 
-  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets)
   " TODO delete duprecate backup
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
@@ -50,7 +49,7 @@ function! tweetvim#buffer#next()
   let bufno = b:tweetvim_bufno + 1
   let pre   = s:backup[bufno]
 
-  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.param)
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets)
   " TODO
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
@@ -71,13 +70,12 @@ endfunction
 "
 "
 "
-function! s:backup(method, args, title, tweets, param)
+function! s:backup(method, args, title, tweets)
   call add(s:backup, {
         \ 'method' : a:method,
         \ 'args'   : a:args,
         \ 'title'  : a:title,
         \ 'tweets' : a:tweets,
-        \ 'param'  : a:param,
         \ })
   " truncate
   if len(s:backup) > 5
@@ -87,41 +85,34 @@ endfunction
 "
 "
 "
-function! s:switch_buffer(param)
-  let buf_name = get(a:param, 'buf_name', s:buf_name)
+function! s:switch_buffer()
   let exist_win = 0
 
   " TODO : find window or buffer
   " buf_name is [tweetvim] or [tweetvim - in_replly_to]
-  if buf_name == s:buf_name
-    let winnr = 1
-    while winnr <= winnr('$')
-      if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
-        execute winnr 'wincmd w'
-        let exist_win = 1
-        break
-      endif
-      let winnr += 1
-    endwhile
-  endif
+  let winnr = 1
+  while winnr <= winnr('$')
+    if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
+      execute winnr 'wincmd w'
+      let exist_win = 1
+      break
+    endif
+    let winnr += 1
+  endwhile
 
   if !exist_win
-    let bufno = s:bufnr(escape(buf_name, '*[]?{},'))
+    let bufno = s:bufnr(escape(s:buf_name, '*[]?{},'))
     if bufno > 0
       execute 'buffer ' . bufno
     else
-      " TODO
-      if get(a:param, 'split', 0)
-        split
-      endif
-      execute 'edit! ' . buf_name
+      execute 'edit! ' . s:buf_name
     endif
   endif
 endfunction
 "
 "
 "
-function! s:pre_process(param)
+function! s:pre_process()
   setlocal noswapfile
   setlocal modifiable
   setlocal buftype=nofile
@@ -131,7 +122,7 @@ endfunction
 "
 "
 "
-function! s:process(method, args, title, tweets, param)
+function! s:process(method, args, title, tweets)
   let b:tweetvim_method = a:method
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
@@ -149,15 +140,11 @@ function! s:process(method, args, title, tweets, param)
   call append(0, title)
   normal dd
   :0
-
-  if get(a:param, 'split', 0)
-    execute string(len(a:tweets) * 2 + 2) . 'wincmd _'
-  endif
 endfunction
 "
 "
 "
-function! s:post_process(param)
+function! s:post_process()
   setlocal nomodified
   setlocal nomodifiable
 endfunction
