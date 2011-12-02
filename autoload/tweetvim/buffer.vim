@@ -70,6 +70,23 @@ endfunction
 "
 "
 "
+function! tweetvim#buffer#truncate_backup(size)
+  " TODO: truncate tail 
+  if a:size < 0
+    let s:backup = eval('s:backup[:' . string(a:size) . ']')
+    return
+  endif
+
+  if len(s:backup) <= a:size
+    return
+  endif
+  let start = len(s:backup) - a:size 
+  " TODO:
+  let s:backup = eval('s:backup[' . string(start) . ':]')
+endfunction
+"
+"
+"
 function! s:backup(method, args, title, tweets)
   call add(s:backup, {
         \ 'method' : a:method,
@@ -78,9 +95,7 @@ function! s:backup(method, args, title, tweets)
         \ 'tweets' : a:tweets,
         \ })
   " truncate
-  if len(s:backup) > 5
-    let s:backup = s:backup[1:]
-  endif
+  call tweetvim#buffer#truncate_backup(g:tweetvim_cache_size)
 endfunction
 "
 "

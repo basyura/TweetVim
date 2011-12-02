@@ -6,6 +6,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 "
 "
+let g:tweetvim_cache_size = 5
+"
+"
 "
 command! TweetVimAccessToken  :call tweetvim#access_token()
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')

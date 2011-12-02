@@ -14,7 +14,6 @@ twitter client for vim
 
 - filter
 - history of tweets ( unite & command )
-- buffer の進戻るの改善
 - 新規ツイートが分かるように
 - コマンドの補完
 - メッセージバッファでのユーザ名補完
@@ -22,6 +21,7 @@ twitter client for vim
 
 ### 済
 
+- buffer の進戻るの改善
 - ページ遷移して戻った時にタイトルのページが戻らない (バッファに保持してるから)
 - 次ページ、前ページ
 - fav したときに ★ を付ける
