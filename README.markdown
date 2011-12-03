@@ -18,6 +18,8 @@ twitter client for vim
 - メッセージバッファでのユーザ名補完
 - タイムラインの更新中が分かるように
 - filter
+- user 情報の表示
+- follow unfollow
 
 ### 済
 
