@@ -14,8 +14,6 @@ twitter client for vim
 
 - バッファの使い回しがおかしい。増える。
 - 新規ツイートが分かるように
-- コマンドの補完
-- リスト補完
 - タイムラインの更新中が分かるように
 - filter
 - user 情報の表示
@@ -24,6 +22,8 @@ twitter client for vim
 
 ### 済
 
+- コマンドの補完
+- リスト補完
 - screen_name ファイルの更新チェック
 - メッセージバッファでのユーザ名補完
 - follow unfollow
