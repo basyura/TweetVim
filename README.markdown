@@ -16,13 +16,14 @@ twitter client for vim
 - 新規ツイートが分かるように
 - コマンドの補完
 - メッセージバッファでのユーザ名補完
+- リスト補完
 - タイムラインの更新中が分かるように
 - filter
 - user 情報の表示
-- follow unfollow
 
 ### 済
 
+- follow unfollow
 - history of tweets ( unite & command )
 - buffer の進戻るの改善
 - ページ遷移して戻った時にタイトルのページが戻らない (バッファに保持してるから)

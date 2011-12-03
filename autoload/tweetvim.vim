@@ -1,7 +1,5 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
-
-let s:config_path = expand('~/.tweetvim')
 "
 "
 "
@@ -28,14 +26,17 @@ function! tweetvim#timeline(method, ...)
         \ a:000,
         \ join(split(a:method, '_'), ' '), 
         \ tweets)
+
+  "call s:write_cache_files(tweets)
 endfunction
 "
 "
 "
 function! tweetvim#access_token()
-
-  if filereadable(s:config_path)
-    return readfile(s:config_path)
+  
+  let token_path = g:tweetvim_config_dir . '/token'
+  if filereadable(token_path)
+    return readfile(token_path)
   endif
 
   let ctx = twibill#access_token({
@@ -44,7 +45,7 @@ function! tweetvim#access_token()
               \ })
   let tokens = [ctx.access_token, ctx.access_token_secret]
 
-  call writefile(tokens , s:config_path)
+  call writefile(tokens , token_path)
 
   return tokens
 endfunction
@@ -148,5 +149,12 @@ function! s:merge_params(list_param, hash_param)
   return param + [a:hash_param]
 endfunction
 
+function! s:read_scree_name_cache()
+endfunction
+
+function! s:write_cache_files(tweets)
+  let names = map(a:tweets, 'v:val.user.screen_name')
+  echo names
+endfunction
 
 

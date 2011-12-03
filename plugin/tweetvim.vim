@@ -7,6 +7,11 @@ set cpo&vim
 "
 "
 let g:tweetvim_cache_size = 5
+let g:tweetvim_config_dir = expand('~/.tweetvim')
+
+if !isdirectory(g:tweetvim_config_dir)
+  call mkdir(g:tweetvim_config_dir, 'p')
+endif
 "
 "
 "
