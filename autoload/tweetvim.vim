@@ -159,12 +159,14 @@ endfunction
 function! s:read_cache(fname)
   let path = g:tweetvim_config_dir . '/' . a:fname
   if !filereadable(path)
-    return {}
+    return
   endif
   " cache
   let cache = {}
   for name in readfile(path)
-    let cache[name] = 1
+    if name != ""
+      let cache[name] = 1
+    endif
   endfor
 
   let s:cache[a:fname] = cache
