@@ -20,6 +20,8 @@ twitter client for vim
 - タイムラインの更新中が分かるように
 - filter
 - user 情報の表示
+- list への追加削除
+- list の作成
 
 ### 済
 
