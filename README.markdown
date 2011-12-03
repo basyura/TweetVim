@@ -12,7 +12,6 @@ twitter client for vim
 
 ## TODO
 
-- screen_name ファイルの更新チェック
 - バッファの使い回しがおかしい。増える。
 - 新規ツイートが分かるように
 - コマンドの補完
@@ -25,6 +24,7 @@ twitter client for vim
 
 ### 済
 
+- screen_name ファイルの更新チェック
 - メッセージバッファでのユーザ名補完
 - follow unfollow
 - history of tweets ( unite & command )

@@ -3,6 +3,10 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 "
 "
+let s:cache = {}
+"
+"
+"
 "
 function! tweetvim#timeline(method, ...)
   " TODO - for list_statuses at tweetvim/timeline action
@@ -28,7 +32,7 @@ function! tweetvim#timeline(method, ...)
         \ join(split(a:method, '_'), ' '), 
         \ tweets)
 
-  call s:write_cache_screen_name(tweets)
+  call s:write_cache('screen_name', map(tweets, 'v:val.user.screen_name'))
 endfunction
 "
 "
@@ -149,9 +153,11 @@ function! s:merge_params(list_param, hash_param)
 
   return param + [a:hash_param]
 endfunction
-
-function! s:read_cache_scree_name()
-  let path = g:tweetvim_config_dir . '/screen_name'
+"
+"
+"
+function! s:read_cache(fname)
+  let path = g:tweetvim_config_dir . '/' . a:fname
   if !filereadable(path)
     return {}
   endif
@@ -160,22 +166,31 @@ function! s:read_cache_scree_name()
   for name in readfile(path)
     let cache[name] = 1
   endfor
-  return cache
+
+  let s:cache[a:fname] = cache
+  let s:cache[a:fname . '_ftime'] = getftime(path)
 endfunction
-
-function! s:write_cache_screen_name(tweets)
-  let size = len(s:cache_screen_name)
-
-  for name in map(a:tweets, 'v:val.user.screen_name')
-    let s:cache_screen_name[name] = 1
+"
+"
+"
+function! s:write_cache(fname, list)
+  let path  = g:tweetvim_config_dir . '/' . a:fname
+  let cache = s:cache[a:fname]
+  let size  = len(cache)
+  " check local change
+  if getftime(path) != s:cache[a:fname . '_ftime']
+      call s:read_cache(a:fname)
+  endif
+  " update buffer cache
+  for name in a:list
+    let s:cache[a:fname][name] = 1
   endfor
-  if size == len(s:cache_screen_name)
+  " check updatable
+  if size == len(s:cache[a:fname])
     return
   endif
   " TODO : merge if local file is updated
-  call writefile(sort(keys(s:cache_screen_name)),
-               \ g:tweetvim_config_dir . '/screen_name')
+  call writefile(sort(keys(s:cache[a:fname])), path)
 endfunction
-
-" cache
-let s:cache_screen_name = s:read_cache_scree_name()
+"
+call s:read_cache('screen_name')
