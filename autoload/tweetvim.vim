@@ -3,6 +3,7 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 "
 "
+"
 function! tweetvim#timeline(method, ...)
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
@@ -27,7 +28,7 @@ function! tweetvim#timeline(method, ...)
         \ join(split(a:method, '_'), ' '), 
         \ tweets)
 
-  "call s:write_cache_files(tweets)
+  call s:write_cache_screen_name(tweets)
 endfunction
 "
 "
@@ -149,12 +150,32 @@ function! s:merge_params(list_param, hash_param)
   return param + [a:hash_param]
 endfunction
 
-function! s:read_scree_name_cache()
+function! s:read_cache_scree_name()
+  let path = g:tweetvim_config_dir . '/screen_name'
+  if !filereadable(path)
+    return {}
+  endif
+  " cache
+  let cache = {}
+  for name in readfile(path)
+    let cache[name] = 1
+  endfor
+  return cache
 endfunction
 
-function! s:write_cache_files(tweets)
-  let names = map(a:tweets, 'v:val.user.screen_name')
-  echo names
+function! s:write_cache_screen_name(tweets)
+  let size = len(s:cache_screen_name)
+
+  for name in map(a:tweets, 'v:val.user.screen_name')
+    let s:cache_screen_name[name] = 1
+  endfor
+  if size == len(s:cache_screen_name)
+    return
+  endif
+  " TODO : merge if local file is updated
+  call writefile(sort(keys(s:cache_screen_name)),
+               \ g:tweetvim_config_dir . '/screen_name')
 endfunction
 
-
+" cache
+let s:cache_screen_name = s:read_cache_scree_name()

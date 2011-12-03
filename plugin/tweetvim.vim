@@ -6,7 +6,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 "
 "
-let g:tweetvim_cache_size = 5
+let g:tweetvim_cache_size = 10
 let g:tweetvim_config_dir = expand('~/.tweetvim')
 
 if !isdirectory(g:tweetvim_config_dir)
