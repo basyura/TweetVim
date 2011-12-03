@@ -32,7 +32,7 @@ function! tweetvim#timeline(method, ...)
         \ join(split(a:method, '_'), ' '), 
         \ tweets)
 
-  call s:write_cache('screen_name', map(tweets, 'v:val.user.screen_name'))
+  call s:write_cache('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
 endfunction
 "
 "
