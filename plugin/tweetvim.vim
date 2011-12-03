@@ -18,11 +18,14 @@ endif
 command! TweetVimAccessToken  :call tweetvim#access_token()
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
-command! -nargs=+ TweetVimListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete_list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#verify_credentials().screen_name, <f-args>)
+command -nargs=1 -complete=custom,tweetvim#complete_screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
 command! TweetVimSay          :call tweetvim#say#open()
 
+
+
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
-  command -nargs=? TweetVimBitly :call <SID>shorten_url()
+  command! TweetVimBitly :call <SID>shorten_url()
 endif
 
 function! s:shorten_url()

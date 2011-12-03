@@ -196,3 +196,15 @@ function! s:write_cache(fname, list)
 endfunction
 "
 call s:read_cache('screen_name')
+"
+"
+"
+function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
+  return join(keys(s:cache['screen_name']), "\n")
+endfunction
+"
+"
+"
+function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
+  return join(map(tweetvim#lists(), 'v:val.name'), "\n")
+endfunction
