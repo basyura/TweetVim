@@ -3,7 +3,7 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 "
 "
-let s:cache = {}
+let s:cache = {'screen_name' : {}}
 "
 "
 "
@@ -159,7 +159,7 @@ endfunction
 function! s:read_cache(fname)
   let path = g:tweetvim_config_dir . '/' . a:fname
   if !filereadable(path)
-    return
+    call writefile([], path)
   endif
   " cache
   let cache = {}
@@ -180,8 +180,8 @@ function! s:write_cache(fname, list)
   let cache = s:cache[a:fname]
   let size  = len(cache)
   " check local change
-  if getftime(path) != s:cache[a:fname . '_ftime']
-      call s:read_cache(a:fname)
+  if filereadable(path) && getftime(path) != s:cache[a:fname . '_ftime']
+    call s:read_cache(a:fname)
   endif
   " update buffer cache
   for name in a:list
