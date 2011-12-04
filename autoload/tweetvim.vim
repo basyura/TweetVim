@@ -44,15 +44,22 @@ function! tweetvim#access_token()
     return readfile(token_path)
   endif
 
-  let ctx = twibill#access_token({
-              \ 'consumer_key'    : s:consumer_key,
-              \ 'consumer_secret' : s:consumer_secret,
-              \ })
-  let tokens = [ctx.access_token, ctx.access_token_secret]
+  try
+    let ctx = twibill#access_token({
+                \ 'consumer_key'    : s:consumer_key,
+                \ 'consumer_secret' : s:consumer_secret,
+                \ })
 
-  call writefile(tokens , token_path)
+    let tokens = [ctx.access_token, ctx.access_token_secret]
 
-  return tokens
+    call writefile(tokens , token_path)
+
+    return tokens
+  catch
+    redraw
+    echohl Error | echo "failed to get access token" | echohl None
+    return ['error','error']
+  endtry
 endfunction
 "
 "
