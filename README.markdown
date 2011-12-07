@@ -10,6 +10,46 @@ twitter client for vim
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
+## HowTo
+
+### verify
+
+認証されていない場合はコマンド実行時にブラウザが起動して PIN を表示。
+
+    :TweetVimHomeTimeline
+	  
+    > now launched your browser to authenticate
+    > Enter Twitter OAuth PIN:
+
+PIN を入力すると認証完了。
+認証時に発行された AccessToken と AccessTokenSecret が以下に保存される。
+
+    ~/.tweetvim/token
+
+### サポートコマンド
+
+#### ホームタイムラインを表示する。
+
+    :TweetVimHomeTimeline
+
+#### Mention を表示する
+
+    :TwetVimMentions
+
+#### リストを表示する
+
+    :TweetVimListStatuses vim
+
+#### ユーザのタイムラインを表示する
+
+    :TweetVimUserTimeline basyura
+
+#### ツイート用バッファを開く
+
+    :TweetVimSay
+
+メッセージ入力後、ノーマルモードの Enter でツイート。
+
 ## TODO
 
 - バッファの使い回しがおかしい。増える。
