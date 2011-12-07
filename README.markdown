@@ -10,9 +10,7 @@ twitter client for vim
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
-## HowTo
-
-### verify
+## verify
 
 認証されていない場合はコマンド実行時にブラウザが起動して PIN を表示。
 
@@ -26,29 +24,80 @@ PIN を入力すると認証完了。
 
     ~/.tweetvim/token
 
-### サポートコマンド
+## サポートコマンド
 
-#### ホームタイムラインを表示する。
+### ホームタイムラインを表示する。
 
     :TweetVimHomeTimeline
 
-#### Mention を表示する
+### Mention を表示する
 
     :TwetVimMentions
 
-#### リストを表示する
+### リストを表示する
 
     :TweetVimListStatuses vim
 
-#### ユーザのタイムラインを表示する
+### ユーザのタイムラインを表示する
 
     :TweetVimUserTimeline basyura
 
-#### ツイート用バッファを開く
+### ツイート用バッファを開く
 
     :TweetVimSay
 
 メッセージ入力後、ノーマルモードの Enter でツイート。
+
+## 定義済みバッファキーマップ
+
+### タイムライン表示バッファ(tweetvim)
+
+    nmap <silent> <buffer> <CR> <Plug>(tweetvim_action_enter)
+    nmap <silent> <buffer> r  <Plug>(tweetvim_action_reply)
+    nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
+    nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
+    nmap <silent> <buffer> <leader>f  <Plug>(tweetvim_action_favorite)
+    nmap <silent> <buffer> <leader>uf <Plug>(tweetvim_action_remove_favorite)
+    nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
+    nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
+    nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
+
+    nmap <silent> <buffer> nn  <Plug>(tweetvim_action_page_next)
+    nmap <silent> <buffer> pp  <Plug>(tweetvim_action_page_previous)
+
+    nmap <silent> <buffer> H  <Plug>(tweetvim_buffer_previous)
+    nmap <silent> <buffer> L  <Plug>(tweetvim_buffer_next)
+
+    nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
+    nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
+
+## ツイート用バッファ(tweetvim_say)
+
+    nnoremap <buffer> <silent> q :bd!<CR>
+    nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
+    inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
+    nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+
+    inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+    nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+
+## Unite インタフェース
+
+    :Unite tweetvim
+
+### candidates
+
+- home_timeline
+- mentions
+- retweeted_by_me
+- retweeted_to_me
+- retweets_of_me
+- favorites
+- @basyura/登録してあるリスト
+- @basyura/登録してあるリスト
+- ・・・
+
+api を使ってスクリーン名とリスト一覧を取得するので、最初の一回はちょっと遅い。
 
 ## TODO
 
