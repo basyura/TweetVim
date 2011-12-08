@@ -205,6 +205,10 @@ function! s:format(tweet)
     let str .= '★ '
   endif
   let str .= text
+  let retweeted = get(a:tweet, 'retweeted', 0)
+  if retweeted
+    let str .= ' ' . string(retweeted) . 'RT'
+  endif
 
   return str
 endfunction
