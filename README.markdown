@@ -168,31 +168,31 @@ C-s で歴を遡って tweetvim_say バッファに表示させることも可
       let g:neocomplcache_dictionary_filetype_lists = {}
     endif
     let neco_dic = g:neocomplcache_dictionary_filetype_lists
-    let neco_dic.tweetvim_say = $HOME . '/.tweetvim/screen_name' .
+    let neco_dic.tweetvim_say = $HOME . '/.tweetvim/screen_name'
 
 ### 使用例
 
 - Unite を起動してタイムラインの一覧を表示する => t
 - タイムラインを選択して表示する
-- 最新の内容に更新する => <leader><leader>
-- リプライする => r
-- リプライの内容を書きこんで送信する => normal モードで enter
-- タイムラインの次ページを表示する => nn
-- タイムラインの前ページを表示する => pp
-- さっき表示したバッファに戻る => H
-- やっぱり元のバッファに戻る(進む) => L
-- 新しく発言する => s
-- 過去に発言した内容をたどる => C-s
-- Unite で過去に発言した内容の一覧を表示する => C-i
-- 発言する => normal モードで enter
-- 検索してー => :TweetVimSearch vim
-- このユーザの発言だけ見たい => u
-- ツイートのやり取りを見たい => i
-- ふぁぼりたい => <leader>f
-- ふぁぼ消したい => <leader>uf
-- リツイートしたい => <leader>r
-- qt したい => <leader>q
-- Unite で rt とか fav とかしたい => a
+- 最新の内容に更新する => `<leader><leader>`
+- リプライする => `r`
+- リプライの内容を書きこんで送信する => normal モードで `enter`
+- タイムラインの次ページを表示する => `nn`
+- タイムラインの前ページを表示する => `pp`
+- さっき表示したバッファに戻る => `H`
+- やっぱり元のバッファに戻る(進む) => `L`
+- 新しく発言する => `s`
+- 過去に発言した内容をたどる => `C-s`
+- Unite で過去に発言した内容の一覧を表示する => `C-i`
+- 発言する => normal モードで `enter`
+- 検索してー => `:TweetVimSearch vim`
+- このユーザの発言だけ見たい => `u`
+- ツイートのやり取りを見たい => `i`
+- ふぁぼりたい => `<leader>f`
+- ふぁぼ消したい => `<leader>uf`
+- リツイートしたい => `<leader>r`
+- qt したい => `<leader>q`
+- Unite で rt とか fav とかしたい => `a`
 
 TODO
 ----
