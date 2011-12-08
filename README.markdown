@@ -32,6 +32,8 @@ PIN を入力すると認証完了。
 
     ~/.tweetvim/token
 
+~/.tweetvim がファイルとして保存されている場合は削除してから上記を行うこと。
+
 commands
 ---------------
 
@@ -56,6 +58,10 @@ commands
     :TweetVimSay
 
 メッセージ入力後、ノーマルモードの Enter でツイート。
+
+### 検索
+
+    :TweetVimSearch tweetvim
 
 定義済みバッファキーマップ
 --------------------------
