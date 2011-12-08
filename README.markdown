@@ -27,7 +27,7 @@ verify
     > now launched your browser to authenticate
     > Enter Twitter OAuth PIN:
 
-PIN を入力すると認証完了。
+PIN を入力すると認証完了。  
 認証時に発行された AccessToken と AccessTokenSecret が以下に保存される。
 
     ~/.tweetvim/token
@@ -113,7 +113,7 @@ api を使ってスクリーン名とリスト一覧を取得するので、最�
 
 ### アクション選択
 
-tweetvim バッファのみ。
+tweetvim バッファのみ。  
 デフォルトでは a でアクション選択用の Unite が起動する。
 
 - browser         - open tweet with browser
@@ -130,11 +130,11 @@ tweetvim バッファのみ。
 
 ### ツイート歴表示、選択
 
-tweetvim_say バッファのみ。
-デフォルトでは <C-i> で歴選択用の Unite が起動する。
-歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。
+tweetvim_say バッファのみ。  
+デフォルトでは C-i で歴選択用の Unite が起動する。  
+歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。  
 
-<C-s> で歴を遡って tweetvim_say バッファに表示させることも可
+C-s で歴を遡って tweetvim_say バッファに表示させることも可
 
 TODO
 ----
