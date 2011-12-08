@@ -1,18 +1,26 @@
 
-# TweetVim
+TweetVim
+========
 
 twitter client for vim
 
-## dependent
+License
+-------
+
+MIT License
+
+Requires
+--------
 
 - [webapi-vim](https://github.com/mattn/webapi-vim)
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
-## verify
+verify
+------
 
-認証されていない場合はコマンド実行時にブラウザが起動して PIN を表示。
+認証されていない場合は、コマンド実行時にブラウザを起動して PIN を表示する。
 
     :TweetVimHomeTimeline
 	  
@@ -24,7 +32,8 @@ PIN を入力すると認証完了。
 
     ~/.tweetvim/token
 
-## サポートコマンド
+commands
+---------------
 
 ### ホームタイムラインを表示する。
 
@@ -48,7 +57,8 @@ PIN を入力すると認証完了。
 
 メッセージ入力後、ノーマルモードの Enter でツイート。
 
-## 定義済みバッファキーマップ
+定義済みバッファキーマップ
+--------------------------
 
 ### タイムライン表示バッファ(tweetvim)
 
@@ -71,7 +81,7 @@ PIN を入力すると認証完了。
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
 
-## ツイート用バッファ(tweetvim_say)
+### ツイート用バッファ(tweetvim_say)
 
     nnoremap <buffer> <silent> q :bd!<CR>
     nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
@@ -81,11 +91,12 @@ PIN を入力すると認証完了。
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
 
-## Unite インタフェース
+Unite インタフェース
+--------------------
+
+### タイムライン選択
 
     :Unite tweetvim
-
-### candidates
 
 - home_timeline
 - mentions
@@ -99,7 +110,34 @@ PIN を入力すると認証完了。
 
 api を使ってスクリーン名とリスト一覧を取得するので、最初の一回はちょっと遅い。
 
-## TODO
+
+### アクション選択
+
+tweetvim バッファのみ。
+デフォルトでは a でアクション選択用の Unite が起動する。
+
+- browser         - open tweet with browser
+- favorite        - favorite tweet
+- follow          - follow user
+- in_reply_to     - show conversation
+- open_links      - open links in tweet
+- qt              - quote tweet
+- remove_favorite - remove favorite
+- reply           - reply
+- retweet         - retweet
+- unfollow        - unfollow user
+- user_timeline   - show user timeline
+
+### ツイート歴表示、選択
+
+tweetvim_say バッファのみ。
+デフォルトでは <C-i> で歴選択用の Unite が起動する。
+歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。
+
+<C-s> で歴を遡って tweetvim_say バッファに表示させることも可
+
+TODO
+----
 
 - バッファの使い回しがおかしい。増える。
 - 新規ツイートが分かるように
@@ -109,7 +147,8 @@ api を使ってスクリーン名とリスト一覧を取得するので、最�
 - list への追加削除
 - list の作成
 
-### 済
+済
+--
 
 - コマンドの補完
 - リスト補完
