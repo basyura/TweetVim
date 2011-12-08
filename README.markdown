@@ -142,6 +142,51 @@ tweetvim_say バッファのみ。
 
 C-s で歴を遡って tweetvim_say バッファに表示させることも可
 
+その他
+------
+
+タイムラインに表示したスクリーン名のキャッシュ
+
+    ~/.tweetvim/screen_name
+
+使い方
+------
+
+### 設定例
+
+    " タイムライン選択用の Unite を起動する
+    nnoremap <silent> t :Unite tweetvim<CR>
+    " 発言用バッファを表示する
+    nnoremap <silent> s           :<C-u>TweetVimSay<CR>
+    " mentions を表示する
+    nnoremap <silent> <Space>re   :<C-u>TweetVimMentions<CR>
+    " 特定のリストのタイムラインを表示する
+    nnoremap <silent> <Space>tt   :<C-u>TweetVimListStatuses basyura vim<CR>
+
+    " スクリーン名のキャッシュを利用して、neocomplcache で補完する
+    if !exists('g:neocomplcache_dictionary_filetype_lists')
+      let g:neocomplcache_dictionary_filetype_lists = {}
+    endif
+    let neco_dic = g:neocomplcache_dictionary_filetype_lists
+    let neco_dic.tweetvim_say = $HOME . '/.tweetvim/screen_name' .
+
+### 使用例
+
+- Unite を起動してタイムラインの一覧を表示する => t
+- タイムラインを選択して表示する
+- 最新の内容に更新する => <leader><leader>
+- リプライする => r
+- リプライの内容を書きこんで送信する => normal モードで enter
+- タイムラインの次ページを表示する => nn
+- タイムラインの前ページを表示する => pp
+- さっき表示したバッファに戻る => H
+- やっぱり元のバッファに戻る(進む) => L
+- 新しく発言する => s
+- 過去に発言した内容をたどる => C-i
+- 過去に発言した内容の一覧を表示する => C-s
+- 発言する => normal モードで enter
+- Unite で rt とか fav とかしたい => a
+
 TODO
 ----
 
