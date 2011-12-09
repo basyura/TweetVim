@@ -23,8 +23,9 @@ syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
 
 syntax match tweetvim_hash_tag "\#[0-9A-Za-z_]\+"
 
-syntax match tweetvim_separator "^-\+$"
-syntax match tweetvim_new_separator "^\s\+$"
+syntax match tweetvim_separator       "^-\+$"
+syntax match tweetvim_separator_title "^=\+$"
+syntax match tweetvim_new_separator   "^\s\+$"
 
 syntax match tweetvim_star " ★ "
 syntax match tweetvim_reload "\[reload\]"
@@ -51,7 +52,7 @@ syntax match tweetvim_rt_count " [0-9]\+RT"
 "highlight uiki_title2 guifg=orange
 
 "highlight uiki_strong guifg=#FF80FF
-highlight tweetvim_title gui=underline guifg=#bde682
+highlight tweetvim_title guifg=#bde682
 highlight tweetvim_status_id  guifg=#444444
 highlight tweetvim_created_at guifg=gray
 highlight tweetvim_screen_name guifg=#bde682
@@ -61,6 +62,7 @@ highlight tweetvim_link guifg=#80a0ff
 highlight tweetvim_hash_tag guifg=yellow
 
 highlight tweetvim_separator guifg=#444444
+highlight tweetvim_separator_title guifg=#444444
 highlight tweetvim_new_separator guifg=orange gui=undercurl
 
 highlight tweetvim_star guifg=yellow

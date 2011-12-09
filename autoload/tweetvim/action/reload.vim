@@ -12,8 +12,10 @@ endfunction
 "
 function! tweetvim#action#reload#execute(tweet)
   try
-    let title = getline(1)
-    call tweetvim#buffer#replace(1, title . ' [reload]')
+    let title  = tweetvim#util#padding(getline(1), tweetvim#util#bufwidth() - 8)
+    let title .= '[reload]'
+
+    call tweetvim#buffer#replace(1, title)
     redraw!
     let ret   = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
     

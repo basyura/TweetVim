@@ -144,8 +144,6 @@ function! s:process(method, args, title, tweets)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  call s:append_tweets(a:tweets, b:tweetvim_status_cache)
-
   let title = '[tweetvim]  - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
@@ -154,7 +152,10 @@ function! s:process(method, args, title, tweets)
       let title .= ' : page ' . string(page)
     endif
   endif
+
   call append(0, title)
+  call append(1, tweetvim#util#separator('='))
+  call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   normal dd
   :0
 endfunction
@@ -170,22 +171,12 @@ endfunction
 "
 function! s:append_tweets(tweets, cache)
   let separator = tweetvim#util#separator('-')
-  " TODO : new separator
-  let is_new    = 0
   for tweet in a:tweets
-    " add new or default separator
-    if is_new && !has_key(tweet, 'is_new')
-      call append(line('$') - 1, tweetvim#util#separator(' '))
-      let is_new = 0
-    else
-      call append(line('$') - 1, separator)
-    endif
-
-    call append(line('$') - 1, s:format(tweet))
     " cache tweet by line no
     let a:cache[line(".")] = tweet
+    call append(line('$') - 1, s:format(tweet))
+    call append(line('$') - 1, separator)
   endfor
-
 endfunction
 "
 "
