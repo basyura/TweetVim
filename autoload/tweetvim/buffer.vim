@@ -154,7 +154,7 @@ function! s:process(method, args, title, tweets)
   endif
 
   call append(0, title)
-  call append(1, tweetvim#util#separator('='))
+  call append(1, tweetvim#util#separator('~'))
   call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   normal dd
   :0
