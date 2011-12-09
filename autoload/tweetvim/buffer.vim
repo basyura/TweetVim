@@ -59,13 +59,15 @@ endfunction
 "
 "
 function! tweetvim#buffer#replace(lineno, tweet)
-  let colno = col('.')
+  let colno  = col('.')
+  let lineno = line('.')
   setlocal modifiable
+  call cursor(a:lineno, colno)
   normal dd
-  call append(a:lineno - 1, s:format(a:tweet))
+  call append(a:lineno - 1, type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet)
   setlocal nomodified
   setlocal nomodifiable
-  call cursor(a:lineno, colno)
+  call cursor(lineno, colno)
 endfunction
 "
 "

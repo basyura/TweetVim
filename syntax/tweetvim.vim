@@ -8,7 +8,7 @@
 setlocal conceallevel=2
 setlocal concealcursor=nc
 
-syntax match tweetvim_title "^\[.*"
+syntax match tweetvim_title "^\[.*" contains=tweetvim_reload
 
 syntax match tweetvim_status_id "\[\d\{-1,}\]$"
 "syntax match tweetvim_created_at "- .\{-1,} \[" 
@@ -27,6 +27,7 @@ syntax match tweetvim_separator "^-\+$"
 syntax match tweetvim_new_separator "^\s\+$"
 
 syntax match tweetvim_star " ★ "
+syntax match tweetvim_reload "\[reload\]"
 
 syntax match tweetvim_rt_count " [0-9]\+RT"
 
@@ -63,6 +64,7 @@ highlight tweetvim_separator guifg=#444444
 highlight tweetvim_new_separator guifg=orange gui=undercurl
 
 highlight tweetvim_star guifg=yellow
+highlight tweetvim_reload guifg=orange
 highlight tweetvim_rt_count guifg=orange
 
 
