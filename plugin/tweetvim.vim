@@ -45,8 +45,11 @@ function! s:shorten_url()
   let shorturl = bitly#shorten(url).url
   let content = http#get(url).content
   let charset = matchstr(content , 'charset=\zs.\{-}\ze".\{-}>')
+  " title
   let title = iconv(matchstr(content , '<title>\zs.\{-}\ze</title>') ,
         \ charset , 'utf-8')
+  let title = tweetvim#util#trim(substitute(title, '\n', '', 'g'))
+  " url
   let shorturl = '> ' . title . ' ' . shorturl
   execute "normal! a".shorturl."\<esc>"
 endfunction

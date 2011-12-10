@@ -39,3 +39,12 @@ function! tweetvim#util#bufwidth()
   endif
   return width
 endfunction
+"
+"
+"
+function! tweetvim#util#trim(msg)
+  let msg = a:msg
+  let msg = substitute(msg, '^\s\+' , '' , '')
+  let msg = substitute(msg, '\s\+$' , '' , '')
+  return msg
+endfunction
