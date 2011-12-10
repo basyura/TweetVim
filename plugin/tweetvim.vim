@@ -54,15 +54,6 @@ function! s:shorten_url()
   execute "normal! a".shorturl."\<esc>"
 endfunction
 
-
-"command!          HomeTimeline :call tweetvim#timeline('home_timeline')
-"command!          Mentions     :call tweetvim#timeline('mentions')
-"command! -nargs=+ ListStatuses :call tweetvim#timeline('list_statuses', <f-args>)
-"command! -nargs=1 UserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
-"command! -nargs=1 Favorites    :call tweetvim#timeline('favorites'    , <f-args>)
-"command! -nargs=1 SearchTweets :call tweetvim#timeline('search'       , <f-args>)
-"
-
 nnoremap <silent> <Plug>(tweetvim_action_enter)           :<C-u>call tweetvim#action('enter')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_reply)           :<C-u>call tweetvim#action('reply')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_in_reply_to)     :<C-u>call tweetvim#action('in_reply_to')<CR>

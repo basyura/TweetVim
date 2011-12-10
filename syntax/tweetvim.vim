@@ -1,9 +1,9 @@
 
 " syntax for tweetvim
 "
-"if exists('b:current_syntax')
-  "finish
-"endif
+if exists('b:current_syntax')
+  finish
+endif
 
 setlocal conceallevel=2
 setlocal concealcursor=nc
