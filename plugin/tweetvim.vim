@@ -65,9 +65,8 @@ nnoremap <silent> <Plug>(tweetvim_action_qt)              :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_reload)          :<C-u>call tweetvim#action('reload')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_page_next)       :<C-u>call tweetvim#action('page_next')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_page_previous)   :<C-u>call tweetvim#action('page_previous')<CR>
-
-nnoremap <silent> <Plug>(tweetvim_buffer_previous)        :<C-u>call tweetvim#buffer#previous()<CR>
-nnoremap <silent> <Plug>(tweetvim_buffer_next)            :<C-u>call tweetvim#buffer#next()<CR>
+nnoremap <silent> <Plug>(tweetvim_action_buffer_previous) :<C-u>call tweetvim#action('buffer_previous')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_buffer_next)     :<C-u>call tweetvim#action('buffer_next')<CR>
 "
 "
 "
@@ -92,8 +91,8 @@ function! s:tweetvim_settings()
   nmap <silent> <buffer> nn  <Plug>(tweetvim_action_page_next)
   nmap <silent> <buffer> pp  <Plug>(tweetvim_action_page_previous)
 
-  nmap <silent> <buffer> H  <Plug>(tweetvim_buffer_previous)
-  nmap <silent> <buffer> L  <Plug>(tweetvim_buffer_next)
+  nmap <silent> <buffer> H  <Plug>(tweetvim_action_buffer_previous)
+  nmap <silent> <buffer> L  <Plug>(tweetvim_action_buffer_next)
 
   nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
   nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>

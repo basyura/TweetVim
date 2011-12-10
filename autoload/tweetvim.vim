@@ -85,11 +85,13 @@ endfunction
 "
 function! tweetvim#action(name)
   let tweet = get(b:tweetvim_status_cache, line('.'), {})
-  " TODO
-  if a:name != 'reload' && a:name != 'page_next' && a:name != 'page_previous' && empty(tweet)
+  let def   = function('tweetvim#action#' . a:name . '#define')()
+  " TODO: check executable
+  if get(def, 'need_tweet', 1) && empty(tweet)
     echo 'no action'
     return
   endif
+
   let Fn = function('tweetvim#action#' . a:name . '#execute')
   call Fn(tweet)
 endfunction

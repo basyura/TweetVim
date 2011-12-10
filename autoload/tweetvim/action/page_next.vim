@@ -5,6 +5,7 @@ function! tweetvim#action#page_next#define()
   return {
         \ 'description'      : 'load next page',
         \ 'source__is__list' : 0,
+        \ 'need_tweet'       : 0,
         \ }
 endfunction
 "

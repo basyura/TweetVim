@@ -5,6 +5,7 @@ function! tweetvim#action#reload#define()
   return {
         \ 'description'      : 'reload timeline',
         \ 'source__is__list' : 0,
+        \ 'need_tweet'       : 0,
         \ }
 endfunction
 "
