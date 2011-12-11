@@ -88,6 +88,8 @@ commands
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
 
+デフォルトでは、`<leader>` は \ が設定されている
+
 ### ツイート用バッファ(tweetvim_say)
 
     nnoremap <buffer> <silent> q :bd!<CR>
