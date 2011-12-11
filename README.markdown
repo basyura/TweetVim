@@ -72,6 +72,7 @@ commands
     nmap <silent> <buffer> r  <Plug>(tweetvim_action_reply)
     nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
     nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
+    nmap <silent> <buffer> o  <Plug>(tweetvim_action_open_links)
     nmap <silent> <buffer> <leader>f  <Plug>(tweetvim_action_favorite)
     nmap <silent> <buffer> <leader>uf <Plug>(tweetvim_action_remove_favorite)
     nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
@@ -126,6 +127,7 @@ tweetvim バッファのみ。
 - favorite        - favorite tweet
 - follow          - follow user
 - in_reply_to     - show conversation
+- list            - add user to list
 - open_links      - open links in tweet
 - qt              - quote tweet
 - remove_favorite - remove favorite
@@ -192,6 +194,7 @@ tweetvim_say バッファのみ。
 - ふぁぼ消したい => `<leader>uf`
 - リツイートしたい => `<leader>r`
 - qt したい => `<leader>q`
+- ツイートにあるリンクを全部開きたい => `o`
 - Unite で rt とか fav とかしたい => `a`
 
 TODO
