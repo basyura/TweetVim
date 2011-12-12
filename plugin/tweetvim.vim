@@ -91,8 +91,8 @@ function! s:tweetvim_settings()
   nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
   nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
-  nmap <silent> <buffer> nn  <Plug>(tweetvim_action_page_next)
-  nmap <silent> <buffer> pp  <Plug>(tweetvim_action_page_previous)
+  nmap <silent> <buffer> ff  <Plug>(tweetvim_action_page_next)
+  nmap <silent> <buffer> bb  <Plug>(tweetvim_action_page_previous)
 
   nmap <silent> <buffer> H  <Plug>(tweetvim_action_buffer_previous)
   nmap <silent> <buffer> L  <Plug>(tweetvim_action_buffer_next)
