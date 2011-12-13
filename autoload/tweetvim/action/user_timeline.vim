@@ -10,5 +10,11 @@ endfunction
 "
 "
 function! tweetvim#action#user_timeline#execute(tweet)
-  call tweetvim#timeline('user_timeline', a:tweet.user.screen_name)
+  let screen_name = a:tweet.user.screen_name
+  let matched = matchlist(expand('<cWORD>') , '@\zs[0-9A-Za-z_]\+\ze')
+  if len(matched) != 0
+    let screen_name = matched[0]
+  endif
+
+  call tweetvim#timeline('user_timeline', screen_name)
 endfunction
