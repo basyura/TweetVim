@@ -15,6 +15,5 @@ function! tweetvim#action#user_timeline#execute(tweet)
   if len(matched) != 0
     let screen_name = matched[0]
   endif
-
-  call tweetvim#timeline('user_timeline', screen_name)
+  call tweetvim#timeline('user_timeline', screen_name, {'opt' : {'user_detail' : 1}})
 endfunction

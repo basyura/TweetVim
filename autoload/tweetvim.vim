@@ -11,6 +11,12 @@ let s:cache = {'screen_name' : {}}
 function! tweetvim#timeline(method, ...)
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
+  " TODO - to add some information
+  let opt  = {}
+  if type(args) == 3 && !empty(args) && type(args[-1]) == 4 && has_key(args[-1], 'opt')
+    let opt = args[-1].opt
+    call remove(args[-1], 'opt')
+  endif
 
   let tweets = tweetvim#request(a:method, args)
 
@@ -30,7 +36,8 @@ function! tweetvim#timeline(method, ...)
         \ a:method,
         \ a:000,
         \ join(split(a:method, '_'), ' '), 
-        \ tweets)
+        \ tweets,
+        \ opt)
 
   call s:write_cache('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
 endfunction

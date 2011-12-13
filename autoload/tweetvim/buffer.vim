@@ -5,16 +5,17 @@ let s:buf_name = '[tweetvim]'
 "
 "
 "
-function! tweetvim#buffer#load(method, args, title, tweets)
+function! tweetvim#buffer#load(method, args, title, tweets, ...)
 
   let args = copy(a:args)
+  let opt  = a:0 ? copy(a:1) : {}
 
   call s:switch_buffer()
   call s:pre_process()
-  call s:process(a:method, args, a:title, a:tweets)
+  call s:process(a:method, args, a:title, a:tweets, opt)
   call s:post_process()
 
-  call s:backup(a:method, args, a:title, a:tweets)
+  call s:backup(a:method, args, a:title, a:tweets, opt)
 
   let b:tweetvim_bufno = -1
 
@@ -89,12 +90,13 @@ endfunction
 "
 "
 "
-function! s:backup(method, args, title, tweets)
+function! s:backup(method, args, title, tweets, opt)
   call add(s:backup, {
         \ 'method' : a:method,
         \ 'args'   : a:args,
         \ 'title'  : a:title,
         \ 'tweets' : a:tweets,
+        \ 'opt'    : a:opt,
         \ })
   " truncate
   call tweetvim#buffer#truncate_backup(g:tweetvim_cache_size)
@@ -139,7 +141,7 @@ endfunction
 "
 "
 "
-function! s:process(method, args, title, tweets)
+function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_method = a:method
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
@@ -153,8 +155,24 @@ function! s:process(method, args, title, tweets)
     endif
   endif
 
+  :0
+
   call append(0, title)
   call append(1, tweetvim#util#separator('~'))
+
+  if get(a:opt, 'user_detail', 0)
+    let user = a:tweets[0].user
+    call append(line('$') - 1, user.screen_name)
+    for desc in split(user.description, '\n')
+      call append(line('$') - 1, substitute(desc, '', "", "g"))
+    endfor
+    call append(line('$') - 1, user.url)
+    call append(line('$') - 1, 'statuses  : ' . string(user.statuses_count))
+    call append(line('$') - 1, 'friends   : ' . string(user.friends_count))
+    call append(line('$') - 1, 'followers : ' . string(user.followers_count))
+    call append(line('$') - 1, tweetvim#util#separator('~'))
+  endif
+
   call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   normal dd
   :0
