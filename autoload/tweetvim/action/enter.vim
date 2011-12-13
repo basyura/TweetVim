@@ -5,6 +5,7 @@ function! tweetvim#action#enter#define()
   return {
         \ 'description'      : 'open tweet with browser',
         \ 'source__is__list' : 0,
+        \ 'need_tweet'       : 0,
         \ }
 endfunction
 "
