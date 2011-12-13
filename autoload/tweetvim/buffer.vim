@@ -162,14 +162,14 @@ function! s:process(method, args, title, tweets, opt)
 
   if get(a:opt, 'user_detail', 0)
     let user = a:tweets[0].user
-    call append(line('$') - 1, user.screen_name)
+    call append(line('$') - 1, '  @' . user.screen_name)
     for desc in split(user.description, '\n')
-      call append(line('$') - 1, substitute(desc, '', "", "g"))
+      call append(line('$') - 1, '  ' . substitute(desc, '', "", "g"))
     endfor
-    call append(line('$') - 1, user.url)
-    call append(line('$') - 1, 'statuses  : ' . string(user.statuses_count))
-    call append(line('$') - 1, 'friends   : ' . string(user.friends_count))
-    call append(line('$') - 1, 'followers : ' . string(user.followers_count))
+    call append(line('$') - 1, '  ' . user.url)
+    call append(line('$') - 1, '  statuses  : ' . string(user.statuses_count))
+    call append(line('$') - 1, '  friends   : ' . string(user.friends_count))
+    call append(line('$') - 1, '  followers : ' . string(user.followers_count))
     call append(line('$') - 1, tweetvim#util#separator('~'))
   endif
 
