@@ -13,9 +13,12 @@ function! tweetvim#timeline(method, ...)
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
   " TODO - to add some information
   let opt  = {}
-  if type(args) == 3 && !empty(args) && type(args[-1]) == 4 && has_key(args[-1], 'opt')
-    let opt = args[-1].opt
-    call remove(args[-1], 'opt')
+  if a:method == 'user_timeline'
+    let opt.user_detail = 1
+    "if type(args) == 3 && !empty(args) && type(args[-1]) == 4 && has_key(args[-1], 'opt')
+      "let opt = args[-1].opt
+      "call remove(args[-1], 'opt')
+    "endif
   endif
 
   let tweets = tweetvim#request(a:method, args)

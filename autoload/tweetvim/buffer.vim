@@ -32,7 +32,7 @@ function! tweetvim#buffer#previous()
   let bufno = b:tweetvim_bufno - 1
   let pre   = s:backup[bufno]
 
-  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets)
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.option)
   " TODO delete duprecate backup
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
@@ -50,7 +50,7 @@ function! tweetvim#buffer#next()
   let bufno = b:tweetvim_bufno + 1
   let pre   = s:backup[bufno]
 
-  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets)
+  call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.option)
   " TODO
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
