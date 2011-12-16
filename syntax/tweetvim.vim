@@ -69,6 +69,8 @@ highlight tweetvim_star guifg=yellow
 highlight tweetvim_reload guifg=orange
 highlight tweetvim_rt_count guifg=orange
 
+"highlight tweetvim_reply gui=underline
+highlight tweetvim_reply guifg=orange
 
 let b:current_syntax = 'tweetvim'
 

@@ -19,6 +19,9 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
 
   let b:tweetvim_bufno = -1
 
+   " define syntax
+   let screen_name = tweetvim#verify_credentials().screen_name
+   execute "syntax match tweetvim_reply '@" . screen_name . "'"
 endfunction
 "
 "
