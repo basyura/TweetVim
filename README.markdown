@@ -146,6 +146,12 @@ tweetvim_say バッファのみ。
 
 `<C-s>` で歴を遡って tweetvim_say バッファに表示させることも可
 
+### outline
+
+タイムラインの絞り込み
+
+    :Unite outline
+
 その他
 ------
 
