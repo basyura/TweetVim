@@ -210,7 +210,7 @@ tweetvim_say バッファのみ。
 ------------------------------------
 
 webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装をした資源が
-[webapi-vim](https://github.com/basyura/webapi-vim/commits/master/) にあります(pull request 中)。  
+[webapi-vim](https://github.com/basyura/webapi-vim) にあります(pull request 中)。  
 この資源を clone するか各自のリポジトリに[差分](https://github.com/mattn/webapi-vim/pull/1/files)を当てるといい感じになるかもしれません。
 
 TODO
