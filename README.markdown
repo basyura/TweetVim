@@ -15,6 +15,7 @@ Requires
 - [webapi-vim](https://github.com/mattn/webapi-vim)
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
+- [unite-outline](https://github.com/h1mesuke/unite-outline)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
 verify
@@ -204,6 +205,13 @@ tweetvim_say バッファのみ。
 - qt したい => `<leader>q`
 - ツイートにあるリンクを全部開きたい => `o`
 - Unite で rt とか fav とかしたい => `a`
+
+タイムラインの表示が遅いと感じる場合
+------------------------------------
+
+webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装をした資源が
+[webapi-vim](https://github.com/basyura/webapi-vim/commits/master/) にあります(pull request 中)。  
+この資源を clone するか各自のリポジトリに[差分](https://github.com/mattn/webapi-vim/pull/1/files)を当てるといい感じになるかもしれません。
 
 TODO
 ----
