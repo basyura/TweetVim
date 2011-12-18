@@ -15,7 +15,7 @@ Requires
 - [webapi-vim](https://github.com/mattn/webapi-vim)
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
-- [unite-outline](https://github.com/h1mesuke/unite-outline)
+- [(unite-outline)](https://github.com/h1mesuke/unite-outline)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 
 verify
