@@ -17,7 +17,7 @@ function! tweetvim#action#reload#execute(tweet)
     let title .= '[reload]'
 
     call tweetvim#buffer#replace(1, title)
-    redraw!
+    redraw
     let ret   = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
     
   catch
