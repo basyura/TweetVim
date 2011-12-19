@@ -209,7 +209,7 @@ tweetvim_say バッファのみ。
 タイムラインの表示が遅いと感じる場合
 ------------------------------------
 
-webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装をした資源が
+webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装を追加した資源が
 [webapi-vim](https://github.com/basyura/webapi-vim) にあります(pull request 中)。  
 この資源を clone するか各自のリポジトリに[差分](https://github.com/mattn/webapi-vim/pull/1/files)を当てるといい感じになるかもしれません。
 
@@ -217,12 +217,15 @@ variables
 ---------
 
 1 ページあたりのツイート取得件数
+
     let g:tweetvim_tweet_per_page = 50
 
 表示内容をキャッシュしておく数(バッファを戻る、進むに使用)
+
     let g:tweetvim_cache_size     = 10
 
 設定情報を保存するディレクトリ
+
     let g:tweetvim_config_dir     = expand('~/.tweetvim')
 
 TODO
