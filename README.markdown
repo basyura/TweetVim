@@ -213,6 +213,18 @@ webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装をした資�
 [webapi-vim](https://github.com/basyura/webapi-vim) にあります(pull request 中)。  
 この資源を clone するか各自のリポジトリに[差分](https://github.com/mattn/webapi-vim/pull/1/files)を当てるといい感じになるかもしれません。
 
+variables
+---------
+
+1 ページあたりのツイート取得件数
+    let g:tweetvim_tweet_per_page = 50
+
+表示内容をキャッシュしておく数(バッファを戻る、進むに使用)
+    let g:tweetvim_cache_size     = 10
+
+設定情報を保存するディレクトリ
+    let g:tweetvim_config_dir     = expand('~/.tweetvim')
+
 TODO
 ----
 
@@ -220,11 +232,13 @@ TODO
 - 新規ツイートが分かるように
 - 自分宛のツイートが分かるように
 - バッファを戻った時にカーソル位置を保持する
+- 同じ内容のバッファはキャッシュしない
 - filter
 - user 情報の表示
 - list への削除
 - list の作成
 - 追加済みリストが分かるように
+- 検索時の次ページ、前ページ
 
 済
 --
