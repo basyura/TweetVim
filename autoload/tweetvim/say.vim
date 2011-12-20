@@ -56,9 +56,12 @@ function! s:tweetvim_say_settings()
   :0
   startinsert!
   " i want to judge by buffer variable
-  if !exists('s:tweetvim_bufwrite_cmd')
-    autocmd BufWriteCmd <buffer> echo 'please enter to tweet'
-    let s:tweetvim_bufwrite_cmd = 1
+  if !exists('b:tweetvim_bufwrite_cmd')
+    augroup TweetVimSay
+      autocmd! TweetVimSay
+      autocmd BufWriteCmd <buffer> echohl Error | echo 'please enter to tweet' | echohl None
+    augroup END
+    let b:tweetvim_bufwrite_cmd = 1
   endif
 endfunction
 
