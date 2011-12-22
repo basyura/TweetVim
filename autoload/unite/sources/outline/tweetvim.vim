@@ -20,7 +20,7 @@ let s:outline_info = {
 
 function! s:outline_info.create_heading(which, heading_line, matched_line, context)
   return {
-        \ 'word'  : a:heading_line,
+        \ 'word'  : unite#util#truncate(a:heading_line, winwidth(0))
         \ }
 endfunction
 
