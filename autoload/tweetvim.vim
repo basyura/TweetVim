@@ -78,6 +78,7 @@ function! tweetvim#request(method, args)
   let args  = type(a:args) == 3 ? a:args : [a:args]
   let param = {'per_page' : g:tweetvim_tweet_per_page, 
               \'count'    : g:tweetvim_tweet_per_page}
+  let param.include_rts = 1
   let args  = s:merge_params(args, param)
 
   let twibill = s:twibill()
