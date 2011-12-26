@@ -228,6 +228,10 @@ variables
 
     let g:tweetvim_config_dir     = expand('~/.tweetvim')
 
+タイムラインにリツイートを含める
+
+    let g:tweetvim_include_rts    = 1
+
 TODO
 ----
 
