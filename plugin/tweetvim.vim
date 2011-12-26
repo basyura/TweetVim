@@ -1,6 +1,6 @@
-if exists('g:loaded_tweetvim')
-  finish
-endif
+"if exists('g:loaded_tweetvim')
+"  finish
+"endif
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -43,6 +43,12 @@ function! s:shorten_url()
     return
   endif
 
+  let col = col('.')
+  if col != 1
+    let col += 1
+  endif
+  let row = line('.')
+
   let shorturl = bitly#shorten(url).url
   let content = http#get(url).content
   let charset = matchstr(content , 'charset=\zs.\{-}\ze".\{-}>')
@@ -53,6 +59,8 @@ function! s:shorten_url()
   " url
   let shorturl = '> ' . title . ' ' . shorturl
   execute "normal! a".shorturl."\<esc>"
+  call cursor(row, col)
+  startinsert
 endfunction
 
 nnoremap <silent> <Plug>(tweetvim_action_enter)           :<C-u>call tweetvim#action('enter')<CR>
