@@ -1,6 +1,6 @@
-"if exists('g:loaded_tweetvim')
-"  finish
-"endif
+if exists('g:loaded_tweetvim')
+  finish
+endif
 
 let s:save_cpo = &cpo
 set cpo&vim
