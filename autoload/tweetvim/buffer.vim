@@ -28,7 +28,6 @@ endfunction
 "
 function! tweetvim#buffer#previous()
   if len(s:backup) <= (b:tweetvim_bufno * -1)
-    echo 'no previous'
     return
   endif
 
@@ -39,14 +38,12 @@ function! tweetvim#buffer#previous()
   " TODO delete duprecate backup
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
-  echo 'previous : ' . string(b:tweetvim_bufno)
 endfunction
 "
 "
 "
 function! tweetvim#buffer#next()
   if b:tweetvim_bufno == -1
-    echo 'no next'
     return
   endif
 
@@ -57,7 +54,6 @@ function! tweetvim#buffer#next()
   " TODO
   let s:backup = s:backup[0:-2]
   let b:tweetvim_bufno = bufno
-  echo 'next : ' . string(b:tweetvim_bufno)
 endfunction
 "
 "
