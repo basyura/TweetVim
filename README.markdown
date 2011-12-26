@@ -153,6 +153,18 @@ tweetvim_say バッファのみ。
 
     :Unite outline
 
+url 短縮
+--------
+
+[bitly.vim](https://github.com/basyura/bitly.vim) をインストールしておくと、ツイート用バッファで URL 短縮とタイトルの取得ができる。  
+デフォルトのキーマッピング。
+
+    inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
+
+実行すると以下の内容がツイート用バッファに展開される
+
+    > basyura/TweetVim - GitHub http://bit.ly/t0RQhx
+
 その他
 ------
 
