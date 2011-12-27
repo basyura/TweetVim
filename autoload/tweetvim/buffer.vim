@@ -211,7 +211,7 @@ function! s:format(tweet)
   let text = tweetvim#util#unescape(text)
 
   let str  = tweetvim#util#padding(a:tweet.user.screen_name, 15) . ' : '
-  if a:tweet.favorited
+  if a:tweet.favorited && a:tweet.user.screen_name == s:screen_name()
     let str .= '★ '
   endif
   let str .= text
@@ -221,4 +221,10 @@ function! s:format(tweet)
   endif
 
   return str
+endfunction
+"
+"
+"
+function! s:screen_name()
+  return tweetvim#verify_credentials().screen_name
 endfunction
