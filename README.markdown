@@ -17,6 +17,8 @@ Requires
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(unite-outline)](https://github.com/h1mesuke/unite-outline)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
+- [(unite.vim)](https://github.com/Shougo/unite.vim)
+- [cURL](http://curl.haxx.se/)
 
 verify
 ------
