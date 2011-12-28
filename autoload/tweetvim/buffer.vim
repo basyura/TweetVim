@@ -211,7 +211,8 @@ function! s:format(tweet)
   let text = tweetvim#util#unescape(text)
 
   let str  = tweetvim#util#padding(a:tweet.user.screen_name, 15) . ' : '
-  if a:tweet.favorited && a:tweet.user.screen_name == s:screen_name()
+  " TODO
+  if a:tweet.favorited && !has_key(a:tweet, 'retweeted_status')
     let str .= '★ '
   endif
   let str .= text
