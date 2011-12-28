@@ -11,7 +11,7 @@ endfunction
 "
 function! tweetvim#action#unfollow#execute(tweet)
   let tweet = a:tweet
-  echo tweet.user.screen_name . ' ' . tweet.text
+  echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.text)
   if input('unfollow ? [y/n] : ') != 'y'
     return
   endif

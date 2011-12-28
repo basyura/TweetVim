@@ -10,7 +10,7 @@ endfunction
 "
 "
 function! tweetvim#action#retweet#execute(tweet)
-  echo a:tweet.user.screen_name . ' ' . a:tweet.text
+  echo a:tweet.user.screen_name . ' ' . tweetvim#util#unescape(a:tweet.text)
   if input('retweet ? [y/n] : ') != 'y'
     return
   endif
