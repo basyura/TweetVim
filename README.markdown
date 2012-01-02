@@ -251,6 +251,7 @@ TODO for v1.1
 - ライブラリチェック
 - デフォルトキーマッピングの上書き
 - highlight の link 化
+- tweetvim_say バッファで、残りの入力文字数を表示する機能
 
 TODO
 ----
