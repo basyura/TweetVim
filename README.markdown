@@ -255,6 +255,10 @@ TODO for v1.1
 - highlight の link 化
 - tweetvim_say バッファで、残りの入力文字数を表示する機能
 
+### 済
+
+- block action
+
 TODO
 ----
 
