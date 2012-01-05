@@ -6,9 +6,19 @@ let s:save_cpo = &cpo
 set cpo&vim
 "
 "
-let g:tweetvim_tweet_per_page = 50
-let g:tweetvim_cache_size     = 10
-let g:tweetvim_config_dir     = expand('~/.tweetvim')
+"
+function! s:set_global_variable(key, default)
+  if !has_key(g:, a:key)
+    let g:[a:key] = a:default
+  endif
+endfunction
+
+"
+"
+call s:set_global_variable('tweetvim_tweet_per_page', 50)
+call s:set_global_variable('tweetvim_cache_size'    , 10)
+call s:set_global_variable('tweetvim_config_dir'    , expand('~/.tweetvim'))
+call s:set_global_variable('tweetvim_display_source', 0)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')

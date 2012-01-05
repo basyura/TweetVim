@@ -246,6 +246,9 @@ variables
 
     let g:tweetvim_include_rts    = 1
 
+source(クライアント名) を表示するオプション
+
+    let g:tweetvim_display_source
 
 TODO for v1.1
 ---------
@@ -258,6 +261,7 @@ TODO for v1.1
 ### 済
 
 - block action
+- source 表示オプション
 
 TODO
 ----

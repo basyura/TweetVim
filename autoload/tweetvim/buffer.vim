@@ -220,6 +220,15 @@ function! s:format(tweet)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
+  " soruce
+  if g:tweetvim_display_source
+    " unescape for search api
+    let source = matchstr(tweetvim#util#unescape(a:tweet.source), '>\zs.*\ze<')
+    if source == ""
+      let source = a:tweet.source
+    endif
+    let str .= ' - ' . source
+  endif
 
   return str
 endfunction
