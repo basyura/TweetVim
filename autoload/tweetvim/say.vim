@@ -25,6 +25,10 @@ function! tweetvim#say#open(...)
   let &filetype = 'tweetvim_say'
   startinsert!
 endfunction
+
+function! tweetvim#say#count()
+  return 140 - strchars(s:get_text())
+endfunction
 "
 "
 "
@@ -52,7 +56,13 @@ function! s:tweetvim_say_settings()
   if exists(':TweetVimBitly')
     inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
   endif
-  
+
+  call s:update_char_count()
+  augroup TweetVimSayCount
+    autocmd! CursorMoved,CursorMovedI <buffer> call s:update_char_count()
+  augroup END
+  setlocal statusline=tweetvim_say\ %{b:tweetvim_say_count}
+
   :0
   startinsert!
   " i want to judge by buffer variable
@@ -101,7 +111,7 @@ endfunction
 "
 "
 function! s:post_tweet()
-  let text  = join(getline(1, "$"))
+  let text = s:get_text()
   if strchars(text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None
@@ -117,4 +127,12 @@ function! s:post_tweet()
   endtry
   bd!
   redraw | echo 'sending ... ok'
+endfunction
+
+function! s:get_text()
+  return matchstr(join(getline(1, '$'), "\n"), '^\_s*\zs\_.\{-}\ze\_s*$')
+endfunction
+
+function! s:update_char_count()
+  let b:tweetvim_say_count = '[' . tweetvim#say#count() . ']'
 endfunction
