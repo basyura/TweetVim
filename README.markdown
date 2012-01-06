@@ -264,6 +264,7 @@ TODO for v1.1
 
 - block action
 - source 表示オプション
+- 入力可能文字数をステータスラインに表示
 
 TODO
 ----
