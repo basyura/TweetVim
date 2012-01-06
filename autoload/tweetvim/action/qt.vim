@@ -14,5 +14,5 @@ function! tweetvim#action#qt#execute(tweet)
                    \ . tweetvim#util#unescape(a:tweet.text)
   let param = {'in_reply_to_status_id' : a:tweet.id_str}
   call tweetvim#say#open(text, param)
-  execute "normal 0"
+  call cursor(1,1)
 endfunction
