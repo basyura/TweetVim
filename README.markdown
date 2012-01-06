@@ -248,7 +248,7 @@ variables
 
 source(クライアント名) を表示するオプション
 
-    let g:tweetvim_display_source
+    let g:tweetvim_display_source = 1
 
 TODO for v1.1
 ---------
