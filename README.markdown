@@ -258,13 +258,13 @@ TODO for v1.1
 - highlight の link 化
 - tweetvim_say バッファで、残りの入力文字数を表示する機能
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
-- tweetvim_say バッファで改行が入っている
 
 ### 済
 
 - block action
 - source 表示オプション
 - 入力可能文字数をステータスラインに表示
+- tweetvim_say バッファで改行が入っている
 
 TODO
 ----

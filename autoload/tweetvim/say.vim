@@ -20,7 +20,7 @@ function! tweetvim#say#open(...)
   endif
   setlocal modifiable
   silent %delete _
-  call append(0, text)
+  call setline(1, text)
   let b:tweetvim_post_param = param
   let &filetype = 'tweetvim_say'
   startinsert!
