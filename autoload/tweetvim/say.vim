@@ -111,7 +111,7 @@ endfunction
 "
 "
 function! s:post_tweet()
-  let text  = join(getline(1, "$"))
+  let text = s:get_text()
   if strchars(text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None
