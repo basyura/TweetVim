@@ -2,7 +2,7 @@
 " syntax for tweetvim
 "
 if exists('b:current_syntax')
-  finish
+"  finish
 endif
 
 setlocal conceallevel=2
@@ -32,6 +32,14 @@ syntax match tweetvim_reload "\[reload\]"
 
 syntax match tweetvim_rt_count " [0-9]\+RT"
 syntax match tweetvim_rt_over  "'100+'RT"
+
+syn region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value
+syn match tweetvim_appendix_value "\[\$\ze.*\ze\$\]"
+
+syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block
+syntax match tweetvim_appendix_block /\[\[/ contained conceal
+syntax match tweetvim_appendix_block /\]\]/ contained conceal
+
 
 "syntax match uiki_strong /|[^|]\+|/ contains=uiki_strong_bar
 "syntax match uiki_page_block /\[\[/ contained conceal
@@ -73,6 +81,8 @@ highlight tweetvim_rt_over  guifg=orange
 
 "highlight tweetvim_reply gui=underline
 highlight tweetvim_reply guifg=orange
+
+highlight tweetvim_appendix guifg=#616161
 
 let b:current_syntax = 'tweetvim'
 

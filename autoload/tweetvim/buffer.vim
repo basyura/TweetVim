@@ -227,7 +227,7 @@ function! s:format(tweet)
     if source == ""
       let source = a:tweet.source
     endif
-    let str .= ' - ' . source
+    let str .= ' [[from ' . source . ']]'
   endif
 
   return str
