@@ -76,6 +76,7 @@ commands
     nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
     nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
     nmap <silent> <buffer> o  <Plug>(tweetvim_action_open_links)
+    nmap <silent> <buffer> q  <Plug>(tweetvim_action_search)
     nmap <silent> <buffer> <leader>f  <Plug>(tweetvim_action_favorite)
     nmap <silent> <buffer> <leader>uf <Plug>(tweetvim_action_remove_favorite)
     nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
@@ -261,6 +262,7 @@ TODO for v1.1
 
 ### 済
 
+- search action
 - block action
 - source 表示オプション
 - 入力可能文字数をステータスラインに表示
