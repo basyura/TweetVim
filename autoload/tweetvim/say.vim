@@ -17,20 +17,7 @@ function! tweetvim#say#open(...)
   else
     execute 'below split tweetvim_say' 
     execute '2 wincmd _'
-
-    augroup tweetvim_say
-      nnoremap <buffer> <silent> q :bd!<CR>
-      nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
-      inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
-      nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
-
-      inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
-      nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
-      if exists(':TweetVimBitly')
-        inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
-      endif
-      autocmd! BufWinLeave <buffer> call s:tweetvim_say_leave()
-    augroup END
+    call s:define_default_key_mappings()
   endif
 
   setlocal modifiable
@@ -133,4 +120,20 @@ endfunction
 
 function! s:update_char_count()
   let b:tweetvim_say_count = '[' . tweetvim#say#count() . ']'
+endfunction
+
+function! s:define_default_key_mappings()
+  augroup tweetvim_say
+    nnoremap <buffer> <silent> q :bd!<CR>
+    nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
+    inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
+    nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+
+    inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+    nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+    if exists(':TweetVimBitly')
+      inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
+    endif
+    autocmd! BufWinLeave <buffer> call s:tweetvim_say_leave()
+  augroup END
 endfunction
