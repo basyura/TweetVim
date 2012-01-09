@@ -17,11 +17,27 @@ function! tweetvim#say#open(...)
   else
     execute 'below split tweetvim_say' 
     execute '2 wincmd _'
+
+    augroup tweetvim_say
+      nnoremap <buffer> <silent> q :bd!<CR>
+      nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
+      inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
+      nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+
+      inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+      nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
+      if exists(':TweetVimBitly')
+        inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
+      endif
+      autocmd! BufWinLeave <buffer> call s:tweetvim_say_leave()
+    augroup END
   endif
+
   setlocal modifiable
   silent %delete _
   call setline(1, text)
   let b:tweetvim_post_param = param
+
   let &filetype = 'tweetvim_say'
   startinsert!
 endfunction
@@ -32,30 +48,12 @@ endfunction
 "
 "
 "
-augroup tweetvim_say
-  autocmd! tweetvim_say
-  autocmd FileType    tweetvim_say call s:tweetvim_say_settings()
-  autocmd BufWinLeave tweetvim_say call s:tweetvim_say_leave()
-augroup END
-
-
 function! s:tweetvim_say_settings()
   setlocal bufhidden=wipe
   setlocal nobuflisted
   setlocal noswapfile
   setlocal modifiable
   setlocal nomodified
-  nnoremap <buffer> <silent> q :bd!<CR>
-  nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
-  inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
-  nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
-
-  inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
-  nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
-
-  if exists(':TweetVimBitly')
-    inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
-  endif
 
   call s:update_char_count()
   augroup TweetVimSayCount
