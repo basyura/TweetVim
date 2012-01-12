@@ -118,6 +118,13 @@ function! s:switch_buffer()
     let winnr += 1
   endwhile
 
+  execute 'edit! ' . s:buf_name
+
+  return
+
+  " バッファの判定がよくわかんねぇ
+  " s:bufnr の下りが 4[s] ぐらいかかっちゃうのとでひとまず
+
   if !exist_win
     let bufno = s:bufnr(escape(s:buf_name, '*[]?{},'))
     if bufno > 0

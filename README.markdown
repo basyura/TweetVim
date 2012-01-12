@@ -139,6 +139,7 @@ tweetvim バッファのみ。
 - remove_favorite - remove favorite
 - reply           - reply
 - retweet         - retweet
+- search          - search tweets
 - unfollow        - unfollow user
 - user_timeline   - show user timeline
 
