@@ -73,7 +73,7 @@ endfunction
 "
 "
 function! tweetvim#buffer#truncate_backup(size)
-  " TODO: truncate tail 
+  " TODO: truncate tail
   if a:size < 0
     let s:backup = eval('s:backup[:' . string(a:size) . ']')
     return
@@ -82,7 +82,7 @@ function! tweetvim#buffer#truncate_backup(size)
   if len(s:backup) <= a:size
     return
   endif
-  let start = len(s:backup) - a:size 
+  let start = len(s:backup) - a:size
   " TODO:
   let s:backup = eval('s:backup[' . string(start) . ':]')
 endfunction
@@ -228,6 +228,11 @@ function! s:format(tweet)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
+  if executable('php')
+    let created_at = get(a:tweet, 'created_at', '')
+    let created_at = system("php -r 'echo date(".'"y/m/d H:i:s", strtotime("'.created_at.'"));'."' 2>/dev/null")
+    let str .= ' [' . created_at . ']'
+  endif
   " soruce
   if g:tweetvim_display_source
     " unescape for search api
@@ -269,5 +274,5 @@ function! s:define_default_key_mappings()
 
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
-  augroup END  
+  augroup END
 endfunction
