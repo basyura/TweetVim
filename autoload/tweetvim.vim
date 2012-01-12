@@ -9,6 +9,7 @@ let s:cache = {'screen_name' : {}}
 "
 "
 function! tweetvim#timeline(method, ...)
+  let start = reltime()
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
   " TODO - to add some information
@@ -21,7 +22,9 @@ function! tweetvim#timeline(method, ...)
     "endif
   endif
 
+  let st_req = reltime()
   let tweets = tweetvim#request(a:method, args)
+  let req_time = reltimestr(reltime(st_req))
 
   if type(tweets) == 4 && has_key(tweets, 'error')
     echohl Error | echo tweets.error | echohl None
@@ -35,6 +38,7 @@ function! tweetvim#timeline(method, ...)
     call tweetvim#buffer#truncate_backup(bufno)
   endif
 
+  let st_load = reltime()
   call tweetvim#buffer#load(
         \ a:method,
         \ a:000,
@@ -42,7 +46,15 @@ function! tweetvim#timeline(method, ...)
         \ tweets,
         \ opt)
 
+  let load_time = reltimestr(reltime(st_load))
+
   call s:write_cache('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
+
+  if get(g:, 'tweetvim_debug', 0)
+    let time = 'total:' . reltimestr(reltime(start)) . ' req:' . req_time . ' load:' . load_time
+    call tweetvim#buffer#replace(1, getline('.') . '   (' . time . ')')
+  endif
+
 endfunction
 "
 "
