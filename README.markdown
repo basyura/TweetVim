@@ -270,6 +270,7 @@ TODO for v1.1
 - デフォルトキーマッピングの上書き
 - tweetvim_say バッファで、残りの入力文字数を表示する機能
 - ハッシュタグの Enter でハッシュタグ検索
+- 検索数の初期値(g:tweetvim_tweet_per_page) を 50 → 20 に変更
 
 TODO
 ----
