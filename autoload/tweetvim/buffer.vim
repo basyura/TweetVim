@@ -228,11 +228,6 @@ function! s:format(tweet)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
-  if executable('php')
-    let created_at = get(a:tweet, 'created_at', '')
-    let created_at = system("php -r 'echo date(".'"y/m/d H:i:s", strtotime("'.created_at.'"));'."' 2>/dev/null")
-    let str .= ' [' . created_at . ']'
-  endif
   " soruce
   if g:tweetvim_display_source
     " unescape for search api
@@ -241,6 +236,11 @@ function! s:format(tweet)
       let source = a:tweet.source
     endif
     let str .= ' [[from ' . source . ']]'
+  endif
+  if executable('php')
+    let created_at = get(a:tweet, 'created_at', '')
+    let created_at = system("php -r 'echo date(".'"y/m/d H:i:s", strtotime("'.created_at.'"));'."' 2>/dev/null")
+    let str .= ' - ' . created_at
   endif
 
   return str

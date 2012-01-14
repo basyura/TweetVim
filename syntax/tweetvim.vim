@@ -11,7 +11,7 @@ setlocal concealcursor=nc
 syntax match tweetvim_title "^\[.*" contains=tweetvim_reload
 
 syntax match tweetvim_status_id "\[\d\{-1,}\]$"
-"syntax match tweetvim_created_at "- .\{-1,} \[" 
+syntax match tweetvim_created_at "- .\{-1,}$" 
 "
 syntax match tweetvim_screen_name "^[0-9A-Za-z_]\{-1,} "
 
