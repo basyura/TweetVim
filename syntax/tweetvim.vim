@@ -21,7 +21,7 @@ syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+"
 "syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
 syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
 
-syntax match tweetvim_hash_tag "\#[0-9A-Za-z_]\+"
+syntax match tweetvim_hash_tag "[#＃][^ ].\{-1,}[ \n]"
 
 syntax match tweetvim_separator       "^-\+$"
 syntax match tweetvim_separator_title "^\~\+$"
