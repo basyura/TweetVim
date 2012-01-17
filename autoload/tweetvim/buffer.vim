@@ -2,6 +2,8 @@
 let s:backup = []
 
 let s:buf_name = '[tweetvim]'
+
+let s:last_bufnr = 0
 "
 "
 "
@@ -104,34 +106,35 @@ endfunction
 "
 "
 function! s:switch_buffer()
-  let exist_win = 0
-
-  " TODO : find window or buffer
-  " buf_name is [tweetvim] or [tweetvim - in_replly_to]
-  let winnr = 1
-  while winnr <= winnr('$')
-    if getbufvar(winbufnr(winnr), '&filetype') ==# 'tweetvim'
-      execute winnr 'wincmd w'
-      let exist_win = 1
+  " get buf no from buffer's name
+  let bufnr = -1
+  let num   = bufnr('$')
+  while num > s:last_bufnr
+    if getbufvar(num, '&filetype') ==# 'tweetvim'
+      let bufnr = num
       break
     endif
-    let winnr += 1
+    let num -= 1
   endwhile
-
-  execute 'edit! ' . s:buf_name
-
-  return
-
-  " バッファの判定がよくわかんねぇ
-  " s:bufnr の下りが 4[s] ぐらいかかっちゃうのとでひとまず
-
-  if !exist_win
-    let bufno = s:bufnr(escape(s:buf_name, '*[]?{},'))
-    if bufno > 0
-      execute 'buffer ' . bufno
-    else
-      execute 'edit! ' . s:buf_name
-    endif
+  " buf is not exist
+  if bufnr < 0
+    execute 'edit! ' . s:buf_name
+    let s:last_bufnr = bufnr("")
+    return
+  endif
+  " buf is exist in window
+  let winnr = bufwinnr(bufnr)
+  if winnr > 0
+    execute winnr 'wincmd w'
+    return
+  endif
+  " buf is exist
+  if buflisted(bufnr)
+    execute 'buffer ' . bufnr
+  else
+    " buf is already deleted
+    execute 'edit! ' . s:buf_name
+    let s:last_bufnr = bufnr("")
   endif
 endfunction
 "
