@@ -109,7 +109,7 @@ function! s:switch_buffer()
   " get buf no from buffer's name
   let bufnr = -1
   let num   = bufnr('$')
-  while num > s:last_bufnr
+  while num >= s:last_bufnr
     if getbufvar(num, '&filetype') ==# 'tweetvim'
       let bufnr = num
       break
