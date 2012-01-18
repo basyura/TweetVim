@@ -1,4 +1,22 @@
 "
+let s:Vital    = vital#of('tweetvim')
+let s:DateTime = s:Vital.import('DateTime')
+"
+"
+"
+function! tweetvim#util#format_date(date)
+ let date = substitute(a:date, '\S* ', '','')
+ let date_time = s:DateTime.from_format(date,'%b %d %H:%M:%S %z %Y', 'C')
+ "return date_time.strftime("%Y/%m/%d %H:%M")
+ return date_time.strftime("%m/%d %H:%M")
+endfunction
+"
+"
+"
+function! tweetvim#util#today()
+ return s:DateTime.now().strftime('%m/%d')
+endfunction
+"
 "
 "
 function! tweetvim#util#padding(msg, length)

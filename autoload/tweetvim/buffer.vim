@@ -199,10 +199,11 @@ endfunction
 "
 function! s:append_tweets(tweets, cache)
   let separator = tweetvim#util#separator('-')
+  let today     = tweetvim#util#today()
   for tweet in a:tweets
     " cache tweet by line no
     let a:cache[line(".")] = tweet
-    call append(line('$') - 1, s:format(tweet))
+    call append(line('$') - 1, s:format(tweet, today))
     call append(line('$') - 1, separator)
   endfor
 endfunction
@@ -215,11 +216,13 @@ endfunction
 "
 "
 "
-function! s:format(tweet)
+function! s:format(tweet, ...)
   let text = a:tweet.text
   let text = substitute(text , '' , '' , 'g')
   let text = substitute(text , '\n' , '' , 'g')
   let text = tweetvim#util#unescape(text)
+
+  let today = a:0 ? a:1 : tweetvim#util#today()
 
   let str  = tweetvim#util#padding(a:tweet.user.screen_name, 15) . ' : '
   " TODO
@@ -240,6 +243,14 @@ function! s:format(tweet)
     endif
     let str .= ' [[from ' . source . ']]'
   endif
+
+  try
+    let date  = tweetvim#util#format_date(a:tweet.created_at)
+    let date  = substitute(date, today, '', '')
+    let str .= ' [[' . date . ']]'
+  catch
+    " serch と timeline でフォーマットが違う
+  endtry
 
   return str
 endfunction
