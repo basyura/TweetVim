@@ -2,7 +2,7 @@
 " syntax for tweetvim
 "
 if exists('b:current_syntax')
-"  finish
+  finish
 endif
 
 setlocal conceallevel=2
