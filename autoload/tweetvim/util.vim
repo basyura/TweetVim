@@ -5,9 +5,7 @@ let s:DateTime = s:Vital.import('DateTime')
 "
 "
 function! tweetvim#util#format_date(date)
- let date = substitute(a:date, '\S* ', '','')
- let date_time = s:DateTime.from_format(date,'%b %d %H:%M:%S %z %Y', 'C')
- "return date_time.strftime("%Y/%m/%d %H:%M")
+ let date_time = s:DateTime.from_format(a:date,'%a %b %d %H:%M:%S %z %Y', 'C')
  return date_time.strftime("%m/%d %H:%M")
 endfunction
 "
