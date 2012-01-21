@@ -252,6 +252,10 @@ source(クライアント名) を表示するオプション
 
     let g:tweetvim_display_source = 1
 
+ツイート時間の表示・非表示設定 (少しでも表示時間を速くしたい場合)
+
+    let g:tweetvim_display_time   = 1
+
 TODO for v1.1
 ---------
 

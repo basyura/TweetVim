@@ -243,14 +243,16 @@ function! s:format(tweet, ...)
     endif
     let str .= ' [[from ' . source . ']]'
   endif
-
-  try
-    let date  = tweetvim#util#format_date(a:tweet.created_at)
-    let date  = substitute(date, today, '', '')
-    let str .= ' [[' . date . ']]'
-  catch
-    " serch と timeline でフォーマットが違う
-  endtry
+  " time
+  if get(g:, 'tweetvim_display_time', 1)
+    try
+      let date  = tweetvim#util#format_date(a:tweet.created_at)
+      let date  = substitute(date, today, '', '')
+      let str .= ' [[' . date . ']]'
+    catch
+      " serch と timeline でフォーマットが違う
+    endtry
+  endif
 
   return str
 endfunction
