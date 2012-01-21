@@ -18,6 +18,7 @@ function! tweetvim#say#open(...)
     execute 'below split tweetvim_say' 
     execute '2 wincmd _'
     call s:define_default_key_mappings()
+    call s:tweetvim_say_settings()
   endif
 
   setlocal modifiable
