@@ -269,6 +269,7 @@ TODO for v1.2
 --
 
 - tweetvim バッファで setlocal nolist
+- tweetvim_say バッファを開いた時に setlocal nomodified にする
 
 release v1.1 2012.01.27
 -----------------------
