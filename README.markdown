@@ -265,6 +265,10 @@ TODO for v1.2
 - フィルタリング(NGワード)
 - 検索時の次ページ、前ページ
 
+### 済
+
+- tweetvim_say バッファを開いた時に setlocal nomodified にする
+
 release v1.1 2012.01.27
 -----------------------
 
