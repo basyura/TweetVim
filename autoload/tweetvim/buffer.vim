@@ -143,6 +143,7 @@ endfunction
 function! s:pre_process()
   setlocal noswapfile
   setlocal modifiable
+  setlocal nolist
   setlocal buftype=nofile
   call s:define_default_key_mappings()
   setfiletype tweetvim
