@@ -40,49 +40,45 @@ syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_bloc
 syntax match tweetvim_appendix_block /\[\[/ contained conceal
 syntax match tweetvim_appendix_block /\]\]/ contained conceal
 
+if get(g:, 'tweetvim_original_hi', 0)
 
-"syntax match uiki_strong /|[^|]\+|/ contains=uiki_strong_bar
-"syntax match uiki_page_block /\[\[/ contained conceal
-"syntax match uiki_page_block /\]\]/ contained conceal
-"syntax match uiki_strong_bar /|/ contained conceal
+  highlight default tweetvim_title            guifg=#bde682
+  highlight default tweetvim_status_id        guifg=#444444
+  highlight default tweetvim_created_at       guifg=gray
+  highlight default tweetvim_screen_name      guifg=#bde682
+  highlight default tweetvim_at_screen_name   guifg=#bde682
+  highlight default tweetvim_link             guifg=#80a0ff
+  highlight default tweetvim_hash_tag         guifg=yellow
+  highlight default tweetvim_separator        guifg=#444444
+  highlight default tweetvim_separator_title  guifg=#444444
+  highlight default tweetvim_new_separator    guifg=orange gui=undercurl
+  highlight default tweetvim_star             guifg=yellow
+  highlight default tweetvim_reload           guifg=orange
+  highlight default tweetvim_rt_count         guifg=orange
+  highlight default tweetvim_rt_over          guifg=orange
+  highlight default tweetvim_reply            guifg=orange
+  highlight default tweetvim_appendix         guifg=#616161
 
-"syntax match uiki_link "\<http://\S\+"
-"syntax match uiki_link "\<https://\S\+"
+else
 
-"syntax match uiki_title1 "^\* .*"
-"syntax match uiki_title2 "\s\* .*"
+  hi def link tweetvim_title           Title
+  hi def link tweetvim_status_id       Special
+  hi def link tweetvim_created_at      NonText
+  hi def link tweetvim_screen_name     String
+  hi def link tweetvim_at_screen_name  String
+  hi def link tweetvim_link            Underlined
+  hi def link tweetvim_hash_tag        Constant
+  hi def link tweetvim_separator       Ignore
+  hi def link tweetvim_separator_title Ignore
+  hi def link tweetvim_new_separator   Conditional
+  hi def link tweetvim_star            Conditional
+  hi def link tweetvim_reload          Constant
+  hi def link tweetvim_rt_count        Question
+  hi def link tweetvim_rt_over         Question
+  hi def link tweetvim_reply           String
+  hi def link tweetvim_appendix        Comment
 
-
-"highlight default link uiki_page_link Underlined
-"highlight default link uiki_page_block Statement
-
-"highlight default link uiki_link Underlined
-"highlight uiki_title1 guifg=orange gui=underline
-"highlight uiki_title2 guifg=orange
-
-"highlight uiki_strong guifg=#FF80FF
-highlight default tweetvim_title guifg=#bde682
-highlight default tweetvim_status_id  guifg=#444444
-highlight default tweetvim_created_at guifg=gray
-highlight default tweetvim_screen_name guifg=#bde682
-highlight default tweetvim_at_screen_name guifg=#bde682
-highlight default tweetvim_link guifg=#80a0ff
-
-highlight default tweetvim_hash_tag guifg=yellow
-
-highlight default tweetvim_separator guifg=#444444
-highlight default tweetvim_separator_title guifg=#444444
-highlight default tweetvim_new_separator guifg=orange gui=undercurl
-
-highlight default tweetvim_star guifg=yellow
-highlight default tweetvim_reload guifg=orange
-highlight default tweetvim_rt_count guifg=orange
-highlight default tweetvim_rt_over  guifg=orange
-
-"highlight tweetvim_reply gui=underline
-highlight default tweetvim_reply guifg=orange
-
-highlight default tweetvim_appendix guifg=#616161
+endif
 
 let b:current_syntax = 'tweetvim'
 

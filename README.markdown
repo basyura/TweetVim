@@ -260,7 +260,6 @@ TODO for v1.2
 -------------
 
 - ライブラリチェック
-- highlight の link 化
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 - 検索時の次ページ、前ページ
@@ -272,6 +271,8 @@ TODO for v1.2
 - tweetvim バッファで setlocal nolist
 - tweetvim_say バッファを開いた時に setlocal nomodified にする
 - hilight が上書きされてしまうのを修正
+- hilight で link を使う (@delphinus35)
+  - オリジナル highlight を使う g:tweetvim_original_hi を用意
 
 release v1.1 2012.01.27
 -----------------------
