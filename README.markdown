@@ -271,6 +271,7 @@ TODO for v1.2
 
 - tweetvim バッファで setlocal nolist
 - tweetvim_say バッファを開いた時に setlocal nomodified にする
+- hilight が上書きされてしまうのを修正
 
 release v1.1 2012.01.27
 -----------------------
