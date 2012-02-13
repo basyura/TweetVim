@@ -15,6 +15,13 @@ function! tweetvim#twibill#new(config)
     endif
 
     let res    = oauth#get(a:url, self.ctx(), {}, a:param)
+    " for debug
+    if g:tweetvim_log
+      call tweetvim#log('twibill#get url    : ' . a:url)
+      call tweetvim#log('twibill#get param  : ', param)
+      call tweetvim#log('twibill#get header : ', res.header)
+    endif
+    "
     let tweets = json#decode(res.content)
 
     if a:url =~ "search.json"

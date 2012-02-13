@@ -6,9 +6,8 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 let s:cache = {'screen_name' : {}}
 "
 "
-"
-"
 function! tweetvim#timeline(method, ...)
+  call s:log('tweetvim#timeline ' . a:method . ' start')
   let start = reltime()
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
@@ -55,6 +54,7 @@ function! tweetvim#timeline(method, ...)
     call tweetvim#buffer#replace(1, getline('.') . '   (' . time . ')')
   endif
 
+  call s:log('tweetvim#timeline ' . a:method . ' end')
 endfunction
 "
 "
@@ -240,4 +240,25 @@ endfunction
 "
 function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
   return join(map(tweetvim#lists(), 'v:val.name'), "\n")
+endfunction
+"
+"
+"
+function! tweetvim#log(msg, ...)
+  " TODO
+  if a:0
+    call tweetvim#logger#log(a:msg, a:1)
+  else
+    call tweetvim#logger#log(a:msg)
+  endif
+endfunction
+"
+" alias for tweetvim#log
+"
+function! s:log(msg, ...)
+  if a:0
+    call tweetvim#logger#log(a:msg, a:1)
+  else
+    call tweetvim#logger#log(a:msg)
+  endif
 endfunction
