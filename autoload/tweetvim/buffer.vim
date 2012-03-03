@@ -130,10 +130,13 @@ function! s:switch_buffer()
   endif
   " buf is exist
   if buflisted(bufnr)
+    if g:tweetvim_open_buffer_cmd =~ "split"
+      execute g:tweetvim_open_buffer_cmd
+    endif
     execute 'buffer ' . bufnr
   else
     " buf is already deleted
-    execute 'edit! ' . s:buf_name
+    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
   endif
 endfunction
