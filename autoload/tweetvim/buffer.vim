@@ -118,7 +118,7 @@ function! s:switch_buffer()
   endwhile
   " buf is not exist
   if bufnr < 0
-    execute 'edit! ' . s:buf_name
+    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
     return
   endif

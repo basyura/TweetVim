@@ -15,12 +15,14 @@ endfunction
 
 "
 "
-call s:set_global_variable('tweetvim_tweet_per_page', 20)
-call s:set_global_variable('tweetvim_cache_size'    , 10)
-call s:set_global_variable('tweetvim_config_dir'    , expand('~/.tweetvim'))
-call s:set_global_variable('tweetvim_display_source', 0)
-call s:set_global_variable('tweetvim_display_time'  , 1)
-call s:set_global_variable('tweetvim_log'           , 0)
+call s:set_global_variable('tweetvim_tweet_per_page'  , 20)
+call s:set_global_variable('tweetvim_cache_size'      , 10)
+call s:set_global_variable('tweetvim_config_dir'      , expand('~/.tweetvim'))
+call s:set_global_variable('tweetvim_display_source'  , 0)
+call s:set_global_variable('tweetvim_display_time'    , 1)
+call s:set_global_variable('tweetvim_log'             , 0)
+call s:set_global_variable('tweetvim_open_buffer_cmd' , 'edit!')
+
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')

@@ -256,6 +256,10 @@ source(クライアント名) を表示するオプション
 
     let g:tweetvim_display_time   = 1
 
+タイムラインを開く際のコマンドを指定 (edit/split/vsplit)
+
+    let g:tweetvim_open_buffer_cmd = 'edit!'
+
 TODO for v1.2
 -------------
 
@@ -272,7 +276,9 @@ TODO for v1.2
 - tweetvim_say バッファを開いた時に setlocal nomodified にする
 - hilight が上書きされてしまうのを修正
 - hilight で link を使う (@delphinus35)
-  - オリジナル highlight を使う g:tweetvim_original_hi を用意
+- オリジナル highlight を使う g:tweetvim_original_hi を用意
+- タイムラインを開く際のコマンドを指定できるようにした
+
 
 release v1.1 2012.01.27
 -----------------------
