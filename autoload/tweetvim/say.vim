@@ -35,13 +35,20 @@ endfunction
 "
 "
 "
-function! tweetvim#say#command()
-  let msg = input('tweet : ')
-  if msg != ''
-    call s:post_tweet(msg)
-  else
-    redraw | echo ''
+function! tweetvim#say#command(...)
+  let msg = a:0 ? a:1 : input('tweet : ')
+  " check msg
+  if msg == ''
+    redraw | echo '' | return
   endif
+  " check post ok
+  redraw
+  echo msg
+  if input('ok ? [y/n] : ') != 'y'
+    redraw | echo '' | return
+  endif
+  " post
+  call s:post_tweet(msg)
 endfunction
 "
 "

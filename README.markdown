@@ -64,7 +64,11 @@ commands
 
 ### コマンドラインからツイート
 
+引数が有る場合はそれをメッセージとして、無い場合はプロンプトを表示。
+
     :TweetVimCommandSay
+    or
+    :TweetVimCommandSay メッセージ
 
 ### 検索
 
