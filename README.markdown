@@ -62,6 +62,10 @@ commands
 
 メッセージ入力後、ノーマルモードの Enter でツイート。
 
+### コマンドラインからツイート
+
+    :TweetVimCommandSay
+
 ### 検索
 
     :TweetVimSearch tweetvim
@@ -272,6 +276,7 @@ TODO for v1.2
 済
 --
 
+- コマンドラインからツイートできる TweetVimCommandSay を追加
 - tweetvim バッファで setlocal nolist
 - tweetvim_say バッファを開いた時に setlocal nomodified にする
 - hilight が上書きされてしまうのを修正

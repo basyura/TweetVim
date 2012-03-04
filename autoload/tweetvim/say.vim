@@ -1,5 +1,6 @@
 "
 "
+"
 let s:tweet_history = []
 function! tweetvim#say#history()
   return copy(s:tweet_history)
@@ -31,7 +32,21 @@ function! tweetvim#say#open(...)
 
   setlocal nomodified
 endfunction
-
+"
+"
+"
+function! tweetvim#say#command()
+  let msg = input('tweet : ')
+  if msg != ''
+    call s:post_tweet(msg)
+  else
+    redraw | echo ''
+  endif
+endfunction
+"
+"
+"
+"
 function! tweetvim#say#count()
   return 140 - strchars(s:get_text())
 endfunction
@@ -98,9 +113,17 @@ endfunction
 "
 "
 "
-function! s:post_tweet()
+function! s:post_buffer_tweet()
   let text = s:get_text()
-  if strchars(text) > 140
+  if s:post_tweet(text)
+    bd!
+  endif
+endfunction
+"
+"
+"
+function! s:post_tweet(text)
+  if strchars(a:text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None
     return
@@ -108,13 +131,13 @@ function! s:post_tweet()
   redraw | echo 'sending ... ' | sleep 1
   try
     let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
-    call tweetvim#update(text, param)
+    call tweetvim#update(a:text, param)
   catch
     echoerr v:exception
-    return
+    return 0
   endtry
-  bd!
   redraw | echo 'sending ... ok'
+  return 1
 endfunction
 
 function! s:get_text()
@@ -130,7 +153,7 @@ function! s:define_default_key_mappings()
     nnoremap <buffer> <silent> q :bd!<CR>
     nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
     inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
-    nnoremap <buffer> <silent> <CR>       :call <SID>post_tweet()<CR>
+    nnoremap <buffer> <silent> <CR>       :call <SID>post_buffer_tweet()<CR>
 
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
