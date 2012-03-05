@@ -70,7 +70,7 @@ commands
     or
     :TweetVimCommandSay メッセージ
 
-### 現在行をツイート
+### カレント行をツイート
 
     :TweetVimCurrentLineSay
 
@@ -284,6 +284,7 @@ TODO for v1.2
 済
 --
 
+- カレント行をツイートする TweetVimCurrentLineSay を追加
 - コマンドラインからツイートできる TweetVimCommandSay を追加
 - tweetvim バッファで setlocal nolist
 - tweetvim_say バッファを開いた時に setlocal nomodified にする
