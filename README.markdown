@@ -70,6 +70,10 @@ commands
     or
     :TweetVimCommandSay メッセージ
 
+### 現在行をツイート
+
+    :TweetVimCurrentLineSay
+
 ### 検索
 
     :TweetVimSearch tweetvim

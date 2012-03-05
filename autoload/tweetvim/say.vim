@@ -6,7 +6,7 @@ function! tweetvim#say#history()
   return copy(s:tweet_history)
 endfunction
 "
-"
+" say with opened buffer
 "
 function! tweetvim#say#open(...)
   let text  = a:0 > 0 ? a:1 : ''
@@ -33,7 +33,7 @@ function! tweetvim#say#open(...)
   setlocal nomodified
 endfunction
 "
-"
+" say with command line
 "
 function! tweetvim#say#command(...)
   let msg = a:0 ? a:1 : input('tweet : ')
@@ -49,6 +49,12 @@ function! tweetvim#say#command(...)
   endif
   " post
   call s:post_tweet(msg)
+endfunction
+"
+" say from current line
+"
+function! tweetvim#say#current_line()
+  call tweetvim#say#command(getline("."))
 endfunction
 "
 "
