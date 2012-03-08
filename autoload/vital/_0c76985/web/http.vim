@@ -3,6 +3,10 @@ set cpo&vim
 
 let s:V = vital#{expand('<sfile>:h:h:t:r')}#new()
 
+function! s:_vital_depends()
+  return ['Data.String']
+endfunction
+
 let s:string = s:V.import('Data.String')
 
 function! s:__urlencode_char(c)
@@ -20,7 +24,7 @@ endfunction
 function! s:decodeURI(str)
   let ret = a:str
   let ret = substitute(ret, '+', ' ', 'g')
-  let ret = substitute(ret, '%\(\x\x\)', '\=nr2char("0x".submatch(1))', 'g')
+  let ret = substitute(ret, '%\(\x\x\)', '\=printf("%c", str2nr(submatch(1), 16))', 'g')
   return ret
 endfunction
 
