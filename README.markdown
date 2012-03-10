@@ -272,17 +272,18 @@ source(クライアント名) を表示するオプション
 
     let g:tweetvim_open_buffer_cmd = 'edit!'
 
-TODO for v1.2
+
+
+TODO for v1.3
 -------------
 
 - ライブラリチェック
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
-- 検索時の次ページ、前ページ
 - http_proxy の設定説明を追加
 
-済
---
+release v1.2 2012.03.10
+-----------------------
 
 - カレント行をツイートする TweetVimCurrentLineSay を追加
 - コマンドラインからツイートできる TweetVimCommandSay を追加
@@ -291,8 +292,9 @@ TODO for v1.2
 - hilight が上書きされてしまうのを修正
 - hilight で link を使う (@delphinus35)
 - オリジナル highlight を使う g:tweetvim_original_hi を用意
-- タイムラインを開く際のコマンドを指定できるようにした
-
+- タイムラインを開く際のコマンドを指定できるようにした (g:tweetvim_open_buffer_cmd)
+- vital の最新化
+- 検索時の次ページ、前ページができなかったのを修正(twibill.vim)
 
 release v1.1 2012.01.27
 -----------------------
