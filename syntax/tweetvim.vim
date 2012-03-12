@@ -25,7 +25,6 @@ syntax match tweetvim_hash_tag "[ 　。、]\zs[#＃][^ ].\{-1,}\ze[ \n]"
 
 syntax match tweetvim_separator       "^-\+$"
 syntax match tweetvim_separator_title "^\~\+$"
-syntax match tweetvim_new_separator   "^\s\+$"
 
 syntax match tweetvim_star " ★ "
 syntax match tweetvim_reload "\[reload\]"
@@ -51,7 +50,6 @@ if get(g:, 'tweetvim_original_hi', 0)
   highlight default tweetvim_hash_tag         guifg=yellow
   highlight default tweetvim_separator        guifg=#444444
   highlight default tweetvim_separator_title  guifg=#444444
-  highlight default tweetvim_new_separator    guifg=orange gui=undercurl
   highlight default tweetvim_star             guifg=yellow
   highlight default tweetvim_reload           guifg=orange
   highlight default tweetvim_rt_count         guifg=orange
