@@ -15,7 +15,7 @@ function! tweetvim#action#in_reply_to#execute(tweet)
   let guard = 0
   while 1
     call add(list, tweet)
-    let id = tweet.in_reply_to_status_id_str
+    let id = get(tweet, 'in_reply_to_status_id_str', '')
     if id == ''
       break
     endif
