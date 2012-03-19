@@ -2,6 +2,9 @@
 " filter
 "
 function! tweetvim#filter#execute(tweets)
-  " todo - find filters and execute
-  return tweetvim#filter#ngword#execute(a:tweets)
+  let tweets  = a:tweets
+  for filter in get(g:, 'tweetvim_filters', [])
+    let tweets  = function('tweetvim#filter#' . filter . '#execute')(tweets)
+  endfor
+  return tweets
 endfunction
