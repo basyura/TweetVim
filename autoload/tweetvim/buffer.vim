@@ -204,7 +204,8 @@ endfunction
 function! s:append_tweets(tweets, cache)
   let separator = tweetvim#util#separator('-')
   let today     = tweetvim#util#today()
-  for tweet in a:tweets
+  " filter tweets
+  for tweet in tweetvim#filter#execute(a:tweets)
     " cache tweet by line no
     let a:cache[line(".")] = tweet
     call append(line('$') - 1, s:format(tweet, today))
