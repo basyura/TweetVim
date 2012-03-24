@@ -154,6 +154,7 @@ tweetvim バッファのみ。
 - search          - search tweets
 - unfollow        - unfollow user
 - user_timeline   - show user timeline
+- remove_status   - remove status
 
 ### ツイート歴表示、選択
 
@@ -291,6 +292,7 @@ TODO for v1.3
 
 ### 済
 
+- remove_status アクションを追加
 - 検索結果から in_reply_to を探すときのメッセージ ID チェックを修正
 - ライブラリチェック
 - http_proxy の設定説明を追加
