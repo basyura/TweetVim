@@ -11,6 +11,12 @@ endfunction
 "
 function! tweetvim#action#remove_status#execute(tweet)
   let tweet = a:tweet
+
+  if tweetvim#verify_credentials().screen_name != tweet.user.screen_name
+    echohl ErrorMsg | echo 'can not remove ' . tweet.user.screen_name . "'s tweet"  | echohl None
+    return
+  endif
+
   echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.text)
   if input('remove this status ? [y/n] : ') != 'y'
     return
