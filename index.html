@@ -1,0 +1,368 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Tweetvim by basyura</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Tweetvim</h1>
+        <p>twitter client for vim</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/basyura/TweetVim" class="button fork"><strong>Fork On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/basyura/TweetVim/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/basyura/TweetVim/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>TweetVim</h1>
+
+<p>twitter client for vim</p>
+
+<h2>License</h2>
+
+<p>MIT License</p>
+
+<h2>Requires</h2>
+
+<ul>
+<li><a href="https://github.com/mattn/webapi-vim">webapi-vim</a></li>
+<li><a href="https://github.com/tyru/open-browser.vim">open-browser.vim</a></li>
+<li><a href="https://github.com/basyura/twibill.vim">twibill.vim</a></li>
+<li><a href="https://github.com/h1mesuke/unite-outline">(unite-outline)</a></li>
+<li><a href="https://github.com/basyura/bitly.vim">(bitly.vim)</a></li>
+<li><a href="https://github.com/Shougo/unite.vim">(unite.vim)</a></li>
+<li><a href="http://curl.haxx.se/">cURL</a></li>
+</ul><h2>verify</h2>
+
+<p>認証されていない場合は、コマンド実行時にブラウザを起動して PIN を表示する。</p>
+
+<pre><code>:TweetVimHomeTimeline
+
+&gt; now launched your browser to authenticate
+&gt; Enter Twitter OAuth PIN:
+</code></pre>
+
+<p>PIN を入力すると認証完了。<br>
+認証時に発行された AccessToken と AccessTokenSecret が以下に保存される。</p>
+
+<pre><code>~/.tweetvim/token
+</code></pre>
+
+<p>~/.tweetvim がファイルとして保存されている場合は削除してから上記を行うこと。</p>
+
+<h2>commands</h2>
+
+<h3>ホームタイムラインを表示する。</h3>
+
+<pre><code>:TweetVimHomeTimeline
+</code></pre>
+
+<h3>Mention を表示する</h3>
+
+<pre><code>:TwetVimMentions
+</code></pre>
+
+<h3>リストを表示する</h3>
+
+<pre><code>:TweetVimListStatuses vim
+</code></pre>
+
+<h3>ユーザのタイムラインを表示する</h3>
+
+<pre><code>:TweetVimUserTimeline basyura
+</code></pre>
+
+<h3>ツイート用バッファを開く</h3>
+
+<pre><code>:TweetVimSay
+</code></pre>
+
+<p>メッセージ入力後、ノーマルモードの Enter でツイート。</p>
+
+<h3>コマンドラインからツイート</h3>
+
+<p>引数が有る場合はそれをメッセージとして、無い場合はプロンプトを表示。</p>
+
+<pre><code>:TweetVimCommandSay
+or
+:TweetVimCommandSay メッセージ
+</code></pre>
+
+<h3>カレント行をツイート</h3>
+
+<pre><code>:TweetVimCurrentLineSay
+</code></pre>
+
+<h3>検索</h3>
+
+<pre><code>:TweetVimSearch tweetvim
+</code></pre>
+
+<h2>定義済みバッファキーマップ</h2>
+
+<h3>タイムライン表示バッファ(tweetvim)</h3>
+
+<pre><code>nmap &lt;silent&gt; &lt;buffer&gt; &lt;CR&gt; &lt;Plug&gt;(tweetvim_action_enter)
+nmap &lt;silent&gt; &lt;buffer&gt; r  &lt;Plug&gt;(tweetvim_action_reply)
+nmap &lt;silent&gt; &lt;buffer&gt; i  &lt;Plug&gt;(tweetvim_action_in_reply_to)
+nmap &lt;silent&gt; &lt;buffer&gt; u  &lt;Plug&gt;(tweetvim_action_user_timeline)
+nmap &lt;silent&gt; &lt;buffer&gt; o  &lt;Plug&gt;(tweetvim_action_open_links)
+nmap &lt;silent&gt; &lt;buffer&gt; q  &lt;Plug&gt;(tweetvim_action_search)
+nmap &lt;silent&gt; &lt;buffer&gt; &lt;leader&gt;f  &lt;Plug&gt;(tweetvim_action_favorite)
+nmap &lt;silent&gt; &lt;buffer&gt; &lt;leader&gt;uf &lt;Plug&gt;(tweetvim_action_remove_favorite)
+nmap &lt;silent&gt; &lt;buffer&gt; &lt;leader&gt;r  &lt;Plug&gt;(tweetvim_action_retweet)
+nmap &lt;silent&gt; &lt;buffer&gt; &lt;leader&gt;q  &lt;Plug&gt;(tweetvim_action_qt)
+nmap &lt;silent&gt; &lt;buffer&gt; &lt;Leader&gt;&lt;Leader&gt;  &lt;Plug&gt;(tweetvim_action_reload)
+
+nmap &lt;silent&gt; &lt;buffer&gt; ff  &lt;Plug&gt;(tweetvim_action_page_next)
+nmap &lt;silent&gt; &lt;buffer&gt; bb  &lt;Plug&gt;(tweetvim_action_page_previous)
+
+nmap &lt;silent&gt; &lt;buffer&gt; H  &lt;Plug&gt;(tweetvim_buffer_previous)
+nmap &lt;silent&gt; &lt;buffer&gt; L  &lt;Plug&gt;(tweetvim_buffer_next)
+
+nnoremap &lt;silent&gt; &lt;buffer&gt; a :call unite#sources#tweetvim_action#start()&lt;CR&gt;
+nnoremap &lt;silent&gt; &lt;buffer&gt; t :call unite#sources#tweetvim_timeline#start()&lt;CR&gt;
+</code></pre>
+
+<p>デフォルトでは、<code>&lt;leader&gt;</code> は \ が設定されている</p>
+
+<h3>ツイート用バッファ(tweetvim_say)</h3>
+
+<pre><code>nnoremap &lt;buffer&gt; &lt;silent&gt; q :bd!&lt;CR&gt;
+nnoremap &lt;buffer&gt; &lt;silent&gt; &lt;C-s&gt;      :call &lt;SID&gt;show_history()&lt;CR&gt;
+inoremap &lt;buffer&gt; &lt;silent&gt; &lt;C-s&gt; &lt;ESC&gt;:call &lt;SID&gt;show_history()&lt;CR&gt;
+nnoremap &lt;buffer&gt; &lt;silent&gt; &lt;CR&gt;       :call &lt;SID&gt;post_tweet()&lt;CR&gt;
+
+inoremap &lt;buffer&gt; &lt;silent&gt; &lt;C-i&gt; &lt;ESC&gt;:call unite#sources#tweetvim_tweet_history#start()&lt;CR&gt;
+nnoremap &lt;buffer&gt; &lt;silent&gt; &lt;C-i&gt; &lt;ESC&gt;:call unite#sources#tweetvim_tweet_history#start()&lt;CR&gt;
+</code></pre>
+
+<h2>Unite インタフェース</h2>
+
+<h3>タイムライン選択</h3>
+
+<pre><code>:Unite tweetvim
+</code></pre>
+
+<ul>
+<li>home_timeline</li>
+<li>mentions</li>
+<li>retweeted_by_me</li>
+<li>retweeted_to_me</li>
+<li>retweets_of_me</li>
+<li>favorites</li>
+<li>
+<a href="/basyura" class="user-mention">@basyura</a>/登録してあるリスト</li>
+<li>
+<a href="/basyura" class="user-mention">@basyura</a>/登録してあるリスト</li>
+<li>・・・</li>
+</ul><p>api を使ってスクリーン名とリスト一覧を取得するので、最初の一回はちょっと遅い。</p>
+
+<h3>アクション選択</h3>
+
+<p>tweetvim バッファのみ。<br>
+デフォルトでは a でアクション選択用の Unite が起動する。</p>
+
+<ul>
+<li>browser         - open tweet with browser</li>
+<li>favorite        - favorite tweet</li>
+<li>follow          - follow user</li>
+<li>in_reply_to     - show conversation</li>
+<li>list            - add user to list</li>
+<li>open_links      - open links in tweet</li>
+<li>qt              - quote tweet</li>
+<li>remove_favorite - remove favorite</li>
+<li>reply           - reply</li>
+<li>retweet         - retweet</li>
+<li>search          - search tweets</li>
+<li>unfollow        - unfollow user</li>
+<li>user_timeline   - show user timeline</li>
+<li>remove_status   - remove status</li>
+</ul><h3>ツイート歴表示、選択</h3>
+
+<p>tweetvim_say バッファのみ。<br>
+デフォルトでは <code>&lt;C-i&gt;</code> で歴選択用の Unite が起動する。<br>
+歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。  </p>
+
+<p><code>&lt;C-s&gt;</code> で歴を遡って tweetvim_say バッファに表示させることも可</p>
+
+<h3>outline</h3>
+
+<p>タイムラインの絞り込み</p>
+
+<pre><code>:Unite outline
+</code></pre>
+
+<h2>url 短縮</h2>
+
+<p><a href="https://github.com/basyura/bitly.vim">bitly.vim</a> をインストールしておくと、ツイート用バッファで URL 短縮とタイトルの取得ができる。<br>
+デフォルトのキーマッピング。</p>
+
+<pre><code>inoremap &lt;buffer&gt; &lt;C-x&gt;&lt;C-d&gt; &lt;ESC&gt;:TweetVimBitly&lt;CR&gt;
+</code></pre>
+
+<p>実行すると以下の内容がツイート用バッファに展開される</p>
+
+<pre><code>&gt; basyura/TweetVim - GitHub <a href="http://bit.ly/t0RQhx">http://bit.ly/t0RQhx</a>
+</code></pre>
+
+<h2>その他</h2>
+
+<p>タイムラインに表示したスクリーン名のキャッシュ</p>
+
+<pre><code>~/.tweetvim/screen_name
+</code></pre>
+
+<h2>使い方</h2>
+
+<h3>設定例</h3>
+
+<pre><code>" タイムライン選択用の Unite を起動する
+nnoremap &lt;silent&gt; t :Unite tweetvim&lt;CR&gt;
+" 発言用バッファを表示する
+nnoremap &lt;silent&gt; s           :&lt;C-u&gt;TweetVimSay&lt;CR&gt;
+" mentions を表示する
+nnoremap &lt;silent&gt; &lt;Space&gt;re   :&lt;C-u&gt;TweetVimMentions&lt;CR&gt;
+" 特定のリストのタイムラインを表示する
+nnoremap &lt;silent&gt; &lt;Space&gt;tt   :&lt;C-u&gt;TweetVimListStatuses basyura vim&lt;CR&gt;
+
+" スクリーン名のキャッシュを利用して、neocomplcache で補完する
+if !exists('g:neocomplcache_dictionary_filetype_lists')
+  let g:neocomplcache_dictionary_filetype_lists = {}
+endif
+let neco_dic = g:neocomplcache_dictionary_filetype_lists
+let neco_dic.tweetvim_say = $HOME . '/.tweetvim/screen_name'
+</code></pre>
+
+<h3>使用例</h3>
+
+<ul>
+<li>Unite を起動してタイムラインの一覧を表示する =&gt; <code>t</code>
+</li>
+<li>タイムラインを選択して表示する</li>
+<li>最新の内容に更新する =&gt; <code>&lt;leader&gt;&lt;leader&gt;</code>
+</li>
+<li>リプライする =&gt; <code>r</code>
+</li>
+<li>リプライの内容を書きこんで送信する =&gt; normal モードで <code>enter</code>
+</li>
+<li>タイムラインの次ページを表示する =&gt; <code>ff</code>
+</li>
+<li>タイムラインの前ページを表示する =&gt; <code>bb</code>
+</li>
+<li>さっき表示したバッファに戻る =&gt; <code>H</code>
+</li>
+<li>やっぱり元のバッファに戻る(進む) =&gt; <code>L</code>
+</li>
+<li>新しく発言する =&gt; <code>s</code>
+</li>
+<li>過去に発言した内容をたどる =&gt; <code>C-s</code>
+</li>
+<li>Unite で過去に発言した内容の一覧を表示する =&gt; <code>C-i</code>
+</li>
+<li>発言する =&gt; normal モードで <code>enter</code>
+</li>
+<li>検索してー =&gt; <code>:TweetVimSearch vim</code>
+</li>
+<li>このユーザの発言だけ見たい =&gt; <code>u</code>
+</li>
+<li>ツイートのやり取りを見たい =&gt; <code>i</code>
+</li>
+<li>ふぁぼりたい =&gt; <code>&lt;leader&gt;f</code>
+</li>
+<li>ふぁぼ消したい =&gt; <code>&lt;leader&gt;uf</code>
+</li>
+<li>リツイートしたい =&gt; <code>&lt;leader&gt;r</code>
+</li>
+<li>qt したい =&gt; <code>&lt;leader&gt;q</code>
+</li>
+<li>ツイートにあるリンクを全部開きたい =&gt; <code>o</code>
+</li>
+<li>Unite で rt とか fav とかしたい =&gt; <code>a</code>
+</li>
+</ul><h2>proxy</h2>
+
+<p>会社等から使用したい場合は、以下のプロキシ設定が必要です。
+環境変数に設定していない場合は、vimrc に記述してください。</p>
+
+<pre><code>let $http_proxy   = '<a href="http://xxx.xx.xx:8080">http://xxx.xx.xx:8080</a>'
+let $HTTPS_PROXY  = '<a href="http://xxx.xx.xx:8080">http://xxx.xx.xx:8080</a>'
+</code></pre>
+
+<h2>タイムラインの表示が遅いと感じる場合</h2>
+
+<p>webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装を追加した資源が
+<a href="https://github.com/basyura/webapi-vim">webapi-vim</a> にあります(pull request 中)。<br>
+この資源を clone するか各自のリポジトリに<a href="https://github.com/mattn/webapi-vim/pull/1/files">差分</a>を当てるといい感じになるかもしれません。</p>
+
+<h2>variables</h2>
+
+<p>1 ページあたりのツイート取得件数</p>
+
+<pre><code>let g:tweetvim_tweet_per_page = 50
+</code></pre>
+
+<p>表示内容をキャッシュしておく数(バッファを戻る、進むに使用)</p>
+
+<pre><code>let g:tweetvim_cache_size     = 10
+</code></pre>
+
+<p>設定情報を保存するディレクトリ</p>
+
+<pre><code>let g:tweetvim_config_dir     = expand('~/.tweetvim')
+</code></pre>
+
+<p>タイムラインにリツイートを含める</p>
+
+<pre><code>let g:tweetvim_include_rts    = 1
+</code></pre>
+
+<p>source(クライアント名) を表示するオプション</p>
+
+<pre><code>let g:tweetvim_display_source = 1
+</code></pre>
+
+<p>ツイート時間の表示・非表示設定 (少しでも表示時間を速くしたい場合)</p>
+
+<pre><code>let g:tweetvim_display_time   = 1
+</code></pre>
+
+<p>タイムラインを開く際のコマンドを指定 (edit/split/vsplit)</p>
+
+<pre><code>let g:tweetvim_open_buffer_cmd = 'edit!'
+</code></pre>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/basyura">basyura</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
