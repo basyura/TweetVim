@@ -14,7 +14,7 @@ function! tweetvim#twibill#new(config)
       let param.since_id = self['cache_since_id_' . a:url]
     endif
 
-    let res    = oauth#get(a:url, self.ctx(), {}, a:param)
+    let res    = twibill#oauth#get(a:url, self.ctx(), {}, a:param)
     " for debug
     if g:tweetvim_log
       call tweetvim#log('twibill#get url    : ' . a:url)
@@ -22,7 +22,7 @@ function! tweetvim#twibill#new(config)
       call tweetvim#log('twibill#get header : ', res.header)
     endif
     "
-    let tweets = json#decode(res.content)
+    let tweets = twibill#json#decode(res.content)
 
     if a:url =~ "search.json"
       let results = tweets['results']
