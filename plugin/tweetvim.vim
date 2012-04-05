@@ -12,7 +12,18 @@ function! s:set_global_variable(key, default)
     let g:[a:key] = a:default
   endif
 endfunction
-
+"
+"
+"
+function! s:http_get(url)
+  try
+    let res = webapi#http#get(a:url)
+  catch
+    let res = http#get(a:url)
+  endtry
+  return res
+endfunction
+"
 "
 "
 call s:set_global_variable('tweetvim_tweet_per_page'  , 20)
@@ -74,7 +85,7 @@ function! s:shorten_url()
   let row = line('.')
 
   let shorturl = bitly#shorten(url).url
-  let content = http#get(url).content
+  let content = s:http_get(url).content
   let charset = matchstr(content , 'charset=\zs.\{-}\ze".\{-}>')
   " title
   let title = iconv(matchstr(content , '<title>\zs.\{-}\ze</title>') ,
