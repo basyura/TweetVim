@@ -292,6 +292,8 @@ TODO for v1.3
 
 ### 済
 
+- webapi-vim の namespace 変更対応
+- webapi-vim を同梱
 - remove_status アクションを追加
 - 検索結果から in_reply_to を探すときのメッセージ ID チェックを修正
 - ライブラリチェック
