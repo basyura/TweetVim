@@ -14,6 +14,7 @@ Requires
 
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
+- [(webapi-vim)](https://github.com/mattn/webapi-vim)
 - [(unite-outline)](https://github.com/h1mesuke/unite-outline)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 - [(unite.vim)](https://github.com/Shougo/unite.vim)
@@ -286,7 +287,7 @@ release V1.3 2012.04.13
 -----------------------
 
 - webapi-vim の namespace 変更対応
-- webapi-vim を同梱
+- twibill.vim に webapi-vim を同梱
 - remove_status アクションを追加
 - 検索結果から in_reply_to を探すときのメッセージ ID チェックを修正
 - ライブラリチェック
