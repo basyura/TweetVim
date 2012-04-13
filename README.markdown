@@ -284,13 +284,14 @@ source(クライアント名) を表示するオプション
 
 
 
-TODO for v1.3
+TODO for v1.4
 -------------
 
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
-### 済
+release V1.3 2012.04.13
+-----------------------
 
 - webapi-vim の namespace 変更対応
 - webapi-vim を同梱
