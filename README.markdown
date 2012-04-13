@@ -12,7 +12,6 @@ MIT License
 Requires
 --------
 
-- [webapi-vim](https://github.com/mattn/webapi-vim)
 - [open-browser.vim](https://github.com/tyru/open-browser.vim)
 - [twibill.vim](https://github.com/basyura/twibill.vim)
 - [(unite-outline)](https://github.com/h1mesuke/unite-outline)
@@ -243,13 +242,6 @@ proxy
 
     let $http_proxy   = 'http://xxx.xx.xx:8080'
     let $HTTPS_PROXY  = 'http://xxx.xx.xx:8080'
-
-タイムラインの表示が遅いと感じる場合
-------------------------------------
-
-webapi-vim を fork して hmac#sha1 の ruby, perl, python 実装を追加した資源が
-[webapi-vim](https://github.com/basyura/webapi-vim) にあります(pull request 中)。  
-この資源を clone するか各自のリポジトリに[差分](https://github.com/mattn/webapi-vim/pull/1/files)を当てるといい感じになるかもしれません。
 
 variables
 ---------
