@@ -1,6 +1,7 @@
 "
 let s:Vital    = vital#of('tweetvim')
 let s:DateTime = s:Vital.import('DateTime')
+let s:Html     = s:Vital.import('Web.Html')
 "
 "
 "
@@ -38,12 +39,7 @@ endfunction
 "
 "
 function! tweetvim#util#unescape(msg)
-  let msg = a:msg
-  let msg = substitute(msg, '&quot;' , '"', 'g')
-  let msg = substitute(msg, '&lt;'   , '<', 'g')
-  let msg = substitute(msg, '&gt;'   , '>', 'g')
-  let msg = substitute(msg, '&#039;' , "'", 'g')
-  return msg
+  return s:Html.decodeEntityReference(a:msg)
 endfunction
 "
 "
