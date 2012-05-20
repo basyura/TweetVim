@@ -144,7 +144,11 @@ function! s:post_tweet(text)
   redraw | echo 'sending ... ' | sleep 1
   try
     let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
-    call tweetvim#update(a:text, param)
+    let res   = tweetvim#update(a:text, param)
+    if has_key(res, 'error')
+      redraw | echohl ErrorMsg | echo res.error | echohl None
+      return 0
+    endif
   catch
     redraw | echohl ErrorMsg | echo 'failed to update' | echohl None
     return 0
