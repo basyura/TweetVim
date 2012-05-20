@@ -66,7 +66,7 @@ function! s:candidates_lists()
   return map(tweetvim#lists(), '{
         \ "word"           : v:val.full_name ,
         \ "source__method" : "list_statuses",
-        \ "source__args"   : [v:val.user.name, v:val.slug],
+        \ "source__args"   : [v:val.user.screen_name, v:val.slug],
         \ }')
   endfor
 endfunction
