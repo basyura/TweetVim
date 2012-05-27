@@ -131,7 +131,7 @@ function! tweetvim#verify_credentials()
     let credencidals = tweetvim#request('verify_credentials', [])
     if has_key(credencidals, 'error')
       echohl Error | echo credencidals.error | echohl None
-      return {}
+      return {'screen_name' : ''}
     endif
     let s:credencidals = credencidals
   endif
