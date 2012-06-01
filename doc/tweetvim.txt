@@ -1,0 +1,216 @@
+*tweetvim.txt*	Twitter client.
+
+Author: basyura <basyura+tweetvim@gmail.com>
+License: MIT License
+
+==============================================================================
+CONTENTS					*tweetvim-contents*
+
+INTRODUCTION			|tweetvim-introduction|
+STARTUP				||tweetvim-startup|
+INTERFACE			|tweetvim-interface|
+  COMMANDS			  |tweetvim-commands|
+  KEY MAPPINGS			  |tweetvim-key-mappings|
+VARIABLES			|tweetvim-variables|
+
+
+==============================================================================
+INTRODUCTION					*tweetvim-introduction*
+
+*tweetvim* is twitter client.
+
+Latest Version:
+https://github.com/basyura/TweetVim
+
+Requirement:
+(*) optional
+
+	cURL
+	http://curl.haxx.se/
+
+	twibill.vim
+	https://github.com/basyura/twibill.vim
+
+	open-browser.vim
+	https://github.com/tyru/open-browser.vim)
+
+	unite-outline (*)
+	https://github.com/h1mesuke/unite-outline
+
+	bitly.vim (*)
+	https://github.com/basyura/bitly.vim
+
+	unite.vim (*)
+	https://github.com/Shougo/unite.vim
+
+
+Related plugin:
+
+	neco-tweetvim
+	https://github.com/yomi322/neco-tweetvim
+
+
+==============================================================================
+STARTUP						*tweetvim-startup*
+
+First, you must verify account.
+>
+	:TweetVimHomeTimeline<CR>
+<
+
+If you are not verified, browser is launched by openbrowser.vim and display the number (pin).
+Then, input the number (pin) to the vim's command line.
+
+>
+	Enter Twitter OAuth PIN: your number (pin)
+<
+
+tweetvim save token to g:tweetvim_config_dir (default : ~/.tweetvim).
+
+==============================================================================
+INTERFACE					*tweetvim-interface*
+
+------------------------------------------------------------------------------
+COMMANDS					*tweetvim-commands*
+
+:TweetVimHomeTimeline				*:TweetVimHomeTimeline*
+		view home timeline.
+
+:TweetVimMentions				*:TweetVimMentions*
+		view mentions.
+
+:TweetVimUserTimeline				*:TweetVimUserTimeline*
+		view user's timeline.
+>
+		:TweetVimUserTimeline basyura
+<
+:TweetVimListStatuses				*:TweetVimListStatuses*
+		view your list's timeline.
+>
+		:TweetVimListStatuses vim
+<
+:TweetVimSearch					*:TweetVimSearch*
+		use twitter search.
+>
+		:TweetVimSearch tweetvim
+>
+:TweetVimSay					*:TweetVimSay*
+		open buffer.
+		write message, then press enter key at normal mode to tweet.
+
+:TweetVimCommandSay				*:TweetVimCommandSay*
+		tweet message at command line.
+>
+		:TweetVimCommandSay hogehoge
+>
+
+:TweetVimCurrentLineSay				*:TweetVimCurrentLineSay*
+		tweet current line in buffer.
+
+:Unite tweetvim					*:Unite-tweetvim*
+		show timeline list with unite.vim
+
+
+
+------------------------------------------------------------------------------
+KEY MAPPINGS					*tweetvim-key-mappings*
+
+
+<Plug>(tweetvim_action_enter)                   *<Plug>(tweetvim_action_enter)*
+		enter action.
+		open url under the cursor with OpenBrowser.
+		search hash tag under the cursor.
+		default : <CR>
+
+<Plug>(tweetvim_action_reply)                   *<Plug>(tweetvim_action_reply)*
+		open buffer to reply.
+		default : r
+
+<Plug>(tweetvim_action_in_reply_to)             *<Plug>(tweetvim_action_in_reply_to)*
+		view tweets of conversation.
+		default : i
+
+<Plug>(tweetvim_action_user_timeline)           *<Plug>(tweetvim_action_user_timeline)*
+		view user timeline.
+		default : u
+
+<Plug>(tweetvim_action_favorite)                *<Plug>(tweetvim_action_favorite)*
+		regsit favorite.
+		default : <leader>f
+
+<Plug>(tweetvim_action_remove_favorite)         *<Plug>(tweetvim_action_remove_favorite)*
+		unregist favorite.
+		default : <leader>uf
+
+<Plug>(tweetvim_action_retweet)                 *<Plug>(tweetvim_action_retweet)*
+		retweet action.
+		default : <leader>r
+
+<Plug>(tweetvim_action_qt)                      *<Plug>(tweetvim_action_qt)*
+		qt action.
+		default : <leader>q
+
+<Plug>(tweetvim_action_reload)                  *<Plug>(tweetvim_action_reload)*
+		reload timeline.
+		default : <leader><leader>
+
+<Plug>(tweetvim_action_page_next)               *<Plug>(tweetvim_action_page_next)*
+		view next page.
+		default : ff
+
+<Plug>(tweetvim_action_page_previous)           *<Plug>(tweetvim_action_page_previous)*
+		view previous page.
+		default : bb
+
+<Plug>(tweetvim_action_buffer_previous)         *<Plug>(tweetvim_action_buffer_previous)*
+		view previous timeline.
+		default : H
+
+<Plug>(tweetvim_action_buffer_next)             *<Plug>(tweetvim_action_buffer_next)*
+		view next timeline.
+		default : L
+
+<Plug>(tweetvim_action_open_links)              *<Plug>(tweetvim_action_open_links)*
+		open links in current line with OpenBrowser.
+		default : o
+
+<Plug>(tweetvim_action_search)                  *<Plug>(tweetvim_action_search)*
+		show search prompt.
+		default : q
+
+<Plug>(tweetvim_action_remove_status)           *<Plug>(tweetvim_action_remove_status)*
+		remove status.
+			
+
+==============================================================================
+VARIABLES 					*tweetvim-variables*
+
+g:tweetvim_tweet_per_page			*g:tweetvim_tweet_per_page*
+		tweets count of view
+		default : 20
+		
+g:tweetvim_cache_size                           *g:tweetvim_cache_size*
+		buffer counts of cache.
+		you can move next, or previous cached buffer by
+		<Plug>(tweetvim_action_page_next) and
+		<Plug>(tweetvim_action_buffer_previous).
+		default : 10
+
+g:tweetvim_config_dir                           *g:tweetvim_config_dir*
+		config file's directory.		
+		default : ~/.tweetvim
+
+g:tweetvim_display_source                       *g:tweetvim_display_source*
+		you can display tweet's source.
+		default : 0
+
+g:tweetvim_display_time                         *g:tweetvim_display_time*
+		you can display tweet's time.	
+		default : 0
+
+g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
+		buffer open command.
+		default : edit!
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl

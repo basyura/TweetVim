@@ -289,6 +289,7 @@ TODO for v1.4
 
 ### 済
 
+- doc を書いた
 - HTML エンティティの変換に Vital の Web.Html を使うように変更
 - unite からリストを選択した時の呼び出しに user.name を使用していたのを user.screen_name に修正
 - ツイートした際のエラーは、API のレスポンス内容を表示する (twibill.vim の最新化が必要)
