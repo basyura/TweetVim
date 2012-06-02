@@ -22,11 +22,17 @@ function! tweetvim#timeline(method, ...)
   let st_req = reltime()
   let tweets = tweetvim#request(a:method, args)
   let req_time = reltimestr(reltime(st_req))
-
-  if type(tweets) == 4 && has_key(tweets, 'error')
-    echohl Error | echo tweets.error | echohl None
-    return
+  " check error
+  if type(tweets) == 4
+    if has_key(tweets, 'error')
+      echohl Error | echo tweets.error | echohl None
+      return
+    elseif has_key(tweets, 'errors')
+      echohl Error | echo tweets.errors[0].message | echohl None
+      return
+    endif
   endif
+
   " TODO:
   " delete cache for previous and next
   " buf no is -1 -2 -3 ... oldest
