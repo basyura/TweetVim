@@ -192,7 +192,7 @@ endfunction
 "
 "
 function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
-  return join(keys(tweetvim#cache#get('screen_name')), "\n")
+  return join(tweetvim#cache#get('screen_name'), "\n")
 endfunction
 "
 "

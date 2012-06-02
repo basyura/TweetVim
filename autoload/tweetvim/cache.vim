@@ -2,8 +2,11 @@
 let s:cache = {}
 "
 "
-function! tweetvim#cache#get(key)
-  return s:cache[a:key]
+function! tweetvim#cache#get(fname)
+  if !has_key(s:cache, a:fname)
+    call tweetvim#cache#read(a:fname)
+  endif
+  return keys(s:cache[a:fname])
 endfunction
 "
 "
