@@ -1,9 +1,7 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
-"
-"
-let s:cache = {'screen_name' : {}}
+call tweetvim#cache#read('screen_name')
 "
 "
 function! tweetvim#timeline(method, ...)
@@ -47,7 +45,7 @@ function! tweetvim#timeline(method, ...)
 
   let load_time = reltimestr(reltime(st_load))
 
-  call s:write_cache('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
+  call tweetvim#cache#write('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
 
   if get(g:, 'tweetvim_debug', 0)
     let time = 'total:' . reltimestr(reltime(start)) . ' req:' . req_time . ' load:' . load_time
@@ -193,51 +191,8 @@ endfunction
 "
 "
 "
-function! s:read_cache(fname)
-  let path = g:tweetvim_config_dir . '/' . a:fname
-  if !filereadable(path)
-    call writefile([], path)
-  endif
-  " cache
-  let cache = {}
-  for name in readfile(path)
-    if name != ""
-      let cache[name] = 1
-    endif
-  endfor
-
-  let s:cache[a:fname] = cache
-  let s:cache[a:fname . '_ftime'] = getftime(path)
-endfunction
-"
-"
-"
-function! s:write_cache(fname, list)
-  let path  = g:tweetvim_config_dir . '/' . a:fname
-  let cache = s:cache[a:fname]
-  let size  = len(cache)
-  " check local change
-  if filereadable(path) && getftime(path) != s:cache[a:fname . '_ftime']
-    call s:read_cache(a:fname)
-  endif
-  " update buffer cache
-  for name in a:list
-    let s:cache[a:fname][name] = 1
-  endfor
-  " check updatable
-  if size == len(s:cache[a:fname])
-    return
-  endif
-  " TODO : merge if local file is updated
-  call writefile(sort(keys(s:cache[a:fname])), path)
-endfunction
-"
-call s:read_cache('screen_name')
-"
-"
-"
 function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
-  return join(keys(s:cache['screen_name']), "\n")
+  return join(keys(tweetvim#cache#get('screen_name'), "\n")
 endfunction
 "
 "
