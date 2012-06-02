@@ -1,6 +1,5 @@
 "
-let s:cache = {'screen_name' : {}}
-"
+let s:cache = {}
 "
 "
 function! tweetvim#cache#get(key)
@@ -29,9 +28,11 @@ endfunction
 "
 "
 function! tweetvim#cache#write(fname, list)
-  let path  = g:tweetvim_config_dir . '/' . a:fname
-  let cache = s:cache[a:fname]
-  let size  = len(cache)
+  if !has_key(s:cache, a:fname)
+    call tweetvim#cache#read(a:fname)
+  endif
+  let size = len(s:cache[a:fname])
+  let path = g:tweetvim_config_dir . '/' . a:fname
   " check local change
   if filereadable(path) && getftime(path) != s:cache[a:fname . '_ftime']
     call tweetvim#cache#read(a:fname)

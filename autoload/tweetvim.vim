@@ -1,6 +1,6 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
-"
+" for screen_name complete
 call tweetvim#cache#read('screen_name')
 "
 "
@@ -192,7 +192,7 @@ endfunction
 "
 "
 function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
-  return join(keys(tweetvim#cache#get('screen_name'), "\n")
+  return join(keys(tweetvim#cache#get('screen_name')), "\n")
 endfunction
 "
 "

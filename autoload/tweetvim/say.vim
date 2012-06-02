@@ -153,6 +153,7 @@ function! s:post_tweet(text)
     redraw | echohl ErrorMsg | echo 'failed to update' | echohl None
     return 0
   endtry
+  call s:write_hash_tag(a:text)
   redraw | echo 'sending ... ok'
   return 1
 endfunction
@@ -179,4 +180,24 @@ function! s:define_default_key_mappings()
     endif
     autocmd! BufWinLeave <buffer> call s:tweetvim_say_leave()
   augroup END
+endfunction
+"
+"
+"
+function! s:write_hash_tag(text)
+  let pattern = '[ 　。、]\zs[#＃][^ ].\{-1,}\ze[ \n]'
+  let list = []
+  let text = a:text . ' '
+  while 1
+    let tag = matchstr(text, pattern)
+    if tag == ''
+      break
+    endif
+    call add(list, substitute(tag, '[#＃]', '', ''))
+    let text = substitute(text, tag, "", "")
+  endwhile
+  
+  if len(list) != 0
+    call tweetvim#cache#write('hash_tag', list)
+  endif
 endfunction
