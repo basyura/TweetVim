@@ -1,5 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
+Version: 1.5-dev
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
@@ -12,6 +13,7 @@ INTERFACE			|tweetvim-interface|
   COMMANDS			  |tweetvim-commands|
   KEY MAPPINGS			  |tweetvim-key-mappings|
 VARIABLES			|tweetvim-variables|
+FILES				|tweetvim-files|
 
 
 ==============================================================================
@@ -48,25 +50,32 @@ Related plugin:
 
 	neco-tweetvim
 	https://github.com/yomi322/neco-tweetvim
+	plugin for neocomplcache.
+	you can complete screen name and hash tag in tweetvim_say buffer.
 
 
 ==============================================================================
 STARTUP						*tweetvim-startup*
 
+Thank you for using tweetvim.
 First, you must verify account.
 >
 	:TweetVimHomeTimeline<CR>
 <
-
 If you are not verified, browser is launched by openbrowser.vim and display the number (pin).
 Then, input the number (pin) to the vim's command line.
-
 >
 	Enter Twitter OAuth PIN: your number (pin)
 <
-
 tweetvim save token to g:tweetvim_config_dir (default : ~/.tweetvim).
 
+If you want to use tweetvim conviniently, writes some key mappings in .vimrc
+like this.
+>
+	nnoremap <silent> s  :<C-u>TweetVimSay<CR>
+	nnoremap <silent> t  :TweetVimHomeTimeline<CR>
+	nnoremap <silent> tm :TweetVimMentions<CR>
+<
 ==============================================================================
 INTERFACE					*tweetvim-interface*
 
@@ -212,5 +221,18 @@ g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
 		buffer open command.
 		default : edit!
 
+==============================================================================
+FILES						*tweetvim-files*
+
+tweetvim writes files under g:tweetvim_config_dir (default : ~/.tweetvim).
+
+token						*tweetvim-file-token*
+		certified access key and token.
+
+screen_name					*tweetvim-file-screen_name*
+		screen names which displyed in timeline.
+
+hash_tag					*tweetvim-file-hash_tag*
+		hash tags which you input in tweetvim_say buffer.
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
