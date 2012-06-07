@@ -289,6 +289,7 @@ TODO for v1.5
 
 ### 済
 
+- TweetVimSearch で screen_name と hash_tag で補完
 - ~/.tweetvim/hash_tag に入力したハッシュタグを出力
 - キャッシュしている screen_name と hash_tag を取れる tweetvim#cache#get を追加
 - api の結果で errors が返ってきた場合にメッセージ出力

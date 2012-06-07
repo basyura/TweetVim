@@ -51,7 +51,7 @@ command! -nargs=1 -complete=custom,tweetvim#complete_list TweetVimListStatuses :
 "
 command! -nargs=1 -complete=custom,tweetvim#complete_screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
 "
-command! -nargs=1 TweetVimSearch :call tweetvim#timeline('search', <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete_search TweetVimSearch :call tweetvim#timeline('search', <f-args>)
 " tweet with say buffer
 command! TweetVimSay :call tweetvim#say#open()
 " tweet with command line

@@ -203,6 +203,15 @@ endfunction
 "
 "
 "
+function! tweetvim#complete_search(argLead, cmdLine, cursorPos)
+  let name = tweetvim#cache#get('screen_name')
+  let tag  = tweetvim#cache#get('hash_tag')
+  call extend(name, tag)
+  return join(name, "\n")
+endfunction
+"
+"
+"
 function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
   return join(map(tweetvim#lists(), 'v:val.name'), "\n")
 endfunction
