@@ -11,7 +11,7 @@ endfunction
 "
 "
 function! tweetvim#action#search#execute(tweet, ...)
-  let word = input('search word : ')
+  let word = input('search word : ', '', 'custom,tweetvim#complete_search')
   if word == ''
     redraw | echo ''
     return
