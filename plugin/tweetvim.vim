@@ -114,6 +114,7 @@ nnoremap <silent> <Plug>(tweetvim_action_buffer_next)     :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_open_links)      :<C-u>call tweetvim#action('open_links')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_search)          :<C-u>call tweetvim#action('search')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_remove_status)   :<C-u>call tweetvim#action('remove_status')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#action('expand_url')<CR>
 
 
 let g:loaded_tweetvim = 1

@@ -93,6 +93,7 @@ commands
     nmap <silent> <buffer> <leader>uf <Plug>(tweetvim_action_remove_favorite)
     nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
     nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
+    nmap <silent> <buffer> <leader>e  <Plug>(tweetvim_action_expand_url)
     nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
     nmap <silent> <buffer> ff  <Plug>(tweetvim_action_page_next)
@@ -155,6 +156,7 @@ tweetvim バッファのみ。
 - unfollow        - unfollow user
 - user_timeline   - show user timeline
 - remove_status   - remove status
+- expand_url      - expand url
 
 ### ツイート歴表示、選択
 
@@ -289,6 +291,7 @@ TODO for v1.5
 
 ### 済
 
+- http://untiny.com/api/ を使用して短縮 url を展開する
 - TweetVimSearch で screen_name と hash_tag で補完
 - ~/.tweetvim/hash_tag に入力したハッシュタグを出力
 - キャッシュしている screen_name と hash_tag を取れる tweetvim#cache#get を追加
