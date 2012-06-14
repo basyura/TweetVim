@@ -53,6 +53,11 @@ Related plugin:
 	plugin for neocomplcache.
 	you can complete screen name and hash tag in tweetvim_say buffer.
 
+	unite-tweetvim
+	https://github.com/yomi322/unite-tweetvim
+	plugin for unite.vim
+
+
 
 ==============================================================================
 STARTUP						*tweetvim-startup*
@@ -189,6 +194,10 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 
 <Plug>(tweetvim_action_remove_status)           *<Plug>(tweetvim_action_remove_status)*
 		remove status.
+
+<Plug>(tweetvim_action_expand_url)		*<Plug>(tweetvim_action_expand_url)*
+		expand url by untiny (http://untiny.com/api/).
+		default : <leader>e
 			
 
 ==============================================================================
