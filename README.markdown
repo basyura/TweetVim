@@ -279,9 +279,10 @@ source(クライアント名) を表示するオプション
 
 
 
-TODO for v1.5
+TODO for v1.6
 -------------
 
+- sign を使ってアイコンを表示する
 - 非同期のポスト
 - ハッシュタグの自動挿入
   - バッファを開いた時に入れる
@@ -289,7 +290,8 @@ TODO for v1.5
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
-### 済
+release V1.5 2012.06.24
+-----------------------
 
 - http://untiny.com/api/ を使用して短縮 url を展開する
 - TweetVimSearch で screen_name と hash_tag で補完
