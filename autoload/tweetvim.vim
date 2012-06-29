@@ -240,8 +240,7 @@ function! tweetvim#fire_hooks(name, ...)
     return
   endif
   for func_name in s:hooks[a:name]
-    let Fn = function(func_name)
-    call Fn(a:000)
+    call call(func_name, a:000)
   endfor
 endfunction
 "
