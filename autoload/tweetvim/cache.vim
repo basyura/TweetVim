@@ -49,5 +49,7 @@ function! tweetvim#cache#write(fname, list)
     return
   endif
   " TODO : merge if local file is updated
-  call writefile(sort(keys(s:cache[a:fname])), path)
+  let values = sort(keys(s:cache[a:fname]))
+  call writefile(values, path)
+  call tweetvim#fire_hooks('write_' . a:fname, values)
 endfunction

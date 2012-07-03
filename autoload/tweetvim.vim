@@ -1,5 +1,11 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
+"
+"
+let s:hooks = {
+      \ 'write_screen_name' : [],
+      \ 'write_hash_tag'    : [],
+      \ }
 " for screen_name complete
 call tweetvim#cache#read('screen_name')
 "
@@ -214,6 +220,28 @@ endfunction
 "
 function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
   return join(map(tweetvim#lists(), 'v:val.name'), "\n")
+endfunction
+"
+"
+"
+function! tweetvim#add_hook(name, func_name)
+  if !has_key(s:hooks, a:name)
+    echoerr 'tweetvim error no hook : ' . a:name
+    return
+  endif
+  call add(s:hooks[a:name], a:func_name)
+endfunction
+"
+"
+"
+function! tweetvim#fire_hooks(name, ...)
+  if !has_key(s:hooks, a:name)
+    echoerr 'tweetvim error no hook : ' . a:name
+    return
+  endif
+  for func_name in s:hooks[a:name]
+    call call(func_name, a:000)
+  endfor
 endfunction
 "
 "

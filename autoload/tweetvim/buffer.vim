@@ -1,3 +1,4 @@
+scriptencoding utf-8
 
 let s:backup = []
 
@@ -209,7 +210,10 @@ function! s:append_tweets(tweets, cache)
     " cache tweet by line no
     let a:cache[line(".")] = tweet
     call append(line('$') - 1, s:format(tweet, today))
-    call append(line('$') - 1, separator)
+    " insert separator or not
+    if g:tweetvim_display_separator
+      call append(line('$') - 1, separator)
+    endif
   endfor
 endfunction
 "

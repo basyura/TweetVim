@@ -1,6 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
-Version: 1.5
+Version: 1.6dev
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
@@ -230,6 +230,9 @@ g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
 		buffer open command.
 		default : edit!
 
+g:tweetvim_display_separator                    *g:tweetvim_display_separator*
+                you can display separator of tweets.
+		default : 1
 ==============================================================================
 FILES						*tweetvim-files*
 
