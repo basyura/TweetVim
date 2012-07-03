@@ -9,20 +9,76 @@ set cpo&vim
 let s:path_sep_pattern = (exists('+shellslash') ? '[\\/]' : '/') . '\+'
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_cygwin = has('win32unix')
-let s:is_mac = !s:is_windows && (has('mac') || has('macunix') || has('gui_macvim') || system('uname') =~? '^darwin')
+let s:is_mac = !s:is_windows && !s:is_cygwin
+      \ && (has('mac') || has('macunix') || has('gui_macvim') ||
+      \   (!executable('xdg-open') && system('uname') =~? '^darwin'))
 
-
-" Get the path separator.
+" Get the directory separator.
 function! s:separator()
   return !exists('+shellslash') || &shellslash ? '/' : '\'
 endfunction
 
-" Convert all path separators to "/".
+" Get the path separator.
+let s:path_separator = s:is_windows ? ';' : ':'
+function! s:path_separator()
+  return s:path_separator
+endfunction
+
+" Get the path extensions
+function! s:path_extensions()
+  if !exists('s:path_extensions')
+    if s:is_windows
+      if exists('$PATHEXT')
+        let pathext = $PATHEXT
+      else
+        " get default PATHEXT
+        let pathext = matchstr(system('set pathext'), '^pathext=\zs.*\ze\n', 'i')
+      endif
+      let s:path_extensions = map(split(pathext, s:path_separator), 'tolower(v:val)')
+    elseif s:is_cygwin
+      " cygwin is not use $PATHEXT
+      let s:path_extensions = ['', '.exe']
+    else
+      let s:path_extensions = ['']
+    endif
+  endif
+  return s:path_extensions
+endfunction
+
+" Convert all directory separators to "/".
 function! s:unify_separator(path)
   return substitute(a:path, s:path_sep_pattern, '/', 'g')
 endfunction
 
-" Split the path with path separator.
+" Get the full path of command.
+function! s:which(command, ...)
+  let pathlist = a:command =~# s:path_sep_pattern ? ['.'] :
+  \              !a:0                  ? split($PATH, s:path_separator) :
+  \              type(a:1) == type([]) ? copy(a:1) :
+  \                                      split(a:1, s:path_separator)
+
+  let pathext = s:path_extensions()
+  if index(pathext, '.' . tolower(fnamemodify(a:command, ':e'))) != -1
+    let pathext = ['']
+  endif
+
+  let dirsep = s:separator()
+  for dir in pathlist
+    for ext in pathext
+      let full = fnamemodify(dir . dirsep . a:command . ext, ':p')
+      if filereadable(full)
+        let full = glob(substitute(toupper(full), '\u:\@!', '[\0\L\0]', 'g'), 1)
+        if full != ''
+          return full
+        endif
+      endif
+    endfor
+  endfor
+
+  return ''
+endfunction
+
+" Split the path with directory separator.
 " Note that this includes the drive letter of MS Windows.
 function! s:split(path)
   return split(a:path, s:path_sep_pattern)
@@ -88,3 +144,5 @@ endfunction
 
 
 let &cpo = s:save_cpo
+
+" vim:set et ts=2 sts=2 sw=2 tw=0:
