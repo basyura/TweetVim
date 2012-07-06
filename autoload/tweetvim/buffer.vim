@@ -226,36 +226,48 @@ endfunction
 "
 "
 function! s:format(tweet, ...)
-  let text = a:tweet.text
+  let tweet = a:tweet
+  " for protected user
+  if has_key(a:tweet, 'error')
+    let tweet = {
+          \ 'user'       : {'screen_name' : 'unknown'},
+          \ 'text'       : tweet.error, 
+          \ 'favorited'  : 0,
+          \ 'source'     : '',
+          \ 'created_at' : '',
+          \ }
+  endif
+
+  let text = tweet.text
   let text = substitute(text , '' , '' , 'g')
   let text = substitute(text , '\n' , '' , 'g')
   let text = tweetvim#util#unescape(text)
 
   let today = a:0 ? a:1 : tweetvim#util#today()
 
-  let str  = tweetvim#util#padding(a:tweet.user.screen_name, 15) . ' : '
+  let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
   " TODO
-  if a:tweet.favorited && !has_key(a:tweet, 'retweeted_status')
+  if tweet.favorited && !has_key(tweet, 'retweeted_status')
     let str .= '★ '
   endif
   let str .= text
-  let rt_count = get(a:tweet, 'retweet_count', 0)
+  let rt_count = get(tweet, 'retweet_count', 0)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
   " soruce
   if g:tweetvim_display_source
     " unescape for search api
-    let source = matchstr(tweetvim#util#unescape(a:tweet.source), '>\zs.*\ze<')
+    let source = matchstr(tweetvim#util#unescape(tweet.source), '>\zs.*\ze<')
     if source == ""
-      let source = a:tweet.source
+      let source = tweet.source
     endif
     let str .= ' [[from ' . source . ']]'
   endif
   " time
   if get(g:, 'tweetvim_display_time', 1)
     try
-      let date  = tweetvim#util#format_date(a:tweet.created_at)
+      let date  = tweetvim#util#format_date(tweet.created_at)
       let date  = substitute(date, today, '', '')
       let str .= ' [[' . date . ']]'
     catch
