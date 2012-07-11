@@ -233,6 +233,11 @@ g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
 g:tweetvim_display_separator                    *g:tweetvim_display_separator*
                 you can display separator of tweets.
 		default : 1
+
+g:tweetvim_footer                               *g:tweetvim_footer*
+                add message when you open tweetvim_say buffer.
+                default : ''
+
 ==============================================================================
 FILES						*tweetvim-files*
 

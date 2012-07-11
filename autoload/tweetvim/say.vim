@@ -25,6 +25,11 @@ function! tweetvim#say#open(...)
   setlocal modifiable
   silent %delete _
   call setline(1, text)
+  " added footer
+  if text == '' && g:tweetvim_footer != ''
+     silent $ put =g:tweetvim_footer
+    call cursor(1, 1)
+  endif
   let b:tweetvim_post_param = param
 
   let &filetype = 'tweetvim_say'

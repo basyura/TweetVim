@@ -295,6 +295,7 @@ TODO for v1.6
 - scriptencoding utf-8
 - vital の最新化
 - tweet の間のセパレータ(---)を表示・非表示できる g:tweetvim_display_separator を追加
+- g:tweetvim_footer を追加 - http://d.hatena.ne.jp/osyo-manga/20120711/1341940747
 
 release V1.5 2012.06.24
 -----------------------
