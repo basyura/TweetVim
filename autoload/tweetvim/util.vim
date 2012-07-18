@@ -29,8 +29,14 @@ endfunction
 "
 "
 function! tweetvim#util#separator(s)
+  let max = tweetvim#util#bufwidth()
+  " FIXME
+  if g:tweetvim_display_icon
+    let max -= 2
+  endif
+
   let sep = ""
-  while len(sep) < tweetvim#util#bufwidth()
+  while len(sep) < max
     let sep .= a:s
   endwhile
   return sep
