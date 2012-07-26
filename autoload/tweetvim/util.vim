@@ -46,7 +46,7 @@ endfunction
 "
 function! tweetvim#util#bufwidth()
   let width = winwidth(0)
-  if &l:number
+  if &l:number || &l:relativenumber
     let width = width - (&numberwidth + 1)
   endif
   return width
