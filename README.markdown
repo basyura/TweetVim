@@ -277,18 +277,25 @@ source(クライアント名) を表示するオプション
 
     let g:tweetvim_open_buffer_cmd = 'edit!'
 
+アイコン表示 (ImageMagick が必要)
 
+    let g:tweetvim_display_icon = 1
 
-TODO for v1.6
+tweetvim_say バッファを開いた際にフッタ(メッセージ)を表示する
+
+    let g:tweetvim_footer = ''
+
+TODO for v1.7
 -------------
 
-- sign を使ってアイコンを表示する
 - 非同期のポスト
-- ハッシュタグの自動挿入
   - バッファを開いた時に入れる
   - リプライ等では入れない
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
+
+release v1.6 2012.08.03
+-----------------------
 
 ### 済み
 
@@ -296,6 +303,8 @@ TODO for v1.6
 - vital の最新化
 - tweet の間のセパレータ(---)を表示・非表示できる g:tweetvim_display_separator を追加
 - g:tweetvim_footer を追加 - http://d.hatena.ne.jp/osyo-manga/20120711/1341940747
+- g:tweetvim_display_icon を追加
+- ハッシュタグの自動挿入 (g:tweetvim_footer)
 
 release V1.5 2012.06.24
 -----------------------

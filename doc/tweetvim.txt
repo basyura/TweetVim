@@ -1,6 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
-Version: 1.6dev
+Version: 1.6
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
@@ -237,6 +237,16 @@ g:tweetvim_display_separator                    *g:tweetvim_display_separator*
 g:tweetvim_footer                               *g:tweetvim_footer*
                 add message when you open tweetvim_say buffer.
                 default : ''
+
+g:tweetvim_display_icon                         *g:tweetvim_display_icon*
+                display icon by :sign.
+                ImageMagick is required.
+                default : 0
+
+g:tweetvim_footer                               *g:tweetvim_footer*
+                add footer when open tweetvim_say buffer.
+                default : ''
+
 
 ==============================================================================
 FILES						*tweetvim-files*
