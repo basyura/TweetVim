@@ -18,7 +18,7 @@ function! unite#sources#tweetvim_action#start()
     return ''
   endif
 
-  let tweet = get(b:tweetvim_status_cache, line('.'), {})
+  let tweet = tweetvim#buffer#get_status_cache(line("."))
   if empty(tweet)
     echo "no action"
     return ''

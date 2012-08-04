@@ -122,7 +122,7 @@ endfunction
 "
 "
 function! tweetvim#action(name)
-  let tweet = get(b:tweetvim_status_cache, line('.'), {})
+  let tweet = tweetvim#buffer#get_status_cache(line('.'))
   let def   = function('tweetvim#action#' . a:name . '#define')()
   " TODO: check executable
   if get(def, 'need_tweet', 1) && empty(tweet)
