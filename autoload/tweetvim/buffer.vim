@@ -78,31 +78,16 @@ endfunction
 function! tweetvim#buffer#prepend(tweets)
   let tweets = type(a:tweets) != 3 ? [a:tweets] : a:tweets
 
-  setlocal modifiable
+  call extend(reverse(tweets), b:tweetvim_status_cache)
+  let title  = join(split(b:tweetvim_method, '_'), ' ')
 
-  for tweet in tweets
-    call append(1, s:format(tweet))
-    call append(1, tweetvim#util#separator('~'))
-  endfor
-
-  call extend(b:tweetvim_status_cache, reverse(tweets), 0)
-
-  setlocal nomodified
-  setlocal nomodifiable
+  call tweetvim#buffer#load(b:tweetvim_method, b:tweetvim_args, title, tweets)
 endfunction
 "
 "
 "
 function! tweetvim#buffer#get_status_cache(lineno)
-  " FIXME ひどいけど・・・
-  if getline(a:lineno) =~# '^\~\~\~\~' || getline(a:lineno) =~# '^----'|| a:lineno < 2
-    return {}
-  endif
-  try
-    return b:tweetvim_status_cache[(a:lineno - 2) / 2]
-  catch
-    return {}
-  endtry
+  return get(b:tweetvim_status_cache, a:lineno, {})
 endfunction
 "
 "
@@ -196,7 +181,7 @@ endfunction
 function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_method = a:method
   let b:tweetvim_args   = a:args
-  let b:tweetvim_status_cache = []
+  let b:tweetvim_status_cache = {}
 
   let title = '[tweetvim]  - ' . a:title
   " add page no
@@ -249,7 +234,7 @@ function! s:append_tweets(tweets, cache)
   " filter tweets
   for tweet in tweetvim#filter#execute(a:tweets)
     " cache tweet by line no
-    call add(a:cache, tweet)
+    let a:cache[line(".")] = tweet
     call append(line('$') - 1, s:format(tweet, today))
     " insert separator or not
     if g:tweetvim_display_separator
@@ -269,7 +254,7 @@ function! s:append_tweets_with_icon(tweets, cache)
 
   let cmds = []
   for tweet in tweetvim#filter#execute(a:tweets)
-    call add(a:cache, tweet)
+    let a:cache[line(".")] = tweet
     call append(line('$') - 1, s:format(tweet, today))
     call append(line('$') - 1, separator)
 
