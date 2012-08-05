@@ -94,15 +94,10 @@ endfunction
 "
 "
 function! tweetvim#buffer#get_status_cache(lineno)
-  " FIXME ひどいけど・・・
-  if getline(a:lineno) =~# '^\~\~\~\~' || getline(a:lineno) =~# '^----'|| a:lineno < 2
+  if getline(a:lineno) =~# '^\~\~\~\~' || a:lineno < 2
     return {}
   endif
-  try
-    return b:tweetvim_status_cache[(a:lineno - 2) / 2]
-  catch
-    return {}
-  endtry
+  return b:tweetvim_status_cache[(a:lineno - 2) / 2]
 endfunction
 "
 "
