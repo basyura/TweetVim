@@ -243,10 +243,6 @@ g:tweetvim_display_icon                         *g:tweetvim_display_icon*
                 ImageMagick is required.
                 default : 0
 
-g:tweetvim_footer                               *g:tweetvim_footer*
-                add footer when open tweetvim_say buffer.
-                default : ''
-
 
 ==============================================================================
 FILES						*tweetvim-files*
