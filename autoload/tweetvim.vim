@@ -70,7 +70,6 @@ endfunction
 "
 function! tweetvim#switch_account(screen_name)
   if s:acMgr.switch(a:screen_name)
-    :TweetVimHomeTimeline
     echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
   else
     echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
@@ -84,8 +83,6 @@ function! tweetvim#add_account()
   if token[0] == 'error'
     return
   endif
-  " ok
-  :TweetVimHomeTimeline
   redraw
   echohl Keyword | echo 'added account - ' . s:acMgr.current() | echohl None
 endfunction
