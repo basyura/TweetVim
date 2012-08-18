@@ -49,7 +49,7 @@ endfunction
 function! s:candidates_time_lines_user()
   let screen_name = tweetvim#current_account()
   " error check
-  if screen_name = ''
+  if screen_name == ''
     return []
   endif
 
