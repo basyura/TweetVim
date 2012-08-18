@@ -46,6 +46,10 @@ endif
 if !isdirectory(g:tweetvim_config_dir . '/ico')
   call mkdir(g:tweetvim_config_dir . '/ico', 'p')
 endif
+
+if !isdirectory(g:tweetvim_config_dir . '/accounts')
+  call mkdir(g:tweetvim_config_dir . '/accounts', 'p')
+endif
 "
 "
 "
@@ -126,6 +130,13 @@ nnoremap <silent> <Plug>(tweetvim_action_open_links)      :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_search)          :<C-u>call tweetvim#action('search')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_remove_status)   :<C-u>call tweetvim#action('remove_status')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#action('expand_url')<CR>
+
+
+" for multi account
+
+if filereadable(g:tweetvim_config_dir . '/token')
+   call tweetvim#__migration__()
+endif
 
 
 let g:loaded_tweetvim = 1

@@ -301,3 +301,27 @@ function! s:log(msg, ...)
     call tweetvim#logger#log(a:msg)
   endif
 endfunction
+"
+"
+"
+function! tweetvim#__migration__()
+
+  let from    = g:tweetvim_config_dir . '/token'
+  let tokens  = readfile(from)
+  let twibill = twibill#new({
+    \ 'consumer_key'        : s:consumer_key ,
+    \ 'consumer_secret'     : s:consumer_secret ,
+    \ 'access_token'        : tokens[0] ,
+    \ 'access_token_secret' : tokens[1] ,
+    \ })
+
+  let credentials = twibill.verify_credentials()
+  let to_dir = g:tweetvim_config_dir . '/accounts/' . credentials.screen_name
+
+  call mkdir(to_dir, 'p')
+  call rename(from, to_dir . '/token')
+
+  call s:acMgr.add(credentials)
+
+  echomsg 'tweetvim - migrated token file'
+endfunction
