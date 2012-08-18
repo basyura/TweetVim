@@ -35,6 +35,7 @@ function! tweetvim#say#open(...)
     call setline(1, '[' . tweetvim#current_account() . '] : ' . getline(1))
   endif
 
+  let b:tweetvim_post_param = param
   let &filetype = 'tweetvim_say'
   startinsert!
 
@@ -173,6 +174,7 @@ function! s:post_tweet(text)
     endif
   catch
     redraw | echohl ErrorMsg | echo 'failed to update' | echohl None
+
     return 0
   endtry
   call s:write_hash_tag(text)
