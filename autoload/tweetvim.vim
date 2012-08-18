@@ -2,7 +2,7 @@ let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 " TODO : account manager
-let s:current_screen_name = 'tottoruby'
+let s:current_screen_name = ''
 let s:credencidals = {}
 let s:lists_cache  = {}
 "
@@ -86,6 +86,7 @@ function! tweetvim#switch_account(screen_name)
     return
   endif
   let s:current_screen_name = a:screen_name
+  :TweetVimHomeTimeline
   echohl Keyword | echo 'current account is ' . s:current_screen_name | echohl None
 endfunction
 "
@@ -105,6 +106,18 @@ function! tweetvim#access_token(...)
   let param = a:0 ? a:1 : {}
   " find registed account
   if get(param, 'mode', '') == ''
+    " check default acount
+    if s:current_screen_name == ''
+      if g:tweetvim_default_account != ''
+        let s:current_screen_name = g:tweetvim_default_account
+      else
+        let accounts = tweetvim#account_list()
+        if len(accounts) != 0
+          let s:current_screen_name = accounts[0]
+        endif
+      endif
+    endif
+    " find account's token
     let token_path = g:tweetvim_config_dir . '/accounts/' . s:current_screen_name . '/token'
     if filereadable(token_path)
       return readfile(token_path)
@@ -228,8 +241,9 @@ function! s:twibill()
   "if exists('s:twibill_cache')
   "  return s:twibill_cache
   "endif
-  let s:twibill_cache = tweetvim#twibill#new(s:config())
-  return s:twibill_cache
+  "let s:twibill_cache = tweetvim#twibill#new(s:config())
+  "return s:twibill_cache
+  return tweetvim#twibill#new(s:config())
 endfunction
 "
 "

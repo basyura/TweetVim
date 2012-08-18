@@ -36,7 +36,7 @@ call s:set_global_variable('tweetvim_display_icon'     , 0)
 call s:set_global_variable('tweetvim_log'              , 0)
 call s:set_global_variable('tweetvim_open_buffer_cmd'  , 'edit!')
 call s:set_global_variable('tweetvim_footer'           , '')
-
+call s:set_global_variable('tweetvim_default_account'  , '')
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')

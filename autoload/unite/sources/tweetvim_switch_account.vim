@@ -9,6 +9,16 @@ let s:source = {
       \ 'default_action' : {'common' : 'execute'},
       \ }
 
+function! unite#sources#tweetvim_switch_account#start()
+  if !exists(':Unite')
+    echoerr 'unite.vim is not installed.'
+    echoerr 'Please install unite.vim'
+    return ''
+  endif
+
+  return unite#start(['tweetvim/account'])
+endfunction
+
 function! s:source.gather_candidates(args, context)
   let candidates = []
   for account in tweetvim#account_list()
