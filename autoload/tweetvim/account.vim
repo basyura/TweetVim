@@ -27,7 +27,8 @@ function! s:manager.switch(screen_name)
 endfunction
 
 function! s:manager.add(account)
-  let self.c_accounts[account.screen_name] = account
+  let self.c_accounts[a:account.screen_name] = a:account
+  let self.c_current = a:account.screen_name
 endfunction
 
 function! s:manager.verify_credentials()

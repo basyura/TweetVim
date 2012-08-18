@@ -79,7 +79,15 @@ endfunction
 "
 "
 function! tweetvim#add_account()
-  call tweetvim#access_token({'mode' : 'new'})
+  let token = tweetvim#access_token({'mode' : 'new'})
+  " check error
+  if token[0] == 'error'
+    return
+  endif
+  " ok
+  :TweetVimHomeTimeline
+  redraw
+  echohl Keyword | echo 'added account - ' . s:acMgr.current() | echohl None
 endfunction
 "
 "

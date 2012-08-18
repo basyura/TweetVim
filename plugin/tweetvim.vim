@@ -68,6 +68,8 @@ command! -nargs=? TweetVimCommandSay :call tweetvim#say#command(<f-args>)
 command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 " switch account
 command! -nargs=1 -complete=custom,tweetvim#complete_account TweetVimSwitchAccount call tweetvim#switch_account(<f-args>)
+" add account
+command! TweetVimAddAccount call tweetvim#add_account()
 
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
