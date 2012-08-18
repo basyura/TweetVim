@@ -82,7 +82,7 @@ function! s:tweetvim_say_settings()
   augroup TweetVimSayCount
     autocmd! CursorMoved,CursorMovedI <buffer> call s:update_char_count()
   augroup END
-  setlocal statusline=tweetvim_say\ %{b:tweetvim_say_count}
+  setlocal statusline=tweetvim_say\ :\ %{tweetvim#current_account()}\ %{b:tweetvim_say_count}
 
   :0
   startinsert!
