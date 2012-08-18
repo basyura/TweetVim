@@ -183,7 +183,7 @@ function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . a:title
+  let title = '[tweetvim]  - ' . tweetvim#current_account() . ' - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
     let page = get(a:args[-1], 'page', 1)

@@ -1,7 +1,7 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
-"
+" TODO : account manager
 let s:current_screen_name = 'tottoruby'
 let s:credencidals = {}
 let s:lists_cache  = {}
@@ -70,6 +70,25 @@ function! tweetvim#timeline(method, ...)
   endif
 
   call s:log('tweetvim#timeline ' . a:method . ' end')
+endfunction
+"
+"
+"
+function! tweetvim#account_list()
+  return map(filter(split(globpath(g:tweetvim_config_dir . '/accounts', "*"), "\n"), "isdirectory(v:val)"), "fnamemodify(v:val, ':t:r')")
+endfunction
+"
+"
+"
+function! tweetvim#switch_account(screen_name)
+  let s:current_screen_name = a:screen_name
+  echohl Error | echo 'current account is ' . s:current_screen_name | echohl None
+endfunction
+"
+"
+"
+function! tweetvim#current_account()
+  return s:current_screen_name
 endfunction
 "
 "
