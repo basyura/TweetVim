@@ -41,6 +41,18 @@ function! tweetvim#say#open(...)
   setlocal nomodified
 endfunction
 "
+"
+"
+function! tweetvim#say#open_with_account(...)
+  if a:0
+    if tweetvim#switch_account(a:1)
+      call tweetvim#say#open()
+    endif
+  else
+    call tweetvim#say#open()
+  endif
+endfunction
+"
 " say with command line
 "
 function! tweetvim#say#command(...)

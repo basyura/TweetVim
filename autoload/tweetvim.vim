@@ -71,8 +71,10 @@ endfunction
 function! tweetvim#switch_account(screen_name)
   if s:acMgr.switch(a:screen_name)
     echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
+    return 1
   else
     echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+    return 0
   endif
 endfunction
 "
