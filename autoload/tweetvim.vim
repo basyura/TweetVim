@@ -69,13 +69,12 @@ endfunction
 "
 "
 function! tweetvim#switch_account(screen_name)
-  if index(s:acMgr.accounts(), a:screen_name) < 0
+  if s:acMgr.switch(a:screen_name)
+    :TweetVimHomeTimeline
+    echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
+  else
     echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
-    return
   endif
-  call s:acMgr.current(a:screen_name)
-  :TweetVimHomeTimeline
-  echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
 endfunction
 "
 "
@@ -116,7 +115,7 @@ function! tweetvim#access_token(...)
     call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
 
-    call s:acMgr.current(account.screen_name, account)
+    call s:acMgr.add(account)
 
     return tokens
   catch

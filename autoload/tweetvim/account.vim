@@ -4,16 +4,7 @@ let s:manager = {
       \ 'c_accounts' : {},
       \ }
 
-function! s:manager.current(...)
-  " set current screen_name
-  if a:0
-    let self.c_current = a:1
-    if a:0 > 2
-      self.c_accounts[a:1].verify_credentials = a:2
-    endif
-    return a:1
-  endif
-
+function! s:manager.current()
   if self.c_current == ''
     if g:tweetvim_default_account != ''
       let self.c_current = g:tweetvim_default_account
@@ -25,6 +16,18 @@ function! s:manager.current(...)
     endif
   endif
   return self.c_current
+endfunction
+
+function! s:manager.switch(screen_name)
+  if index(self.accounts(), a:screen_name) < 0
+    return 0
+  endif
+  let self.c_current = a:screen_name
+  return 1
+endfunction
+
+function! s:manager.add(account)
+  let self.c_accounts[account.screen_name] = account
 endfunction
 
 function! s:manager.verify_credentials()
