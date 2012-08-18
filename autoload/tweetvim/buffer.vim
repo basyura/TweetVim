@@ -23,7 +23,7 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let b:tweetvim_bufno = -1
 
    " define syntax
-   let screen_name = tweetvim#verify_credentials().screen_name
+   let screen_name = tweetvim#current_account()
    execute "syntax match tweetvim_reply '@" . screen_name . "'"
 endfunction
 "
@@ -358,7 +358,7 @@ endfunction
 "
 "
 function! s:screen_name()
-  return tweetvim#verify_credentials().screen_name
+  return tweetvim#current_account()
 endfunction
 
 function! s:define_default_key_mappings()

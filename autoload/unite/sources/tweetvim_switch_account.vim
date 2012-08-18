@@ -21,7 +21,7 @@ endfunction
 
 function! s:source.gather_candidates(args, context)
   let candidates = []
-  for account in tweetvim#account_list()
+  for account in tweetvim#accounts()
     call add(candidates, {
           \ 'word' : account,
           \ 'abbr' : (tweetvim#current_account() == account ? '* ' : '  ') . account ,

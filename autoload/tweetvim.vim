@@ -2,9 +2,7 @@ let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 " TODO : account manager
-let s:current_screen_name = ''
-let s:credencidals = {}
-let s:lists_cache  = {}
+let s:acMgr = tweetvim#account#new_manager()
 "
 "
 let s:hooks = {
@@ -24,10 +22,6 @@ function! tweetvim#timeline(method, ...)
   let opt  = {}
   if a:method == 'user_timeline'
     let opt.user_detail = 1
-    "if type(args) == 3 && !empty(args) && type(args[-1]) == 4 && has_key(args[-1], 'opt')
-      "let opt = args[-1].opt
-      "call remove(args[-1], 'opt')
-    "endif
   endif
 
   let st_req = reltime()
@@ -74,36 +68,14 @@ endfunction
 "
 "
 "
-function! tweetvim#account_list()
-  return map(filter(split(globpath(g:tweetvim_config_dir . '/accounts', "*"), "\n"), "isdirectory(v:val)"), "fnamemodify(v:val, ':t:r')")
-endfunction
-"
-"
-"
 function! tweetvim#switch_account(screen_name)
-  if index(tweetvim#account_list(), a:screen_name) < 0
+  if index(s:acMgr.accounts(), a:screen_name) < 0
     echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
     return
   endif
-  let s:current_screen_name = a:screen_name
+  call s:acMgr.current(a:screen_name)
   :TweetVimHomeTimeline
-  echohl Keyword | echo 'current account is ' . s:current_screen_name | echohl None
-endfunction
-"
-"
-"
-function! tweetvim#current_account()
-  if s:current_screen_name == ''
-    if g:tweetvim_default_account != ''
-      let s:current_screen_name = g:tweetvim_default_account
-    else
-      let accounts = tweetvim#account_list()
-      if len(accounts) != 0
-        let s:current_screen_name = accounts[0]
-      endif
-    endif
-  endif
-  return s:current_screen_name
+  echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
 endfunction
 "
 "
@@ -117,7 +89,7 @@ function! tweetvim#access_token(...)
   " find registed account
   if get(param, 'mode', '') == ''
     " find account's token
-    let token_path = g:tweetvim_config_dir . '/accounts/' . tweetvim#current_account() . '/token'
+    let token_path = g:tweetvim_config_dir . '/accounts/' . s:acMgr.current() . '/token'
     if filereadable(token_path)
       return readfile(token_path)
     endif
@@ -144,7 +116,7 @@ function! tweetvim#access_token(...)
     call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
 
-    let s:current_screen_name = account.screen_name
+    call s:acMgr.current(account.screen_name, account)
 
     return tokens
   catch
@@ -152,6 +124,12 @@ function! tweetvim#access_token(...)
     echohl Error | echo "failed to get access token" | echohl None
     return ['error','error']
   endtry
+endfunction
+"
+"
+"
+function! tweetvim#current_account()
+  return s:acMgr.current()
 endfunction
 "
 "
@@ -172,8 +150,7 @@ function! tweetvim#request(method, args)
 
   return call(twibill[a:method], args, twibill)
 endfunction
-"
-"
+
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
@@ -194,31 +171,17 @@ function! tweetvim#action(name)
   call Fn(tweet)
 endfunction
 "
-" 
 "
-function! tweetvim#verify_credentials()
-  if !has_key(s:credencidals, s:current_screen_name)
-    let credencials = tweetvim#request('verify_credentials', [])
-    if has_key(credencials, 'error')
-      echohl Error | echo credencials.error | echohl None
-      return {'screen_name' : ''}
-    endif
-    let s:credencidals[s:current_screen_name] = credencials
-  endif
-  return copy(s:credencidals[s:current_screen_name])
+"
+function! tweetvim#lists()
+  return s:acMgr.lists()
 endfunction
 "
 "
 "
-function! tweetvim#lists()
-  if !has_key(s:lists_cache, s:current_screen_name)
-    let info = tweetvim#verify_credentials()
-    if empty(info)
-      return []
-    endif
-    let s:lists_cache[s:current_screen_name] = tweetvim#request('lists', [info.screen_name]).lists
-  endif
-  return copy(s:lists_cache[s:current_screen_name])
+"
+function! tweetvim#accounts()
+  return s:acMgr.accounts()
 endfunction
 "
 "
@@ -271,7 +234,7 @@ endfunction
 "
 "
 function! tweetvim#complete_account(arglead, ...)
-  return join(tweetvim#account_list(), "\n")
+  return join(s:acMgr.accounts(), "\n")
 endfunction
 "
 "
