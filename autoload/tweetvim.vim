@@ -2,6 +2,11 @@ let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
 "
+let s:current_screen_name = 'tottoruby'
+let s:credencidals = {}
+let s:lists_cache  = {}
+"
+"
 let s:hooks = {
       \ 'write_screen_name' : [],
       \ 'write_hash_tag'    : [],
@@ -68,12 +73,19 @@ function! tweetvim#timeline(method, ...)
 endfunction
 "
 "
+function! tweetvim#add_account()
+  call tweetvim#access_token({'mode' : 'new'})
+endfunction
 "
-function! tweetvim#access_token()
-  
-  let token_path = g:tweetvim_config_dir . '/token'
-  if filereadable(token_path)
-    return readfile(token_path)
+"
+function! tweetvim#access_token(...)
+  let param = a:0 ? a:1 : {}
+  " find registed account
+  if get(param, 'mode', '') == ''
+    let token_path = g:tweetvim_config_dir . '/accounts/' . s:current_screen_name . '/token'
+    if filereadable(token_path)
+      return readfile(token_path)
+    endif
   endif
 
   try
@@ -84,7 +96,20 @@ function! tweetvim#access_token()
 
     let tokens = [ctx.access_token, ctx.access_token_secret]
 
+    let config = {
+      \ 'consumer_key'        : s:consumer_key ,
+      \ 'consumer_secret'     : s:consumer_secret ,
+      \ 'access_token'        : tokens[0] ,
+      \ 'access_token_secret' : tokens[1] ,
+      \ }
+
+    let account    = twibill#new(config).verify_credentials()
+    let token_path = g:tweetvim_config_dir . '/accounts/' . account.screen_name . '/token'
+
+    call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
+
+    let s:current_screen_name = account.screen_name
 
     return tokens
   catch
@@ -134,31 +159,31 @@ function! tweetvim#action(name)
   call Fn(tweet)
 endfunction
 "
-"
+" 
 "
 function! tweetvim#verify_credentials()
-  if !exists('s:credencidals')
-    let credencidals = tweetvim#request('verify_credentials', [])
-    if has_key(credencidals, 'error')
-      echohl Error | echo credencidals.error | echohl None
+  if !has_key(s:credencidals, s:current_screen_name)
+    let credencials = tweetvim#request('verify_credentials', [])
+    if has_key(credencials, 'error')
+      echohl Error | echo credencials.error | echohl None
       return {'screen_name' : ''}
     endif
-    let s:credencidals = credencidals
+    let s:credencidals[s:current_screen_name] = credencials
   endif
-  return copy(s:credencidals)
+  return copy(s:credencidals[s:current_screen_name])
 endfunction
 "
 "
 "
 function! tweetvim#lists()
-  if !exists('s:cache_lists')
+  if !has_key(s:lists_cache, s:current_screen_name)
     let info = tweetvim#verify_credentials()
     if empty(info)
       return []
     endif
-    let s:cache_lists = tweetvim#request('lists', [info.screen_name]).lists
+    let s:lists_cache[s:current_screen_name] = tweetvim#request('lists', [info.screen_name]).lists
   endif
-  return copy(s:cache_lists)
+  return copy(s:lists_cache[s:current_screen_name])
 endfunction
 "
 "
@@ -177,9 +202,9 @@ endfunction
 "
 "
 function! s:twibill()
-  if exists('s:twibill_cache')
-    return s:twibill_cache
-  endif
+  "if exists('s:twibill_cache')
+  "  return s:twibill_cache
+  "endif
   let s:twibill_cache = tweetvim#twibill#new(s:config())
   return s:twibill_cache
 endfunction
