@@ -81,8 +81,12 @@ endfunction
 "
 "
 function! tweetvim#switch_account(screen_name)
+  if index(tweetvim#account_list(), a:screen_name) < 0
+    echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+    return
+  endif
   let s:current_screen_name = a:screen_name
-  echohl Error | echo 'current account is ' . s:current_screen_name | echohl None
+  echohl Keyword | echo 'current account is ' . s:current_screen_name | echohl None
 endfunction
 "
 "
@@ -249,6 +253,12 @@ endfunction
 "
 function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
   return join(tweetvim#cache#get('screen_name'), "\n")
+endfunction
+"
+"
+"
+function! tweetvim#complete_account(arglead, ...)
+  return join(tweetvim#account_list(), "\n")
 endfunction
 "
 "
