@@ -93,6 +93,16 @@ endfunction
 "
 "
 function! tweetvim#current_account()
+  if s:current_screen_name == ''
+    if g:tweetvim_default_account != ''
+      let s:current_screen_name = g:tweetvim_default_account
+    else
+      let accounts = tweetvim#account_list()
+      if len(accounts) != 0
+        let s:current_screen_name = accounts[0]
+      endif
+    endif
+  endif
   return s:current_screen_name
 endfunction
 "
@@ -106,19 +116,8 @@ function! tweetvim#access_token(...)
   let param = a:0 ? a:1 : {}
   " find registed account
   if get(param, 'mode', '') == ''
-    " check default acount
-    if s:current_screen_name == ''
-      if g:tweetvim_default_account != ''
-        let s:current_screen_name = g:tweetvim_default_account
-      else
-        let accounts = tweetvim#account_list()
-        if len(accounts) != 0
-          let s:current_screen_name = accounts[0]
-        endif
-      endif
-    endif
     " find account's token
-    let token_path = g:tweetvim_config_dir . '/accounts/' . s:current_screen_name . '/token'
+    let token_path = g:tweetvim_config_dir . '/accounts/' . tweetvim#current_account() . '/token'
     if filereadable(token_path)
       return readfile(token_path)
     endif

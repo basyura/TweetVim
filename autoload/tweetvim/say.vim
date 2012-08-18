@@ -27,10 +27,13 @@ function! tweetvim#say#open(...)
   call setline(1, text)
   " added footer
   if text == '' && g:tweetvim_footer != ''
-     silent $ put =g:tweetvim_footer
+    silent $ put =g:tweetvim_footer
     call cursor(1, 1)
   endif
-  let b:tweetvim_post_param = param
+
+  if g:tweetvim_say_insert_account
+    call setline(1, '[' . tweetvim#current_account() . '] : ' . getline(1))
+  endif
 
   let &filetype = 'tweetvim_say'
   startinsert!
@@ -141,7 +144,9 @@ endfunction
 "
 "
 function! s:post_tweet(text)
-  if strchars(a:text) > 140
+  let text = a:text
+  let text = substitute(text, '^\[' . tweetvim#current_account() . '\] : ', '', '')
+  if strchars(text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None
     return
@@ -149,7 +154,7 @@ function! s:post_tweet(text)
   redraw | echo 'sending ... ' | sleep 1
   try
     let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
-    let res   = tweetvim#update(a:text, param)
+    let res   = tweetvim#update(text, param)
     if has_key(res, 'error')
       redraw | echohl ErrorMsg | echo res.error | echohl None
       return 0
@@ -158,7 +163,7 @@ function! s:post_tweet(text)
     redraw | echohl ErrorMsg | echo 'failed to update' | echohl None
     return 0
   endtry
-  call s:write_hash_tag(a:text)
+  call s:write_hash_tag(text)
   redraw | echo 'sending ... ok'
   return 1
 endfunction
