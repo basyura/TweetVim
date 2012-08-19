@@ -192,26 +192,16 @@ endfunction
 "
 "
 "
-function! s:config()
+function! s:twibill()
   let tokens = tweetvim#access_token()
-  return {
+  let config = {
     \ 'consumer_key'        : s:consumer_key ,
     \ 'consumer_secret'     : s:consumer_secret ,
     \ 'access_token'        : tokens[0] ,
     \ 'access_token_secret' : tokens[1] ,
     \ 'cache'               : 1
     \ }
-endfunction
-"
-"
-"
-function! s:twibill()
-  "if exists('s:twibill_cache')
-  "  return s:twibill_cache
-  "endif
-  "let s:twibill_cache = tweetvim#twibill#new(s:config())
-  "return s:twibill_cache
-  return tweetvim#twibill#new(s:config())
+  return tweetvim#twibill#new(config)
 endfunction
 "
 "
