@@ -135,7 +135,8 @@ nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#ac
 " for multi account
 
 if filereadable(g:tweetvim_config_dir . '/token')
-   call tweetvim#__migration__()
+   command! TweetVimMigration :call tweetvim#migration#execute()
+   :TweetVimMigration
 endif
 
 
