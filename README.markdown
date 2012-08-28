@@ -277,6 +277,10 @@ source(クライアント名) を表示するオプション
 
     let g:tweetvim_open_buffer_cmd = 'edit!'
 
+発言用のバッファを開く際のコマンドを指定
+
+    let g:tweetvim_open_say_cmd = 'botright split'
+
 アイコン表示 (ImageMagick が必要)
 
     let g:tweetvim_display_icon = 1
@@ -284,6 +288,8 @@ source(クライアント名) を表示するオプション
 tweetvim_say バッファを開いた際にフッタ(メッセージ)を表示する
 
     let g:tweetvim_footer = ''
+
+
 
 TODO for v1.7
 -------------
@@ -293,6 +299,10 @@ TODO for v1.7
   - リプライ等では入れない
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
+
+### 済
+
+- g:tweetvim_open_buffer_cmd を追加。デフォルトを botright split に変更。
 
 release v1.6 2012.08.03
 -----------------------

@@ -16,7 +16,7 @@ function! tweetvim#say#open(...)
   if bufnr > 0
     exec bufnr.'wincmd w'
   else
-    execute 'below split tweetvim_say' 
+    execute g:tweetvim_open_say_cmd . ' tweetvim_say'
     execute '2 wincmd _'
     call s:define_default_key_mappings()
     call s:tweetvim_say_settings()

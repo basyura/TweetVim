@@ -230,6 +230,10 @@ g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
 		buffer open command.
 		default : edit!
 
+g:tweetvim_open_say_cmd                         *g:tweetvim_open_say_cmd*
+		say buffer open command.
+		default : botright split
+ 
 g:tweetvim_display_separator                    *g:tweetvim_display_separator*
                 you can display separator of tweets.
 		default : 1
