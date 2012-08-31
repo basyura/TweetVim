@@ -25,7 +25,7 @@ function! s:source.action_table.execute.func(candidate)
   if input(msg) != 'y'
     return
   endif
-  let user = tweetvim#verify_credentials().screen_name
+  let user = tweetvim#current_account()
   call tweetvim#request("add_member_to_list", 
         \ [user, name, {"id" : a:candidate.source__screen_name}])
   echo 'added'

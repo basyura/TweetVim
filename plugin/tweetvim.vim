@@ -26,17 +26,19 @@ endfunction
 "
 "
 "
-call s:set_global_variable('tweetvim_tweet_per_page'   , 20)
-call s:set_global_variable('tweetvim_cache_size'       , 10)
-call s:set_global_variable('tweetvim_config_dir'       , expand('~/.tweetvim'))
-call s:set_global_variable('tweetvim_display_source'   , 0)
-call s:set_global_variable('tweetvim_display_time'     , 1)
-call s:set_global_variable('tweetvim_display_separator', 1)
-call s:set_global_variable('tweetvim_display_icon'     , 0)
-call s:set_global_variable('tweetvim_log'              , 0)
-call s:set_global_variable('tweetvim_open_buffer_cmd'  , 'edit!')
-call s:set_global_variable('tweetvim_footer'           , '')
-
+call s:set_global_variable('tweetvim_tweet_per_page'     , 20)
+call s:set_global_variable('tweetvim_cache_size'         , 10)
+call s:set_global_variable('tweetvim_config_dir'         , expand('~/.tweetvim'))
+call s:set_global_variable('tweetvim_display_source'     , 0)
+call s:set_global_variable('tweetvim_display_time'       , 1)
+call s:set_global_variable('tweetvim_display_separator'  , 1)
+call s:set_global_variable('tweetvim_display_icon'       , 0)
+call s:set_global_variable('tweetvim_log'                , 0)
+call s:set_global_variable('tweetvim_open_buffer_cmd'    , 'edit!')
+call s:set_global_variable('tweetvim_open_say_cmd'       , 'botright split')
+call s:set_global_variable('tweetvim_footer'             , '')
+call s:set_global_variable('tweetvim_default_account'    , '')
+call s:set_global_variable('tweetvim_say_insert_account' , 0)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')
@@ -44,6 +46,10 @@ endif
 
 if !isdirectory(g:tweetvim_config_dir . '/ico')
   call mkdir(g:tweetvim_config_dir . '/ico', 'p')
+endif
+
+if !isdirectory(g:tweetvim_config_dir . '/accounts')
+  call mkdir(g:tweetvim_config_dir . '/accounts', 'p')
 endif
 "
 "
@@ -54,18 +60,21 @@ command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 "
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
 "
-command! -nargs=1 -complete=custom,tweetvim#complete_list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#verify_credentials().screen_name, <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete_list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#current_account(), <f-args>)
 "
 command! -nargs=1 -complete=custom,tweetvim#complete_screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
 "
 command! -nargs=1 -complete=custom,tweetvim#complete_search TweetVimSearch :call tweetvim#timeline('search', <f-args>)
 " tweet with say buffer
-command! TweetVimSay :call tweetvim#say#open()
+command! -nargs=? -complete=custom,tweetvim#complete_account TweetVimSay :call tweetvim#say#open_with_account(<f-args>)
 " tweet with command line
 command! -nargs=? TweetVimCommandSay :call tweetvim#say#command(<f-args>)
 " tweet current line
 command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
-
+" switch account
+command! -nargs=1 -complete=custom,tweetvim#complete_account TweetVimSwitchAccount call tweetvim#switch_account(<f-args>)
+" add account
+command! TweetVimAddAccount call tweetvim#add_account()
 
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
@@ -122,6 +131,14 @@ nnoremap <silent> <Plug>(tweetvim_action_open_links)      :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_search)          :<C-u>call tweetvim#action('search')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_remove_status)   :<C-u>call tweetvim#action('remove_status')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#action('expand_url')<CR>
+
+
+" for multi account
+
+if filereadable(g:tweetvim_config_dir . '/token')
+   command! TweetVimMigration :call tweetvim#migration#execute()
+   :TweetVimMigration
+endif
 
 
 let g:loaded_tweetvim = 1

@@ -1,6 +1,9 @@
 let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 "
+" TODO : account manager
+let s:acMgr = tweetvim#account#new_manager()
+"
 "
 let s:hooks = {
       \ 'write_screen_name' : [],
@@ -19,10 +22,6 @@ function! tweetvim#timeline(method, ...)
   let opt  = {}
   if a:method == 'user_timeline'
     let opt.user_detail = 1
-    "if type(args) == 3 && !empty(args) && type(args[-1]) == 4 && has_key(args[-1], 'opt')
-      "let opt = args[-1].opt
-      "call remove(args[-1], 'opt')
-    "endif
   endif
 
   let st_req = reltime()
@@ -69,11 +68,37 @@ endfunction
 "
 "
 "
-function! tweetvim#access_token()
-  
-  let token_path = g:tweetvim_config_dir . '/token'
-  if filereadable(token_path)
-    return readfile(token_path)
+function! tweetvim#switch_account(screen_name)
+  if s:acMgr.switch(a:screen_name)
+    echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
+    return 1
+  else
+    echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+    return 0
+  endif
+endfunction
+"
+"
+function! tweetvim#add_account()
+  let token = tweetvim#access_token({'mode' : 'new'})
+  " check error
+  if token[0] == 'error'
+    return
+  endif
+  redraw
+  echohl Keyword | echo 'added account - ' . s:acMgr.current() | echohl None
+endfunction
+"
+"
+function! tweetvim#access_token(...)
+  let param = a:0 ? a:1 : {}
+  " find registed account
+  if get(param, 'mode', '') == ''
+    " find account's token
+    let token_path = g:tweetvim_config_dir . '/accounts/' . s:acMgr.current() . '/token'
+    if filereadable(token_path)
+      return readfile(token_path)
+    endif
   endif
 
   try
@@ -84,7 +109,20 @@ function! tweetvim#access_token()
 
     let tokens = [ctx.access_token, ctx.access_token_secret]
 
+    let config = {
+      \ 'consumer_key'        : s:consumer_key ,
+      \ 'consumer_secret'     : s:consumer_secret ,
+      \ 'access_token'        : tokens[0] ,
+      \ 'access_token_secret' : tokens[1] ,
+      \ }
+
+    let account    = twibill#new(config).verify_credentials()
+    let token_path = g:tweetvim_config_dir . '/accounts/' . account.screen_name . '/token'
+
+    call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
+
+    call s:acMgr.add(account)
 
     return tokens
   catch
@@ -92,6 +130,12 @@ function! tweetvim#access_token()
     echohl Error | echo "failed to get access token" | echohl None
     return ['error','error']
   endtry
+endfunction
+"
+"
+"
+function! tweetvim#current_account()
+  return s:acMgr.current()
 endfunction
 "
 "
@@ -112,8 +156,7 @@ function! tweetvim#request(method, args)
 
   return call(twibill[a:method], args, twibill)
 endfunction
-"
-"
+
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
@@ -136,52 +179,29 @@ endfunction
 "
 "
 "
-function! tweetvim#verify_credentials()
-  if !exists('s:credencidals')
-    let credencidals = tweetvim#request('verify_credentials', [])
-    if has_key(credencidals, 'error')
-      echohl Error | echo credencidals.error | echohl None
-      return {'screen_name' : ''}
-    endif
-    let s:credencidals = credencidals
-  endif
-  return copy(s:credencidals)
-endfunction
-"
-"
-"
 function! tweetvim#lists()
-  if !exists('s:cache_lists')
-    let info = tweetvim#verify_credentials()
-    if empty(info)
-      return []
-    endif
-    let s:cache_lists = tweetvim#request('lists', [info.screen_name]).lists
-  endif
-  return copy(s:cache_lists)
+  return s:acMgr.lists()
 endfunction
 "
 "
 "
-function! s:config()
+"
+function! tweetvim#accounts()
+  return s:acMgr.accounts()
+endfunction
+"
+"
+"
+function! s:twibill()
   let tokens = tweetvim#access_token()
-  return {
+  let config = {
     \ 'consumer_key'        : s:consumer_key ,
     \ 'consumer_secret'     : s:consumer_secret ,
     \ 'access_token'        : tokens[0] ,
     \ 'access_token_secret' : tokens[1] ,
     \ 'cache'               : 1
     \ }
-endfunction
-"
-"
-"
-function! s:twibill()
-  if exists('s:twibill_cache')
-    return s:twibill_cache
-  endif
-  let s:twibill_cache = tweetvim#twibill#new(s:config())
-  return s:twibill_cache
+  return tweetvim#twibill#new(config)
 endfunction
 "
 "
@@ -205,6 +225,12 @@ endfunction
 "
 function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
   return join(tweetvim#cache#get('screen_name'), "\n")
+endfunction
+"
+"
+"
+function! tweetvim#complete_account(arglead, ...)
+  return join(s:acMgr.accounts(), "\n")
 endfunction
 "
 "

@@ -47,9 +47,9 @@ function! s:candidates_time_lines()
 endfunction
 
 function! s:candidates_time_lines_user()
-  let credential = tweetvim#verify_credentials()
+  let screen_name = tweetvim#current_account()
   " error check
-  if empty(credential)
+  if screen_name == ''
     return []
   endif
 
@@ -58,7 +58,7 @@ function! s:candidates_time_lines_user()
   return map(list, '{
         \ "word" : v:val ,
         \ "source__method" : v:val,
-        \ "source__args"   : [credential.screen_name],
+        \ "source__args"   : [screen_name],
         \ }')
 endfunction
 

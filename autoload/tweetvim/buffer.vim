@@ -23,7 +23,7 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let b:tweetvim_bufno = -1
 
    " define syntax
-   let screen_name = tweetvim#verify_credentials().screen_name
+   let screen_name = tweetvim#current_account()
    execute "syntax match tweetvim_reply '@" . screen_name . "'"
 endfunction
 "
@@ -71,6 +71,23 @@ function! tweetvim#buffer#replace(lineno, tweet)
   setlocal nomodified
   setlocal nomodifiable
   call cursor(lineno, colno)
+endfunction
+"
+"
+"
+function! tweetvim#buffer#prepend(tweets)
+  let tweets = type(a:tweets) != 3 ? [a:tweets] : a:tweets
+
+  call extend(reverse(tweets), b:tweetvim_status_cache)
+  let title  = join(split(b:tweetvim_method, '_'), ' ')
+
+  call tweetvim#buffer#load(b:tweetvim_method, b:tweetvim_args, title, tweets)
+endfunction
+"
+"
+"
+function! tweetvim#buffer#get_status_cache(lineno)
+  return get(b:tweetvim_status_cache, a:lineno, {})
 endfunction
 "
 "
@@ -166,7 +183,7 @@ function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . a:title
+  let title = '[tweetvim]  - ' . tweetvim#current_account() . ' - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
     let page = get(a:args[-1], 'page', 1)
@@ -341,7 +358,7 @@ endfunction
 "
 "
 function! s:screen_name()
-  return tweetvim#verify_credentials().screen_name
+  return tweetvim#current_account()
 endfunction
 
 function! s:define_default_key_mappings()
@@ -367,5 +384,6 @@ function! s:define_default_key_mappings()
 
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
+    nnoremap <silent> <buffer> <leader>a :call unite#sources#tweetvim_switch_account#start()<CR>
   augroup END  
 endfunction
