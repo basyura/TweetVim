@@ -40,6 +40,14 @@ PIN を入力すると認証完了。
 commands
 ---------------
 
+### アカウントを追加する
+
+    :TweetVimAddAccount
+
+### アカウントを変更する
+
+    :TweetVimSwitchAccount {screen_name}
+
 ### ホームタイムラインを表示する。
 
     :TweetVimHomeTimeline
@@ -119,6 +127,10 @@ commands
 
 Unite インタフェース
 --------------------
+
+### アカウントの変更
+
+    :Unite tweetvim/account
 
 ### タイムライン選択
 
@@ -236,6 +248,8 @@ url 短縮
 - qt したい => `<leader>q`
 - ツイートにあるリンクを全部開きたい => `o`
 - Unite で rt とか fav とかしたい => `a`
+- アカウントを変更したい => :TweetVimSwitchAccount {screen_name}
+- Unite でアカウントを変更したい => :Unite tweetvim/account
 
 proxy
 -----
@@ -289,9 +303,14 @@ tweetvim_say バッファを開いた際にフッタ(メッセージ)を表示�
 
     let g:tweetvim_footer = ''
 
+tweetvim_say バッファにアカウント名を差し込む
 
+    let g:tweetvim_say_insert_account = 0
+    
+    [basyura] : 
+    上記は触らなければ発言時に削除する。文字数カウントの考慮はない。
 
-TODO for v1.7
+TODO for v1.8
 -------------
 
 - 非同期のポスト
@@ -300,14 +319,36 @@ TODO for v1.7
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
-### 済
+TODO for v1.7 2012.08.31
+------------------------
 
-- g:tweetvim_open_buffer_cmd を追加。デフォルトを botright split に変更。
+- マルチアカウント対応
+- :TweetVimSay コマンドにアカウントが渡せるようにした。その際はアカウントが変更される
+- :TweetVimAddAccount を追加。アカウントを追加
+- :TweetVimSwitchAccount を追加。カウントの変更
+- :Unite tweetvim/account でアカウントの変更
+- g:tweetvim_open_buffer_cmd を追加 (デフォルトを botright split に変更)
+- g:tweetvim_say_insert_account を追加
+  - 発言時のアカウントを tweetvim_say バッファに差し込む(いじらなければツイートはされない)
+
+### g:tweetvim_config_dir 配下のディレクトリ構成を変更
+
+before
+
+    g:tweetvim_config_dir/token
+
+after
+
+    g:tweetvim_config_dir/accounts/
+                          screen_name1/token
+                          screen_name2/token
+                          screen_name3/token
+
+フォルダ構成は自動的に修正します。エラーが出る場合は、 TweetVimMigration を実行してみること。
+回復しない場合は上記のディレクトリ構成に手動で変更すること。
 
 release v1.6 2012.08.03
 -----------------------
-
-### 済み
 
 - scriptencoding utf-8
 - vital の最新化
