@@ -50,6 +50,10 @@ function! tweetvim#cache#write(fname, list)
   endif
   " TODO : merge if local file is updated
   let values = sort(keys(s:cache[a:fname]))
-  call writefile(values, path)
-  call tweetvim#fire_hooks('write_' . a:fname, values)
+  try
+    call writefile(values, path)
+    call tweetvim#fire_hooks('write_' . a:fname, values)
+  catch
+    echomsg "failed to write tweetvim's " . a:fname  " cache"
+  endtry
 endfunction
