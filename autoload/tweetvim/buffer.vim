@@ -66,7 +66,7 @@ function! tweetvim#buffer#replace(lineno, tweet)
   let lineno = line('.')
   setlocal modifiable
   call cursor(a:lineno, colno)
-  normal dd
+  delete _
   call append(a:lineno - 1, type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet)
   setlocal nomodified
   setlocal nomodifiable
@@ -215,7 +215,7 @@ function! s:process(method, args, title, tweets, opt)
   else
     call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   endif
-  normal dd
+  delete _
   :0
 endfunction
 "
