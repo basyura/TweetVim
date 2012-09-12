@@ -13,12 +13,12 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let args = copy(a:args)
   let opt  = a:0 ? copy(a:1) : {}
 
+  call s:backup(a:method, args, a:title, a:tweets, opt)
+
   call s:switch_buffer()
   call s:pre_process()
   call s:process(a:method, args, a:title, a:tweets, opt)
   call s:post_process()
-
-  call s:backup(a:method, args, a:title, a:tweets, opt)
 
   let b:tweetvim_bufno = -1
 
@@ -93,7 +93,7 @@ endfunction
 "
 "
 function! tweetvim#buffer#truncate_backup(size)
-  " TODO: truncate tail 
+  " TODO: truncate tail
   if a:size < 0
     let s:backup = eval('s:backup[:' . string(a:size) . ']')
     return
@@ -102,7 +102,7 @@ function! tweetvim#buffer#truncate_backup(size)
   if len(s:backup) <= a:size
     return
   endif
-  let start = len(s:backup) - a:size 
+  let start = len(s:backup) - a:size
   " TODO:
   let s:backup = eval('s:backup[' . string(start) . ':]')
 endfunction
@@ -110,6 +110,11 @@ endfunction
 "
 "
 function! s:backup(method, args, title, tweets, opt)
+
+  if len(s:backup) > 0
+    let s:backup[-1].opt.line = line('.')
+  end
+
   call add(s:backup, {
         \ 'method' : a:method,
         \ 'args'   : a:args,
@@ -216,7 +221,9 @@ function! s:process(method, args, title, tweets, opt)
     call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   endif
   delete _
-  :0
+
+  let line = get(a:opt, 'line', 1)
+  call cursor(line, 1)
 endfunction
 "
 "
@@ -304,7 +311,7 @@ function! s:format(tweet, ...)
   if has_key(a:tweet, 'error')
     let tweet = {
           \ 'user'       : {'screen_name' : 'unknown'},
-          \ 'text'       : tweet.error, 
+          \ 'text'       : tweet.error,
           \ 'favorited'  : 0,
           \ 'source'     : '',
           \ 'created_at' : '',
@@ -385,5 +392,5 @@ function! s:define_default_key_mappings()
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
     nnoremap <silent> <buffer> <leader>a :call unite#sources#tweetvim_switch_account#start()<CR>
-  augroup END  
+  augroup END
 endfunction
