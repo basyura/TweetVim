@@ -60,19 +60,19 @@ command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 "
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
 "
-command! -nargs=1 -complete=custom,tweetvim#complete_list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#account#current(), <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#account#current(), <f-args>)
 "
-command! -nargs=1 -complete=custom,tweetvim#complete_screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
 "
-command! -nargs=1 -complete=custom,tweetvim#complete_search TweetVimSearch :call tweetvim#timeline('search', <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#search TweetVimSearch :call tweetvim#timeline('search', <f-args>)
 " tweet with say buffer
-command! -nargs=? -complete=custom,tweetvim#complete_account TweetVimSay :call tweetvim#say#open_with_account(<f-args>)
+command! -nargs=? -complete=custom,tweetvim#complete#account TweetVimSay :call tweetvim#say#open_with_account(<f-args>)
 " tweet with command line
 command! -nargs=? TweetVimCommandSay :call tweetvim#say#command(<f-args>)
 " tweet current line
 command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 " switch account
-command! -nargs=1 -complete=custom,tweetvim#complete_account TweetVimSwitchAccount call tweetvim#account#switch(<f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccount call tweetvim#account#switch(<f-args>)
 " add account
 command! TweetVimAddAccount call tweetvim#add_account()
 

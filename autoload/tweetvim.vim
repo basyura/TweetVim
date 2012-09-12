@@ -144,33 +144,6 @@ endfunction
 "
 "
 "
-function! tweetvim#complete_screen_name(argLead, cmdLine, cursorPos)
-  return join(tweetvim#cache#get('screen_name'), "\n")
-endfunction
-"
-"
-"
-function! tweetvim#complete_account(arglead, ...)
-  return join(tweetvim#account#users(), "\n")
-endfunction
-"
-"
-"
-function! tweetvim#complete_search(argLead, cmdLine, cursorPos)
-  let name = tweetvim#cache#get('screen_name')
-  let tag  = tweetvim#cache#get('hash_tag')
-  call extend(name, tag)
-  return join(name, "\n")
-endfunction
-"
-"
-"
-function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
-  return join(map(tweetvim#account#lists(), 'v:val.name'), "\n")
-endfunction
-"
-"
-"
 function! tweetvim#add_hook(name, func_name)
   if !has_key(s:hooks, a:name)
     echoerr 'tweetvim error no hook : ' . a:name
