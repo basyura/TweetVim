@@ -62,17 +62,6 @@ function! tweetvim#timeline(method, ...)
 endfunction
 "
 "
-function! tweetvim#add_account()
-  let token = tweetvim#access_token({'mode' : 'new'})
-  " check error
-  if token[0] == 'error'
-    return
-  endif
-  redraw
-  echohl Keyword | echo 'added account - ' . s:acMgr.current() | echohl None
-endfunction
-"
-"
 "
 function! tweetvim#request(method, args)
   let args  = type(a:args) == 3 ? a:args : [a:args]

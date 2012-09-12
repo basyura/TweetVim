@@ -4,7 +4,7 @@ let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 let s:current  = ''
 let s:accounts = {}
 
-function! tweetvim#account#access_token()
+function! tweetvim#account#access_token(...)
 
   let param = a:0 ? a:1 : {}
   " find registed account
@@ -19,7 +19,7 @@ function! tweetvim#account#access_token()
     endif
   endif
 
-  try
+  "try
     let ctx = twibill#access_token({
                 \ 'consumer_key'    : s:consumer_key,
                 \ 'consumer_secret' : s:consumer_secret,
@@ -40,14 +40,16 @@ function! tweetvim#account#access_token()
     call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
 
-    call s:acMgr.add(account)
+
+    let s:accounts[account.screen_name] = account
 
     return tokens
-  catch
-    redraw
-    echohl Error | echo "failed to get access token" | echohl None
-    return ['error','error']
-  endtry
+  "catch
+    "redraw
+    "echo ctx
+    "echohl Error | echo "failed to get access token" | echohl None
+    "return ['error','error']
+  "endtry
 endfunction
 
 
@@ -78,22 +80,15 @@ function! tweetvim#account#switch(screen_name)
   return 1
 endfunction
 
-"function! s:manager.add(account)
-  "let self.c_accounts[a:account.screen_name] = a:account
-  "let self.c_current = a:account.screen_name
-"endfunction
-
-"function! s:manager.verify_credentials()
-  "if empty(self.c_accounts[self.c_current].verify_credentials)
-    "let credencials = tweetvim#request('verify_credentials', [])
-    "if has_key(credencials, 'error')
-      "echohl Error | echo credencials.error | echohl None
-      "return {'screen_name' : ''}
-    "endif
-    "let self.c_accounts[self.c_current].verify_credentials = credencials
-  "endif
-  "return deepcopy(self.c_accounts[self.c_current].verify_credentials)
-"endfunction
+function! tweetvim#account#add()
+  let token = tweetvim#account#access_token({'mode' : 'new'})
+  " check error
+  if token[0] == 'error'
+    return
+  endif
+  redraw
+  echohl Keyword | echo 'added account' |  echohl None
+endfunction
 
 function! tweetvim#account#lists()
   if !has_key(s:accounts[s:current], 'lists')
