@@ -94,14 +94,9 @@ endfunction
 "
 function! s:twibill()
   let tokens = tweetvim#account#access_token()
-  let config = {
-    \ 'consumer_key'        : tokens[0],
-    \ 'consumer_secret'     : tokens[1],
-    \ 'access_token'        : tokens[2] ,
-    \ 'access_token_secret' : tokens[3] ,
-    \ 'cache'               : 1
-    \ }
-  return tweetvim#twibill#new(config)
+  " TODO
+  let tokens.cache = 1
+  return tweetvim#twibill#new(tokens)
 endfunction
 "
 "

@@ -13,9 +13,12 @@ function! tweetvim#account#access_token(...)
     let token_path = s:token_path()
     if filereadable(token_path)
       let tokens = readfile(token_path)
-      call insert(tokens, s:consumer_secret)
-      call insert(tokens, s:consumer_key)
-      return tokens
+      return {
+        \ 'consumer_key'        : s:consumer_key ,
+        \ 'consumer_secret'     : s:consumer_secret ,
+        \ 'access_token'        : tokens[0] ,
+        \ 'access_token_secret' : tokens[1] ,
+        \ }
     endif
   endif
 
@@ -43,12 +46,11 @@ function! tweetvim#account#access_token(...)
 
     let s:accounts[account.screen_name] = account
 
-    return tokens
+    return config
   catch
     redraw
-    echo ctx
     echohl Error | echo "failed to get access token" | echohl None
-    return ['error','error']
+    return {'error' : v:exception}
   endtry
 endfunction
 
@@ -83,7 +85,7 @@ endfunction
 function! tweetvim#account#add()
   let token = tweetvim#account#access_token({'mode' : 'new'})
   " check error
-  if token[0] == 'error'
+  if has_key(token, 'error')
     return
   endif
   redraw
