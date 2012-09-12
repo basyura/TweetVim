@@ -12,7 +12,10 @@ function! tweetvim#account#access_token()
     " find account's token
     let token_path = s:token_path()
     if filereadable(token_path)
-      return readfile(token_path)
+      let tokens = readfile(token_path)
+      call insert(tokens, s:consumer_secret)
+      call insert(tokens, s:consumer_key)
+      return tokens
     endif
   endif
 
@@ -65,13 +68,15 @@ function! tweetvim#account#current()
 endfunction
 
 
-"function! s:manager.switch(screen_name)
-  "if index(self.accounts(), a:screen_name) < 0
-    "return 0
-  "endif
-  "let self.c_current = a:screen_name
-  "return 1
-"endfunction
+function! tweetvim#account#switch(screen_name)
+  if index(tweetvim#account#users(), a:screen_name) < 0
+    echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+    return 0
+  endif
+  let s:current = a:screen_name
+  echohl Keyword | echo 'current account is ' . tweetvim#account#current() | echohl None
+  return 1
+endfunction
 
 "function! s:manager.add(account)
   "let self.c_accounts[a:account.screen_name] = a:account
@@ -102,21 +107,19 @@ function! tweetvim#account#users()
   return keys(s:accounts)
 endfunction
 
-function! tweetvim#account#new_manager()
-  let manager = deepcopy(s:manager)
+function! s:token_path()
+  return g:tweetvim_config_dir . '/accounts/' . tweetvim#account#current() . '/token'
+endfunction
 
+function! s:load_accounts()
   for account in s:account_list()
-    let manager.c_accounts[account] = {}
-    let manager.c_accounts[account]['verify_credentials'] = {}
+    let s:accounts[account] = {}
+    let s:accounts[account]['verify_credentials'] = {}
   endfor
-
-  return manager
 endfunction
 
 function! s:account_list()
   return map(filter(split(globpath(g:tweetvim_config_dir . '/accounts', "*"), "\n"), "isdirectory(v:val)"), "fnamemodify(v:val, ':t:r')")
 endfunction
 
-function! s:token_path()
-  return g:tweetvim_config_dir . '/accounts/' . tweetvim#account#current() . '/token'
-endfunction
+call s:load_accounts()

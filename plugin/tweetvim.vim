@@ -72,7 +72,7 @@ command! -nargs=? TweetVimCommandSay :call tweetvim#say#command(<f-args>)
 " tweet current line
 command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 " switch account
-command! -nargs=1 -complete=custom,tweetvim#complete_account TweetVimSwitchAccount call tweetvim#switch_account(<f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete_account TweetVimSwitchAccount call tweetvim#account#switch(<f-args>)
 " add account
 command! TweetVimAddAccount call tweetvim#add_account()
 

@@ -62,18 +62,6 @@ function! tweetvim#timeline(method, ...)
 endfunction
 "
 "
-"
-function! tweetvim#switch_account(screen_name)
-  if s:acMgr.switch(a:screen_name)
-    echohl Keyword | echo 'current account is ' . s:acMgr.current() | echohl None
-    return 1
-  else
-    echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
-    return 0
-  endif
-endfunction
-"
-"
 function! tweetvim#add_account()
   let token = tweetvim#access_token({'mode' : 'new'})
   " check error
@@ -128,10 +116,10 @@ endfunction
 function! s:twibill()
   let tokens = tweetvim#account#access_token()
   let config = {
-    \ 'consumer_key'        : s:consumer_key ,
-    \ 'consumer_secret'     : s:consumer_secret ,
-    \ 'access_token'        : tokens[0] ,
-    \ 'access_token_secret' : tokens[1] ,
+    \ 'consumer_key'        : tokens[0],
+    \ 'consumer_secret'     : tokens[1],
+    \ 'access_token'        : tokens[2] ,
+    \ 'access_token_secret' : tokens[3] ,
     \ 'cache'               : 1
     \ }
   return tweetvim#twibill#new(config)
