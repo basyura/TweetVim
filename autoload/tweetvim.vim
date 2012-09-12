@@ -1,15 +1,7 @@
-"
-"
-let s:hooks = {
-      \ 'write_screen_name' : [],
-      \ 'write_hash_tag'    : [],
-      \ }
-" for screen_name complete
 call tweetvim#cache#read('screen_name')
 "
 "
 function! tweetvim#timeline(method, ...)
-  call s:log('tweetvim#timeline ' . a:method . ' start')
   let start = reltime()
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
@@ -57,8 +49,6 @@ function! tweetvim#timeline(method, ...)
     let time = 'total:' . reltimestr(reltime(start)) . ' req:' . req_time . ' load:' . load_time
     call tweetvim#buffer#replace(1, getline('.') . '   (' . time . ')')
   endif
-
-  call s:log('tweetvim#timeline ' . a:method . ' end')
 endfunction
 "
 "
@@ -70,12 +60,12 @@ function! tweetvim#request(method, args)
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
   let args  = s:merge_params(args, param)
 
-"  try
+  try
     let twibill = s:twibill()
-"  catch
-"    echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
-"    return {}
-"  endtry
+  catch
+    echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
+    return {}
+  endtry
 
   return call(twibill[a:method], args, twibill)
 endfunction
@@ -129,47 +119,4 @@ function! s:merge_params(list_param, hash_param)
   endif
 
   return param + [a:hash_param]
-endfunction
-"
-"
-"
-function! tweetvim#add_hook(name, func_name)
-  if !has_key(s:hooks, a:name)
-    echoerr 'tweetvim error no hook : ' . a:name
-    return
-  endif
-  call add(s:hooks[a:name], a:func_name)
-endfunction
-"
-"
-"
-function! tweetvim#fire_hooks(name, ...)
-  if !has_key(s:hooks, a:name)
-    echoerr 'tweetvim error no hook : ' . a:name
-    return
-  endif
-  for func_name in s:hooks[a:name]
-    call call(func_name, a:000)
-  endfor
-endfunction
-"
-"
-"
-function! tweetvim#log(msg, ...)
-  " TODO
-  if a:0
-    call tweetvim#logger#log(a:msg, a:1)
-  else
-    call tweetvim#logger#log(a:msg)
-  endif
-endfunction
-"
-" alias for tweetvim#log
-"
-function! s:log(msg, ...)
-  if a:0
-    call tweetvim#logger#log(a:msg, a:1)
-  else
-    call tweetvim#logger#log(a:msg)
-  endif
 endfunction

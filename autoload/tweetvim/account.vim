@@ -19,7 +19,7 @@ function! tweetvim#account#access_token(...)
     endif
   endif
 
-  "try
+  try
     let ctx = twibill#access_token({
                 \ 'consumer_key'    : s:consumer_key,
                 \ 'consumer_secret' : s:consumer_secret,
@@ -44,12 +44,12 @@ function! tweetvim#account#access_token(...)
     let s:accounts[account.screen_name] = account
 
     return tokens
-  "catch
-    "redraw
-    "echo ctx
-    "echohl Error | echo "failed to get access token" | echohl None
-    "return ['error','error']
-  "endtry
+  catch
+    redraw
+    echo ctx
+    echohl Error | echo "failed to get access token" | echohl None
+    return ['error','error']
+  endtry
 endfunction
 
 
