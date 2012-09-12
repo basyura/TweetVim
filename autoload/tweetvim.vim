@@ -1,8 +1,3 @@
-let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
-let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
-"
-" TODO : account manager
-let s:acMgr = tweetvim#account#new_manager()
 "
 "
 let s:hooks = {
@@ -90,55 +85,6 @@ function! tweetvim#add_account()
 endfunction
 "
 "
-function! tweetvim#access_token(...)
-  let param = a:0 ? a:1 : {}
-  " find registed account
-  if get(param, 'mode', '') == ''
-    " find account's token
-    let token_path = g:tweetvim_config_dir . '/accounts/' . s:acMgr.current() . '/token'
-    if filereadable(token_path)
-      return readfile(token_path)
-    endif
-  endif
-
-  try
-    let ctx = twibill#access_token({
-                \ 'consumer_key'    : s:consumer_key,
-                \ 'consumer_secret' : s:consumer_secret,
-                \ })
-
-    let tokens = [ctx.access_token, ctx.access_token_secret]
-
-    let config = {
-      \ 'consumer_key'        : s:consumer_key ,
-      \ 'consumer_secret'     : s:consumer_secret ,
-      \ 'access_token'        : tokens[0] ,
-      \ 'access_token_secret' : tokens[1] ,
-      \ }
-
-    let account    = twibill#new(config).verify_credentials()
-    let token_path = g:tweetvim_config_dir . '/accounts/' . account.screen_name . '/token'
-
-    call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
-    call writefile(tokens , token_path)
-
-    call s:acMgr.add(account)
-
-    return tokens
-  catch
-    redraw
-    echohl Error | echo "failed to get access token" | echohl None
-    return ['error','error']
-  endtry
-endfunction
-"
-"
-"
-function! tweetvim#current_account()
-  return s:acMgr.current()
-endfunction
-"
-"
 "
 function! tweetvim#request(method, args)
   let args  = type(a:args) == 3 ? a:args : [a:args]
@@ -147,12 +93,12 @@ function! tweetvim#request(method, args)
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
   let args  = s:merge_params(args, param)
 
-  try
+"  try
     let twibill = s:twibill()
-  catch
-    echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
-    return {}
-  endtry
+"  catch
+"    echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
+"    return {}
+"  endtry
 
   return call(twibill[a:method], args, twibill)
 endfunction
@@ -179,21 +125,8 @@ endfunction
 "
 "
 "
-function! tweetvim#lists()
-  return s:acMgr.lists()
-endfunction
-"
-"
-"
-"
-function! tweetvim#accounts()
-  return s:acMgr.accounts()
-endfunction
-"
-"
-"
 function! s:twibill()
-  let tokens = tweetvim#access_token()
+  let tokens = tweetvim#account#access_token()
   let config = {
     \ 'consumer_key'        : s:consumer_key ,
     \ 'consumer_secret'     : s:consumer_secret ,
@@ -230,7 +163,7 @@ endfunction
 "
 "
 function! tweetvim#complete_account(arglead, ...)
-  return join(s:acMgr.accounts(), "\n")
+  return join(tweetvim#account#users(), "\n")
 endfunction
 "
 "
@@ -245,7 +178,7 @@ endfunction
 "
 "
 function! tweetvim#complete_list(argLead, cmdLine, cursorPos)
-  return join(map(tweetvim#lists(), 'v:val.name'), "\n")
+  return join(map(tweetvim#account#lists(), 'v:val.name'), "\n")
 endfunction
 "
 "
