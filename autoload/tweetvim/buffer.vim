@@ -311,7 +311,9 @@ function! s:format(tweet, ...)
           \ }
   endif
 
-  let text = tweet.text
+  let text = has_key(tweet, 'retweeted_status')
+              \ ? 'RT @' . tweet.retweeted_status.user.screen_name . ': ' . tweet.retweeted_status.text
+              \ : tweet.text
   let text = substitute(text , '' , '' , 'g')
   let text = substitute(text , '\n' , '' , 'g')
   let text = tweetvim#util#unescape(text)
