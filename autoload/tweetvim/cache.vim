@@ -52,7 +52,7 @@ function! tweetvim#cache#write(fname, list)
   let values = sort(keys(s:cache[a:fname]))
   try
     call writefile(values, path)
-    call tweetvim#fire_hooks('write_' . a:fname, values)
+    call tweetvim#hook#fire('write_' . a:fname, values)
   catch
     echomsg "failed to write tweetvim's " . a:fname  " cache"
   endtry
