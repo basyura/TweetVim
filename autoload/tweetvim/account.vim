@@ -65,7 +65,7 @@ function! tweetvim#account#current(...)
       echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
     endif
     let current = a:1
-    echohl Keyword | echo 'current account is ' . tweetvim#account#current().screen_name | echohl None
+    echohl Keyword | echo 'current account is ' . current | echohl None
   endif
 
   if current == ''
