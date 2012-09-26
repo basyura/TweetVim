@@ -32,7 +32,7 @@ function! tweetvim#say#open(...)
   endif
 
   if g:tweetvim_say_insert_account
-    call setline(1, '[' . tweetvim#account#current() . '] : ' . getline(1))
+    call setline(1, '[' . tweetvim#account#current().screen_name . '] : ' . getline(1))
   endif
 
   let b:tweetvim_post_param = param
@@ -46,7 +46,7 @@ endfunction
 "
 function! tweetvim#say#open_with_account(...)
   if a:0
-    if tweetvim#account#switch(a:1)
+    if tweetvim#account#current(a:1)
       call tweetvim#say#open()
     endif
   else
@@ -98,7 +98,7 @@ function! s:tweetvim_say_settings()
   augroup TweetVimSayCount
     autocmd! CursorMoved,CursorMovedI <buffer> call s:update_char_count()
   augroup END
-  setlocal statusline=tweetvim_say\ :\ %{tweetvim#account#current()}\ %{b:tweetvim_say_count}
+  setlocal statusline=tweetvim_say\ :\ %{tweetvim#account#current().screen_name}\ %{b:tweetvim_say_count}
 
   :0
   startinsert!
@@ -158,7 +158,7 @@ endfunction
 "
 function! s:post_tweet(text)
   let text = a:text
-  let text = substitute(text, '^\[' . tweetvim#account#current() . '\] : ', '', '')
+  let text = substitute(text, '^\[' . tweetvim#account#current().screen_name . '\] : ', '', '')
   if strchars(text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None

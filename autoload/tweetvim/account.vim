@@ -2,7 +2,11 @@ let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
 let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
 
 let s:current  = ''
+" let s:user = {'screen_name' : '' , 'lists' : []}
 let s:accounts = {}
+
+
+
 
 function! tweetvim#account#access_token(...)
 
@@ -10,7 +14,7 @@ function! tweetvim#account#access_token(...)
   " find registed account
   if get(param, 'mode', '') == ''
     " find account's token
-    let token_path = s:token_path()
+    let token_path = s:token_path(s:current)
     if filereadable(token_path)
       let tokens = readfile(token_path)
       return {
@@ -54,32 +58,38 @@ function! tweetvim#account#access_token(...)
   endtry
 endfunction
 
+function! tweetvim#account#current(...)
+  let current = s:current
+  if a:0 > 0
+    if index(map(tweetvim#account#users(), 'v:val.screen_name'), a:1) < 0
+      echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+    endif
+    let current = a:1
+    echohl Keyword | echo 'current account is ' . tweetvim#account#current().screen_name | echohl None
+  endif
 
-
-
-function! tweetvim#account#current()
-  if s:current == ''
+  if current == ''
     if g:tweetvim_default_account != ''
       let s:current = g:tweetvim_default_account
     else
       let accounts = tweetvim#account#users()
       if len(accounts) != 0
-        let s:current = accounts[0]
+        let current = accounts[0].screen_name
       endif
     endif
   endif
-  return s:current
-endfunction
 
-
-function! tweetvim#account#switch(screen_name)
-  if index(tweetvim#account#users(), a:screen_name) < 0
-    echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
-    return 0
+  if current == ''
+    return {}
   endif
-  let s:current = a:screen_name
-  echohl Keyword | echo 'current account is ' . tweetvim#account#current() | echohl None
-  return 1
+
+  let s:current = current
+  let account = s:accounts[s:current]
+  if !has_key(account, 'lists')
+    let account.lists = tweetvim#request('lists', [s:current]).lists
+  endif
+
+  return deepcopy(account)
 endfunction
 
 function! tweetvim#account#add()
@@ -92,26 +102,19 @@ function! tweetvim#account#add()
   echohl Keyword | echo 'added account' |  echohl None
 endfunction
 
-function! tweetvim#account#lists()
-  if !has_key(s:accounts[s:current], 'lists')
-    let lists = tweetvim#request('lists', [s:current]).lists
-    let s:accounts[s:current]['lists'] = lists
-  endif
-  return copy(s:accounts[s:current].lists)
-endfunction
-
 function! tweetvim#account#users()
-  return keys(s:accounts)
+  return deepcopy(values(s:accounts))
 endfunction
 
-function! s:token_path()
-  return g:tweetvim_config_dir . '/accounts/' . tweetvim#account#current() . '/token'
+function! s:token_path(screen_name)
+  return g:tweetvim_config_dir . '/accounts/' . a:screen_name . '/token'
 endfunction
 
 function! s:load_accounts()
   for account in s:account_list()
-    let s:accounts[account] = {}
-    let s:accounts[account]['verify_credentials'] = {}
+    let s:accounts[account] = {
+      \ 'screen_name' : account,
+      \ }
   endfor
 endfunction
 

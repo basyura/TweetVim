@@ -60,12 +60,12 @@ function! tweetvim#request(method, args)
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
   let args  = s:merge_params(args, param)
 
-  try
+  "  try
     let twibill = s:twibill()
-  catch
-    echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
-    return {}
-  endtry
+    "catch
+    "echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
+    "return {}
+    "endtry
 
   return call(twibill[a:method], args, twibill)
 endfunction

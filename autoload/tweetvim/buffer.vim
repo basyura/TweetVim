@@ -23,7 +23,7 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   let b:tweetvim_bufno = -1
 
    " define syntax
-   let screen_name = tweetvim#account#current()
+   let screen_name = tweetvim#account#current().screen_name
    execute "syntax match tweetvim_reply '@" . screen_name . "'"
 endfunction
 "
@@ -188,7 +188,7 @@ function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current() . ' - ' . a:title
+  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
     let page = get(a:args[-1], 'page', 1)

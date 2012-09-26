@@ -8,7 +8,7 @@ endfunction
 "
 "
 function! tweetvim#complete#account(arglead, ...)
-  return join(tweetvim#account#users(), "\n")
+  return join(map(tweetvim#account#users(), 'v:val.screen_name'), "\n")
 endfunction
 "
 "
@@ -23,5 +23,5 @@ endfunction
 "
 "
 function! tweetvim#complete#list(argLead, cmdLine, cursorPos)
-  return join(map(tweetvim#account#lists(), 'v:val.name'), "\n")
+  return join(map(tweetvim#account#current().lists, 'v:val.name'), "\n")
 endfunction

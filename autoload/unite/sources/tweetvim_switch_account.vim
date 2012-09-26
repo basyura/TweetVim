@@ -21,10 +21,11 @@ endfunction
 
 function! s:source.gather_candidates(args, context)
   let candidates = []
-  for account in tweetvim#account#users()
+  let current    = tweetvim#account#current().screen_name
+  for user in tweetvim#account#users()
     call add(candidates, {
-          \ 'word' : account,
-          \ 'abbr' : (tweetvim#account#current() == account ? '* ' : '  ') . account ,
+          \ 'word' : user.screen_name,
+          \ 'abbr' : (current == user.screen_name ? '* ' : '  ') . user.screen_name ,
           \ })
   endfor
   return candidates
@@ -32,7 +33,7 @@ endfunction
 
 let s:source.action_table.execute = {'description' : 'add to list'}
 function! s:source.action_table.execute.func(candidate)
-  call tweetvim#account#switch(a:candidate.word)
+  call tweetvim#account#current(a:candidate.word)
 endfunction
 
  

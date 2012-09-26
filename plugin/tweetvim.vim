@@ -60,7 +60,7 @@ command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 "
 command! TweetVimMentions     :call tweetvim#timeline('mentions')
 "
-command! -nargs=1 -complete=custom,tweetvim#complete#list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#account#current(), <f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#list TweetVimListStatuses :call tweetvim#timeline('list_statuses', tweetvim#account#current().screen_name, <f-args>)
 "
 command! -nargs=1 -complete=custom,tweetvim#complete#screen_name TweetVimUserTimeline :call tweetvim#timeline('user_timeline', <f-args>)
 "
@@ -72,7 +72,7 @@ command! -nargs=? TweetVimCommandSay :call tweetvim#say#command(<f-args>)
 " tweet current line
 command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 " switch account
-command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccount call tweetvim#account#switch(<f-args>)
+command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccount call tweetvim#account#current(<f-args>)
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
 
