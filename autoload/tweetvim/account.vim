@@ -111,11 +111,15 @@ function! s:token_path(screen_name)
 endfunction
 
 function! s:load_accounts()
-  for account in s:account_list()
+  let list = s:account_list()
+  for account in list
     let s:accounts[account] = {
       \ 'screen_name' : account,
       \ }
   endfor
+  if len(list) > 0
+    let s:current = list[0]
+  endif
 endfunction
 
 function! s:account_list()
