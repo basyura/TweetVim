@@ -164,7 +164,7 @@ function! s:post_tweet(text)
     echohl Error | echo "over 140 chars" | echohl None
     return
   endif
-  redraw | echo 'sending ... ' | sleep 1
+  redraw | echo 'sending ... '
   try
     let param = exists("b:tweetvim_post_param") ? b:tweetvim_post_param : {}
     let res   = tweetvim#update(text, param)
