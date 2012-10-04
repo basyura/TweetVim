@@ -46,7 +46,7 @@ endfunction
 "
 function! tweetvim#say#open_with_account(...)
   if a:0
-    if tweetvim#account#current(a:1)
+    if !empty(tweetvim#account#current(a:1))
       call tweetvim#say#open()
     endif
   else

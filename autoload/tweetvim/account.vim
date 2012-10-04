@@ -62,7 +62,8 @@ function! tweetvim#account#current(...)
   let current = s:current
   if a:0 > 0
     if index(map(tweetvim#account#users(), 'v:val.screen_name'), a:1) < 0
-      echohl Error | echo 'failed to switch ' . a:screen_name | echohl None
+      echohl Error | echo 'failed to switch ' . a:1 | echohl None
+      return {}
     endif
     let current = a:1
     echohl Keyword | echo 'current account is ' . current | echohl None
