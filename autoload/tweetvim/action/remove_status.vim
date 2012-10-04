@@ -12,7 +12,7 @@ endfunction
 function! tweetvim#action#remove_status#execute(tweet)
   let tweet = a:tweet
 
-  if tweetvim#current_account() != tweet.user.screen_name
+  if tweetvim#account#current().screen_name != tweet.user.screen_name
     echohl ErrorMsg | echo 'can not remove ' . tweet.user.screen_name . "'s tweet"  | echohl None
     return
   endif
