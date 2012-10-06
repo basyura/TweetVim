@@ -196,6 +196,7 @@ function! s:define_default_key_mappings()
     nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
     inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
     nnoremap <buffer> <silent> <CR>       :call <SID>post_buffer_tweet()<CR>
+    inoremap <buffer> <silent> <C-CR> <ESC>:call <SID>post_buffer_tweet()<CR>
 
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
