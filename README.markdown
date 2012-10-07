@@ -319,7 +319,16 @@ TODO for v1.8
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
-TODO for v1.7 2012.08.31
+### 済
+
+- RT でツイートが省略されないように修正 by rhysd
+- API の変更
+  - tweetvim#current_account → tweetvim#account#current
+  - tweetvim#add_hook → tweetvim#hook#add
+  - tweetvim#complete_XXXX → twetvim#complete#XXXX
+- inoremap C-CR でツイートするようにしてみた
+
+release v1.7 2012.08.31
 ------------------------
 
 - マルチアカウント対応
