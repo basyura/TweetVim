@@ -159,6 +159,10 @@ endfunction
 function! s:post_tweet(text)
   let text = a:text
   let text = substitute(text, '^\[' . tweetvim#account#current().screen_name . '\] : ', '', '')
+  if text == ''
+    echohl Error | echo "status is blank" | echohl None
+    return 1
+  endif
   if strchars(text) > 140
     "call unite#util#print_error("over 140 chars")
     echohl Error | echo "over 140 chars" | echohl None
