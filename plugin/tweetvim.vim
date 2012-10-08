@@ -39,6 +39,7 @@ call s:set_global_variable('tweetvim_open_say_cmd'       , 'botright split')
 call s:set_global_variable('tweetvim_footer'             , '')
 call s:set_global_variable('tweetvim_default_account'    , '')
 call s:set_global_variable('tweetvim_say_insert_account' , 0)
+call s:set_global_variable('tweetvim_async_post'         , 0)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')

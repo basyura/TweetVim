@@ -93,10 +93,11 @@ endfunction
 "
 "
 function! s:twibill()
-  let tokens = tweetvim#account#access_token()
+  let config = tweetvim#account#access_token()
   " TODO
-  let tokens.cache = 1
-  return tweetvim#twibill#new(tokens)
+  let config.cache   = 1
+  let config.isAsync = g:tweetvim_async_post
+  return tweetvim#twibill#new(config)
 endfunction
 "
 "
