@@ -70,3 +70,10 @@ function! tweetvim#util#trim(msg)
   let msg = substitute(msg, '\s\+$' , '' , '')
   return msg
 endfunction
+"
+"
+"
+function! tweetvim#util#isCursorOnSeprator()
+  let name = synIDattr(synID(line('.'),col('.'),1),'name')
+  return name == 'tweetvim_separator' || name == 'tweetvim_separator_title'
+endfunction
