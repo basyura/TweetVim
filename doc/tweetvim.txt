@@ -232,6 +232,12 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 		expand url by untiny (http://untiny.com/api/).
 		default : <leader>e
 
+<Plug>(tweetvim_action_cursor_up)               *<Plug>(tweetvim_action_cursor_up)*
+		cursor up. skip separator.
+
+<Plug>(tweetvim_action_cursor_down)             *<Plug>(tweetvim_action_cursor_down)*
+		cursor down. skip separator.
+
 ==============================================================================
 VARIABLES 					*tweetvim-variables*
 

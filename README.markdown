@@ -110,6 +110,9 @@ commands
     nmap <silent> <buffer> H  <Plug>(tweetvim_buffer_previous)
     nmap <silent> <buffer> L  <Plug>(tweetvim_buffer_next)
 
+    nmap <silent> <buffer> j <Plug>(tweetvim_action_cursor_down)
+    nmap <silent> <buffer> k <Plug>(tweetvim_action_cursor_up)
+
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
 
@@ -327,6 +330,7 @@ TODO for v1.8
   - tweetvim#add_hook → tweetvim#hook#add
   - tweetvim#complete_XXXX → twetvim#complete#XXXX
 - inoremap C-CR でツイートするようにしてみた
+- j or k でセパレータを飛ばして移動するようにした
 
 release v1.7 2012.08.31
 ------------------------

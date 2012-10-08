@@ -131,6 +131,8 @@ nnoremap <silent> <Plug>(tweetvim_action_open_links)      :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_search)          :<C-u>call tweetvim#action('search')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_remove_status)   :<C-u>call tweetvim#action('remove_status')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#action('expand_url')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_cursor_up)       :<C-u>call tweetvim#action('cursor_up')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_cursor_down)     :<C-u>call tweetvim#action('cursor_down')<CR>
 
 
 " for multi account
