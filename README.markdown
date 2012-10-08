@@ -331,6 +331,7 @@ TODO for v1.8
   - tweetvim#complete_XXXX → twetvim#complete#XXXX
 - inoremap C-CR でツイートするようにしてみた
 - j or k でセパレータを飛ばして移動するようにした
+- 検索の際に日時が出ていなかったのを修正
 
 release v1.7 2012.08.31
 ------------------------

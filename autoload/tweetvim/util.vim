@@ -6,8 +6,12 @@ let s:Html     = s:Vital.import('Web.Html')
 "
 "
 function! tweetvim#util#format_date(date)
- let date_time = s:DateTime.from_format(a:date,'%a %b %d %H:%M:%S %z %Y', 'C')
- return date_time.strftime("%m/%d %H:%M")
+  if a:date =~ ','
+    let date_time = s:DateTime.from_format(a:date,'%a, %d %b %Y %H:%M:%S %z', 'C')
+  else
+    let date_time = s:DateTime.from_format(a:date,'%a %b %d %H:%M:%S %z %Y', 'C')
+  endif
+  return date_time.strftime("%m/%d %H:%M")
 endfunction
 "
 "
