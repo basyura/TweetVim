@@ -181,8 +181,12 @@ function! s:post_tweet(text)
 
     return 0
   endtry
+  " write cache
   call s:write_hash_tag(text)
-  redraw | echo 'sending ... ok'
+  " check async
+  if !get(res, 'isAsync', 0)
+    redraw | echo 'sending ... ok'
+  endif
   return 1
 endfunction
 
