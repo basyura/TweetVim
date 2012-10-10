@@ -54,6 +54,7 @@ if !isdirectory(g:tweetvim_config_dir . '/accounts')
 endif
 "
 "
+command! TweetVimVersion :echo tweetvim#version()
 "
 command! TweetVimAccessToken  :call tweetvim#access_token()
 "

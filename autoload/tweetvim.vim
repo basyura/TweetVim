@@ -1,4 +1,11 @@
 call tweetvim#cache#read('screen_name')
+
+let s:version = 1.8
+"
+"
+function! tweetvim#version()
+  return s:version
+endfunction
 "
 "
 function! tweetvim#timeline(method, ...)
