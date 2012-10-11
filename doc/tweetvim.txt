@@ -107,6 +107,9 @@ INTERFACE					*tweetvim-interface*
 ------------------------------------------------------------------------------
 COMMANDS					*tweetvim-commands*
 
+:TweetVimVersion                                *:TweetVimVersion*
+                display version.
+
 :TweetVimAddAccount                             *:TweetVimAddAccount*
                 add account.
 

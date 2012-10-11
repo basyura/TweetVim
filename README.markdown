@@ -40,6 +40,10 @@ PIN を入力すると認証完了。
 commands
 ---------------
 
+### バージョを表示する
+
+    :TweetVimVersion
+
 ### アカウントを追加する
 
     :TweetVimAddAccount
@@ -332,6 +336,7 @@ TODO for v1.8
 - inoremap C-CR でツイートするようにしてみた
 - j or k でセパレータを飛ばして移動するようにした
 - 検索の際に日時が出ていなかったのを修正
+- :TweetVimVersion or tweetvim#version() でバージョンを取得できるようにしてみた
 
 release v1.7 2012.08.31
 ------------------------
