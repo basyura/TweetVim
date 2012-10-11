@@ -65,8 +65,10 @@ function! tweetvim#say#command(...)
   " check post ok
   redraw
   echo msg
-  if input('ok ? [y/n] : ') != 'y'
-    redraw | echo '' | return
+  if !g:tweetvim_silent_say
+    if input('ok ? [y/n] : ') != 'y'
+      redraw | echo '' | return
+    endif
   endif
   " post
   call s:post_tweet(msg)
