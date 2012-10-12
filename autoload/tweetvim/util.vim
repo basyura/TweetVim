@@ -2,6 +2,13 @@
 let s:Vital    = vital#of('tweetvim')
 let s:DateTime = s:Vital.import('DateTime')
 let s:Html     = s:Vital.import('Web.Html')
+let s:List     = s:Vital.import('Data.List')
+"
+"
+"
+function! tweetvim#util#uniq(list)
+  return s:List.uniq(a:list)
+endfunction
 "
 "
 "

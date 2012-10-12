@@ -14,10 +14,10 @@ endfunction
 "
 "
 function! tweetvim#complete#search(argLead, cmdLine, cursorPos)
-  let name = tweetvim#cache#get('screen_name')
-  let tag  = tweetvim#cache#get('hash_tag')
-  call extend(name, tag)
-  return join(name, "\n")
+  let list = tweetvim#cache#get('screen_name')
+  let list = extend(list, tweetvim#cache#get('hash_tag'))
+  let list = tweetvim#util#uniq(list)
+  return join(list, "\n")
 endfunction
 "
 "
