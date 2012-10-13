@@ -42,11 +42,14 @@ function! tweetvim#account#access_token(...)
       \ }
 
     let account    = twibill#new(config).verify_credentials()
+
+    let folder = g:tweetvim_config_dir . '/accounts/' . account.screen_name
+    if !isdirectory(folder)
+      call mkdir(folder, 'p')
+    endif
+
     let token_path = g:tweetvim_config_dir . '/accounts/' . account.screen_name . '/token'
-
-    call mkdir(g:tweetvim_config_dir . '/accounts/' . account.screen_name, 'p')
     call writefile(tokens , token_path)
-
 
     let s:accounts[account.screen_name] = account
 
