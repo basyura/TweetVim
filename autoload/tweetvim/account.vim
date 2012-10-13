@@ -57,7 +57,8 @@ function! tweetvim#account#access_token(...)
   catch
     redraw
     echohl Error | echo "failed to get access token" | echohl None
-    return {'error' : v:exception}
+    if g:tweetvim_debug | echoerr v:exception | endif
+    throw "AccessTokenError"
   endtry
 endfunction
 
@@ -72,22 +73,40 @@ function! tweetvim#account#current(...)
     echohl Keyword | echo 'current account is ' . current | echohl None
   endif
 
-  " default account is already setted at s:load_accounts()
-  let s:current = current
-  let account   = s:accounts[s:current]
-  if !has_key(account, 'lists')
-    let account.lists = tweetvim#request('lists', [s:current]).lists
+  " for get first account & display timeline
+  if g:tweetvim_default_account != ''
+    let current = g:tweetvim_default_account
+  else
+    let users   = tweetvim#account#users()
+    if !empty(users)
+      let current = users[0].screen_name
+    endif
   endif
+
+  let s:current = current
+  if s:current == ''
+    if g:tweetvim_debug | echoerr "current account is empty" | endif
+    throw "AccessTokenError"
+  endif
+  let account   = s:accounts[s:current]
+  try 
+    if !has_key(account, 'lists')
+      let account.lists = tweetvim#request('lists', [s:current]).lists
+    endif
+  catch
+      let account.lists = []
+  endtry
 
   return deepcopy(account)
 endfunction
 
 function! tweetvim#account#add()
-  let token = tweetvim#account#access_token({'mode' : 'new'})
-  " check error
-  if has_key(token, 'error')
+  try
+    call tweetvim#account#access_token({'mode' : 'new'})
+  catch /AccessTokenError/
     return
-  endif
+  endtry
+  :TweetVimHomeTimeline
   redraw
   echohl Keyword | echo 'added account' |  echohl None
 endfunction

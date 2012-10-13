@@ -20,6 +20,9 @@ function! tweetvim#timeline(method, ...)
 
   let st_req = reltime()
   let tweets = tweetvim#request(a:method, args)
+  if empty(tweets)
+    return
+  endif
   let req_time = reltimestr(reltime(st_req))
   " check error
   if type(tweets) == 4
@@ -50,7 +53,11 @@ function! tweetvim#timeline(method, ...)
 
   let load_time = reltimestr(reltime(st_load))
 
-  call tweetvim#cache#write('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
+  try 
+    call tweetvim#cache#write('screen_name', map(copy(tweets), 'v:val.user.screen_name'))
+  catch
+    " noop
+  endtry
 
   if get(g:, 'tweetvim_debug', 0)
     let time = 'total:' . reltimestr(reltime(start)) . ' req:' . req_time . ' load:' . load_time
@@ -67,12 +74,12 @@ function! tweetvim#request(method, args)
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
   let args  = s:merge_params(args, param)
 
-  "  try
+  try
     let twibill = s:twibill()
-    "catch
+  catch /AccessTokenError/
     "echoerr 'You must install twibill.vim (https://github.com/basyura/twibill.vim)'
-    "return {}
-    "endtry
+    return []
+  endtry
 
   return call(twibill[a:method], args, twibill)
 endfunction
