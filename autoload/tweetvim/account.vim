@@ -53,6 +53,8 @@ function! tweetvim#account#access_token(...)
 
     let s:accounts[account.screen_name] = account
 
+    let s:current = account.screen_name
+
     return config
   catch
     redraw
@@ -64,6 +66,7 @@ endfunction
 
 function! tweetvim#account#current(...)
   let current = s:current
+  " TODO: refactoring
   if a:0 > 0
     if index(map(tweetvim#account#users(), 'v:val.screen_name'), a:1) < 0
       echohl Error | echo 'failed to switch ' . a:1 | echohl None
@@ -72,13 +75,15 @@ function! tweetvim#account#current(...)
     let current = a:1
     echohl Keyword | echo 'current account is ' . current | echohl None
   else
-    " for get first account & display timeline
-    if g:tweetvim_default_account != ''
-      let current = g:tweetvim_default_account
-    else
-      let users   = tweetvim#account#users()
-      if !empty(users)
-        let current = users[0].screen_name
+    if current == ''
+      " for get first account & display timeline
+      if g:tweetvim_default_account != ''
+        let current = g:tweetvim_default_account
+      else
+        let users   = tweetvim#account#users()
+        if !empty(users)
+          let current = users[0].screen_name
+        endif
       endif
     endif
   endif
@@ -107,7 +112,7 @@ function! tweetvim#account#add()
   catch /AccessTokenError/
     return
   endtry
-  :TwretVimHomeTimeline
+  :TweetVimHomeTimeline
   redraw
   echohl Keyword | echo 'added account' |  echohl None
 endfunction
