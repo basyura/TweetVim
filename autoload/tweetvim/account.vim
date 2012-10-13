@@ -71,17 +71,18 @@ function! tweetvim#account#current(...)
     endif
     let current = a:1
     echohl Keyword | echo 'current account is ' . current | echohl None
-  endif
-
-  " for get first account & display timeline
-  if g:tweetvim_default_account != ''
-    let current = g:tweetvim_default_account
   else
-    let users   = tweetvim#account#users()
-    if !empty(users)
-      let current = users[0].screen_name
+    " for get first account & display timeline
+    if g:tweetvim_default_account != ''
+      let current = g:tweetvim_default_account
+    else
+      let users   = tweetvim#account#users()
+      if !empty(users)
+        let current = users[0].screen_name
+      endif
     endif
   endif
+
 
   let s:current = current
   if s:current == ''
@@ -106,7 +107,7 @@ function! tweetvim#account#add()
   catch /AccessTokenError/
     return
   endtry
-  :TweetVimHomeTimeline
+  :TwretVimHomeTimeline
   redraw
   echohl Keyword | echo 'added account' |  echohl None
 endfunction
