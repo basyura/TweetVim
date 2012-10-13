@@ -69,23 +69,9 @@ function! tweetvim#account#current(...)
     echohl Keyword | echo 'current account is ' . current | echohl None
   endif
 
-  if current == ''
-    if g:tweetvim_default_account != ''
-      let s:current = g:tweetvim_default_account
-    else
-      let accounts = tweetvim#account#users()
-      if len(accounts) != 0
-        let current = accounts[0].screen_name
-      endif
-    endif
-  endif
-
-  if current == ''
-    return {}
-  endif
-
+  " default account is already setted at s:load_accounts()
   let s:current = current
-  let account = s:accounts[s:current]
+  let account   = s:accounts[s:current]
   if !has_key(account, 'lists')
     let account.lists = tweetvim#request('lists', [s:current]).lists
   endif
@@ -104,7 +90,7 @@ function! tweetvim#account#add()
 endfunction
 
 function! tweetvim#account#users()
-  return deepcopy(values(s:accounts))
+  return deepcopy(sort(values(s:accounts)))
 endfunction
 
 function! s:token_path(screen_name)
@@ -118,7 +104,9 @@ function! s:load_accounts()
       \ 'screen_name' : account,
       \ }
   endfor
-  if len(list) > 0
+  if g:tweetvim_default_account != ''
+    let s:current = g:tweetvim_default_account
+  elseif len(list) != 0
     let s:current = list[0]
   endif
 endfunction

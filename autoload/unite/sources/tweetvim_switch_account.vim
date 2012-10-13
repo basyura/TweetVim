@@ -28,6 +28,7 @@ function! s:source.gather_candidates(args, context)
           \ 'abbr' : (current == user.screen_name ? '* ' : '  ') . user.screen_name ,
           \ })
   endfor
+  call sort(candidates, 's:sort_by_screen_name')
   return candidates
 endfunction
 
@@ -36,4 +37,6 @@ function! s:source.action_table.execute.func(candidate)
   call tweetvim#account#current(a:candidate.word)
 endfunction
 
- 
+function! s:sort_by_screen_name(i1, i2)
+  return a:i1.word == a:i2.word ? 0 : a:i1.word > a:i2.word ? 1 : -1
+endfunction 
