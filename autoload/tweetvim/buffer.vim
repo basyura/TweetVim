@@ -208,7 +208,9 @@ function! s:process(method, args, title, tweets, opt)
     for desc in split(user.description, '\n')
       call append(line('$') - 1, '  ' . substitute(desc, '', "", "g"))
     endfor
-    call append(line('$') - 1, '  ' . user.url)
+    if user.url != '0'
+      call append(line('$') - 1, '  ' . user.url)
+    end
     call append(line('$') - 1, '  statuses  : ' . string(user.statuses_count))
     call append(line('$') - 1, '  friends   : ' . string(user.friends_count))
     call append(line('$') - 1, '  followers : ' . string(user.followers_count))
