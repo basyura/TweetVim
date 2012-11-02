@@ -65,6 +65,8 @@ Requirement:
 	unite.vim (*)
 	https://github.com/Shougo/unite.vim
 
+	vimproc (*)
+        https://github.com/Shougo/vimproc
 
 Related plugin:
 
@@ -292,6 +294,13 @@ g:tweetvim_say_insert_account                   *g:tweetvim_say_insert_account*
                 insert screen_name to say buffer.
                 if you want to know account which you say, use this option.
                 default : 0
+
+g:tweetvim_async_post                          *g:tweetvim_async_post*
+                post tweet asynchronously.
+                vimproc is required.
+                default : 0
+
+
 ==============================================================================
 FILES						*tweetvim-files*
 
