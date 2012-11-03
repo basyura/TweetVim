@@ -13,7 +13,7 @@ endfunction
 "
 function! tweetvim#action#cursor_down#execute(tweet)
   while 1
-    :execute "normal \<Down>"
+    :execute "normal! \<Down>"
     if getline(".") !~ '^  ' && (!tweetvim#util#isCursorOnSeprator() || line(".") == line("$"))
       break
     endif
