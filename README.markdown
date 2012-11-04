@@ -320,6 +320,8 @@ tweetvim_say バッファにアカウント名を差し込む
 TODO for v1.9
 -------------
 
+- OpenBrowser のチェック
+- vimproc#start でブラウザを開く
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
