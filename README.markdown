@@ -325,6 +325,10 @@ TODO for v1.9
 - POST しようとしてまだ認証してなくて PIN の入力求められて、これをキャンセルしても sending ... ok って出る。
 - フィルタリング(NGワード)
 
+### 済
+
+- t.co のデフォルト展開設定を追加 (g:tweetvim_expand_t_co)。default = 0
+
 TODO for v1.8
 -------------
 

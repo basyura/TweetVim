@@ -295,11 +295,14 @@ g:tweetvim_say_insert_account                   *g:tweetvim_say_insert_account*
                 if you want to know account which you say, use this option.
                 default : 0
 
-g:tweetvim_async_post                          *g:tweetvim_async_post*
+g:tweetvim_async_post                           *g:tweetvim_async_post*
                 post tweet asynchronously.
                 vimproc is required.
                 default : 0
 
+g:tweetvim_expand_t_co                          *g:tweetvim_expand_t_co*
+                expand t.co.
+                default : 0
 
 ==============================================================================
 FILES						*tweetvim-files*

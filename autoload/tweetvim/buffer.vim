@@ -334,8 +334,11 @@ function! s:format(tweet, ...)
   let text = has_key(tweet, 'retweeted_status')
               \ ? 'RT @' . tweet.retweeted_status.user.screen_name . ': ' . tweet.retweeted_status.text
               \ : tweet.text
-  let text = s:expand_t_co(text,
-              \ has_key(tweet, 'retweeted_status') ? tweet.retweeted_status : tweet)
+  " expand t.co url
+  if g:tweetvim_expand_t_co
+    let text = s:expand_t_co(text,
+                \ has_key(tweet, 'retweeted_status') ? tweet.retweeted_status : tweet)
+  end
   let text = substitute(text , '' , '' , 'g')
   let text = substitute(text , '\n' , '' , 'g')
   let text = tweetvim#util#unescape(text)

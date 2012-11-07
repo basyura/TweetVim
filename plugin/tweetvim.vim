@@ -41,6 +41,7 @@ call s:set_global_variable('tweetvim_default_account'    , '')
 call s:set_global_variable('tweetvim_say_insert_account' , 0)
 call s:set_global_variable('tweetvim_async_post'         , 0)
 call s:set_global_variable('tweetvim_silent_say'         , 0)
+call s:set_global_variable('tweetvim_expand_t_co'        , 0)
 call s:set_global_variable('tweetvim_debug'              , 0)
 
 if !isdirectory(g:tweetvim_config_dir)
