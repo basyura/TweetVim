@@ -244,7 +244,16 @@ function! s:append_tweets(tweets, cache)
   for tweet in tweetvim#filter#execute(a:tweets)
     " cache tweet by line no
     let a:cache[line(".")] = tweet
-    call append(line('$') - 1, s:format(tweet, today))
+    let tweet.row = line(".")
+
+  "let text = substitute(text , '' , '' , 'g')
+  "let text = substitute(text , '\n' , '' , 'g')
+    let text = s:format(tweet, today)
+    let isfirst = 1
+    for line in split(text, "\n")
+      call append(line('$') - 1, (isfirst ? '' : '                  ') . line)
+      let isfirst = 0
+    endfor
     " insert separator or not
     if g:tweetvim_display_separator
       call append(line('$') - 1, separator)
@@ -339,8 +348,8 @@ function! s:format(tweet, ...)
     let text = s:expand_t_co(text,
                 \ has_key(tweet, 'retweeted_status') ? tweet.retweeted_status : tweet)
   end
-  let text = substitute(text , '' , '' , 'g')
-  let text = substitute(text , '\n' , '' , 'g')
+  "let text = substitute(text , '' , '' , 'g')
+  "let text = substitute(text , '\n' , '' , 'g')
   let text = tweetvim#util#unescape(text)
 
   let today = a:0 ? a:1 : tweetvim#util#today()
