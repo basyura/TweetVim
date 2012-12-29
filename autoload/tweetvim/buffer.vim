@@ -244,14 +244,11 @@ function! s:append_tweets(tweets, cache)
   for tweet in tweetvim#filter#execute(a:tweets)
     " cache tweet by line no
     let a:cache[line(".")] = tweet
-    let tweet.row = line(".")
 
-  "let text = substitute(text , '' , '' , 'g')
-  "let text = substitute(text , '\n' , '' , 'g')
     let text = s:format(tweet, today)
     let isfirst = 1
     for line in split(text, "\n")
-      call append(line('$') - 1, (isfirst ? '' : '                  ') . line)
+      call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '' , '' , 'g'))
       let isfirst = 0
     endfor
     " insert separator or not
