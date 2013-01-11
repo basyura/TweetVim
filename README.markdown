@@ -18,6 +18,7 @@ Requires
 - [(unite-outline)](https://github.com/h1mesuke/unite-outline)
 - [(bitly.vim)](https://github.com/basyura/bitly.vim)
 - [(unite.vim)](https://github.com/Shougo/unite.vim)
+- [(favstar-vim)](https://github.com/mattn/favstar-vim)
 - [cURL](http://curl.haxx.se/)
 
 verify
@@ -30,7 +31,7 @@ verify
     > now launched your browser to authenticate
     > Enter Twitter OAuth PIN:
 
-PIN を入力すると認証完了。  
+PIN を入力すると認証完了。
 認証時に発行された AccessToken と AccessTokenSecret が以下に保存される。
 
     ~/.tweetvim/token
@@ -106,6 +107,7 @@ commands
     nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
     nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
     nmap <silent> <buffer> <leader>e  <Plug>(tweetvim_action_expand_url)
+    nmap <silent> <buffer> <leader>s  <Plug>(tweetvim_action_favstar)
     nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
     nmap <silent> <buffer> ff  <Plug>(tweetvim_action_page_next)
@@ -158,30 +160,34 @@ api を使ってスクリーン名とリスト一覧を取得するので、最�
 
 ### アクション選択
 
-tweetvim バッファのみ。  
+tweetvim バッファのみ。
 デフォルトでは a でアクション選択用の Unite が起動する。
 
+- block           - block this user
 - browser         - open tweet with browser
+- expand_url      - expand url
 - favorite        - favorite tweet
+- favstar         - show favstar
+- favstar_browser - open favstar site by browser
 - follow          - follow user
 - in_reply_to     - show conversation
 - list            - add user to list
 - open_links      - open links in tweet
 - qt              - quote tweet
 - remove_favorite - remove favorite
+- remove_status   - remove status
 - reply           - reply
 - retweet         - retweet
-- search          - search tweets
+- search          - seach tweets
 - unfollow        - unfollow user
 - user_timeline   - show user timeline
-- remove_status   - remove status
-- expand_url      - expand url
+
 
 ### ツイート歴表示、選択
 
-tweetvim_say バッファのみ。  
-デフォルトでは `<C-i>` で歴選択用の Unite が起動する。  
-歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。  
+tweetvim_say バッファのみ。
+デフォルトでは `<C-i>` で歴選択用の Unite が起動する。
+歴は tweetvim_say バッファが閉じられるタイミングでキャッシュされる。
 
 `<C-s>` で歴を遡って tweetvim_say バッファに表示させることも可
 
@@ -194,7 +200,7 @@ tweetvim_say バッファのみ。
 url 短縮
 --------
 
-[bitly.vim](https://github.com/basyura/bitly.vim) をインストールしておくと、ツイート用バッファで URL 短縮とタイトルの取得ができる。  
+[bitly.vim](https://github.com/basyura/bitly.vim) をインストールしておくと、ツイート用バッファで URL 短縮とタイトルの取得ができる。
 デフォルトのキーマッピング。
 
     inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
@@ -314,7 +320,7 @@ tweetvim_say バッファにアカウント名を差し込む
 
     let g:tweetvim_say_insert_account = 0
     
-    [basyura] : 
+    [basyura] :
     上記は触らなければ発言時に削除する。文字数カウントの考慮はない。
 
 TODO for v1.9
@@ -328,6 +334,7 @@ TODO for v1.9
 ### 済
 
 - t.co のデフォルト展開設定を追加 (g:tweetvim_expand_t_co)。default = 0
+- favstar のステータス表示とブラウザ表示を追加
 
 TODO for v1.8
 -------------
@@ -342,7 +349,7 @@ TODO for v1.8
 - 検索の際に日時が出ていなかったのを修正
 - :TweetVimVersion or tweetvim#version() でバージョンを取得できるようにしてみた
 - 非同期のポスト (g:tweetvim_async_post)
-  - twibill.vim の最新化が必要 
+  - twibill.vim の最新化が必要
 
 release v1.7 2012.08.31
 ------------------------

@@ -68,6 +68,9 @@ Requirement:
 	vimproc (*)
         https://github.com/Shougo/vimproc
 
+        favstar-vim (*)
+        https://github.com/mattn/favstar-vim
+
 Related plugin:
 
 	neco-tweetvim
@@ -242,6 +245,12 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 
 <Plug>(tweetvim_action_cursor_down)             *<Plug>(tweetvim_action_cursor_down)*
 		cursor down. skip separator.
+
+<Plug>(tweetvim_action_favstar)                 *<Plug>(tweetvim_action_favstar)*
+		show favstar's status.
+
+<Plug>(tweetvim_action_favstar_browser)         *<Plug>(tweetvim_action_favstar_browser)*
+		open favstar's site by browser.
 
 ==============================================================================
 VARIABLES 					*tweetvim-variables*
