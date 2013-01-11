@@ -248,6 +248,7 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 
 <Plug>(tweetvim_action_favstar)                 *<Plug>(tweetvim_action_favstar)*
 		show favstar's status.
+                default : <leader>F
 
 <Plug>(tweetvim_action_favstar_browser)         *<Plug>(tweetvim_action_favstar_browser)*
 		open favstar's site by browser.

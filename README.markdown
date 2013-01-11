@@ -107,7 +107,7 @@ commands
     nmap <silent> <buffer> <leader>r  <Plug>(tweetvim_action_retweet)
     nmap <silent> <buffer> <leader>q  <Plug>(tweetvim_action_qt)
     nmap <silent> <buffer> <leader>e  <Plug>(tweetvim_action_expand_url)
-    nmap <silent> <buffer> <leader>s  <Plug>(tweetvim_action_favstar)
+    nmap <silent> <buffer> <leader>F  <Plug>(tweetvim_action_favstar)
     nmap <silent> <buffer> <Leader><Leader>  <Plug>(tweetvim_action_reload)
 
     nmap <silent> <buffer> ff  <Plug>(tweetvim_action_page_next)
