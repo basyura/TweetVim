@@ -31,13 +31,19 @@ function! tweetvim#say#open(...)
     call cursor(1, 1)
   endif
 
+  if text == '' && g:tweetvim_appendix != ''
+    call append(0, g:tweetvim_appendix)
+    delete _
+    call cursor(1, 1)
+  endif
+
   if g:tweetvim_say_insert_account
     call setline(1, '[' . tweetvim#account#current().screen_name . '] : ' . getline(1))
   endif
 
   let b:tweetvim_post_param = param
   let &filetype = 'tweetvim_say'
-  startinsert!
+  startinsert
 
   setlocal nomodified
 endfunction
