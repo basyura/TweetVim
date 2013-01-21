@@ -73,7 +73,6 @@ function! tweetvim#request(method, args)
               \'count'    : g:tweetvim_tweet_per_page,
               \'include_entities' : 1}
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
-  let param = {}
   let args  = s:merge_params(args, param)
 
   try
