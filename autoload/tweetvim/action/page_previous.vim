@@ -12,5 +12,7 @@ endfunction
 "
 "
 function! tweetvim#action#page_previous#execute(tweet)
-  call tweetvim#action#page_next#execute(a:tweet, -1)
+  " TODO
+  call tweetvim#buffer#previous()
+  "call tweetvim#action#page_next#execute(a:tweet, -1)
 endfunction

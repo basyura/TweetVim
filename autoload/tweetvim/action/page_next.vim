@@ -35,6 +35,17 @@ function! tweetvim#action#page_next#execute(tweet, ...)
     let param.page = page
     let b:tweetvim_args = tweetvim_args
 
+    "TODO
+    let _ = has_key(param, 'max_id')   ? remove(param, 'max_id')   : ''
+    let _ = has_key(param, 'since_id') ? remove(param, 'since_id') : ''
+
+    if b:tweetvim_method == 'search'
+      if next == 1
+        let param.max_id   = b:tweetvim_status_cache[max(keys(b:tweetvim_status_cache))].id_str
+      else
+        let param.since_id = b:tweetvim_status_cache[min(keys(b:tweetvim_status_cache))].id_str
+      endif
+    endif
     let ret = call('tweetvim#timeline', [b:tweetvim_method] + tweetvim_args)
   catch
     echo v:exception
