@@ -43,7 +43,13 @@ function! tweetvim#say#open(...)
 
   let b:tweetvim_post_param = param
   let &filetype = 'tweetvim_say'
-  startinsert
+
+  if g:tweetvim_appendix != '' && getline('.') == g:tweetvim_appendix
+    startinsert
+  else
+    startinsert!
+  endif
+
 
   setlocal nomodified
 endfunction
