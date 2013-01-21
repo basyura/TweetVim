@@ -35,8 +35,6 @@ function! s:candidates_time_lines()
   let list = [
         \ 'home_timeline', 
         \ 'mentions', 
-        \ 'retweeted_by_me', 
-        \ 'retweeted_to_me', 
         \ 'retweets_of_me', 
         \ ]
 
