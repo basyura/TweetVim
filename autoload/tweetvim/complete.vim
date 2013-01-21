@@ -23,5 +23,13 @@ endfunction
 "
 "
 function! tweetvim#complete#list(argLead, cmdLine, cursorPos)
-  return join(map(tweetvim#account#current().lists, 'v:val.name'), "\n")
+  let screen_name = tweetvim#account#current().screen_name
+  let slugs = []
+  for list in tweetvim#account#current().lists
+    if list.user.screen_name == screen_name
+      call add(slugs, list.slug)
+    endif
+  endfor
+
+  return join(slugs, "\n")
 endfunction
