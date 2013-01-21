@@ -108,6 +108,9 @@ endfunction
 "
 "
 function! s:twibill()
+  if twibill#version() < 1.1
+    throw "you must udpate to twibill 1.1"
+  endif
   let config = tweetvim#account#access_token()
   " TODO
   let config.cache   = 1
