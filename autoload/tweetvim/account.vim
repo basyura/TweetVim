@@ -97,7 +97,7 @@ function! tweetvim#account#current(...)
   let account   = s:accounts[s:current]
   try 
     if !has_key(account, 'lists')
-      let account.lists = tweetvim#request('lists', [s:current]).lists
+      let account.lists = tweetvim#request('lists', {'screen_name' : s:current})
     endif
   catch
       let account.lists = []
