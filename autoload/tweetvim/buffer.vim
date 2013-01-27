@@ -337,9 +337,16 @@ function! s:format(tweet, ...)
           \ }
   endif
 
-  let text = has_key(tweet, 'retweeted_status')
-              \ ? 'RT @' . tweet.retweeted_status.user.screen_name . ': ' . tweet.retweeted_status.text
-              \ : tweet.text
+  if has_key(tweet, 'retweeted_status')
+    let text = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
+    if stridx(tweet.retweeted_status.text, "\n") != -1
+      let text .= "\n"
+    endif
+    let text .= tweet.retweeted_status.text
+  else
+    let text = tweet.text
+  endif
+
   " expand t.co url
   if g:tweetvim_expand_t_co
     let text = s:expand_t_co(text,
