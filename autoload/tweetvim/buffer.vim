@@ -209,7 +209,11 @@ function! s:process(method, args, title, tweets, opt)
       call append(line('$') - 1, '  ' . substitute(desc, '', "", "g"))
     endfor
     if user.url != '0'
-      call append(line('$') - 1, '  ' . user.url)
+      let url = user.entities.url.urls[0].expanded_url
+      if url == '0'
+        let url = user.url
+      endif
+      call append(line('$') - 1, '  ' . url)
     end
     call append(line('$') - 1, '  statuses  : ' . string(user.statuses_count))
     call append(line('$') - 1, '  friends   : ' . string(user.friends_count))
