@@ -30,7 +30,16 @@ function! tweetvim#timeline(method, ...)
       echohl Error | echo tweets.error | echohl None
       return
     elseif has_key(tweets, 'errors')
-      echohl Error | echo tweets.errors[0].message | echohl None
+      let msg = tweets.errors[0].message
+      echohl Error
+      if msg == 'Rate limit exceeded'
+        echo "＿人人人人人人人人人人人＿"
+        echo "＞　Rate limit exceeded　＜"
+        echo "￣ＹＹＹＹＹＹＹＹＹＹＹ￣"
+      else
+        echo msg
+      endif
+      echohl None
       return
     endif
   endif
