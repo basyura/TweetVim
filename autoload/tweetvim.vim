@@ -30,16 +30,7 @@ function! tweetvim#timeline(method, ...)
       echohl Error | echo tweets.error | echohl None
       return
     elseif has_key(tweets, 'errors')
-      let msg = tweets.errors[0].message
-      echohl Error
-      if msg == 'Rate limit exceeded'
-        echo "＿人人人人人人人人人人人＿"
-        echo "＞　Rate limit exceeded　＜"
-        echo "￣ＹＹＹＹＹＹＹＹＹＹＹ￣"
-      else
-        echo msg
-      endif
-      echohl None
+      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
       return
     endif
   endif
@@ -142,4 +133,20 @@ function! s:merge_params(list_param, hash_param)
   endif
 
   return param + [a:hash_param]
+endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function! s:sudden_death(str)
+  let width = s:str_to_mb_width(a:str) + 2
+  let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
+  let content = '＞　' . a:str . '　＜'
+  let bottom = '￣' . join(map(range(width), '"Ｙ"'),'') . '￣'
+  return join([top, content, bottom], "\n")
+endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function! s:str_to_mb_width(str)
+  return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
 endfunction
