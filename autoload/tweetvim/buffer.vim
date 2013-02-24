@@ -205,8 +205,8 @@ function! s:process(method, args, title, tweets, opt)
   if get(a:opt, 'user_detail', 0)
     let user = a:tweets[0].user
     call append(line('$') - 1, '  @' . user.screen_name)
-    for desc in split(user.description, '\n')
-      call append(line('$') - 1, '  ' . substitute(desc, '', "", "g"))
+    for desc in split(user.description, '\r')
+      call append(line('$') - 1, '  ' . substitute(desc, '\n', "", "g"))
     endfor
     if user.url != '0'
       let url = user.entities.url.urls[0].expanded_url
