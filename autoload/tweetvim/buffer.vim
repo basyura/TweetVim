@@ -206,7 +206,7 @@ function! s:process(method, args, title, tweets, opt)
     let user = a:tweets[0].user
     call append(line('$') - 1, '  @' . user.screen_name)
     for desc in split(user.description, '\n')
-      call append(line('$') - 1, '  ' . substitute(desc, '', "", "g"))
+      call append(line('$') - 1, '  ' . substitute(desc, '\r', "", "g"))
     endfor
     if user.url != '0'
       let url = user.entities.url.urls[0].expanded_url
@@ -251,8 +251,8 @@ function! s:append_tweets(tweets, cache)
 
     let text = s:format(tweet, today)
     let isfirst = 1
-    for line in split(text, "\n")
-      call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '' , '' , 'g'))
+    for line in split(text, '\n')
+      call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '\r' , '' , 'g'))
       let isfirst = 0
     endfor
     " insert separator or not
