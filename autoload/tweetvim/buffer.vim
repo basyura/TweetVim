@@ -248,17 +248,8 @@ function! s:append_tweets(tweets, cache)
   for tweet in tweetvim#filter#execute(a:tweets)
     " cache tweet by line no
     let a:cache[line(".")] = tweet
-
-    let text = s:format(tweet, today)
-    let isfirst = 1
-    for line in split(text, "\n")
-      call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '' , '' , 'g'))
-      let isfirst = 0
-    endfor
-    " insert separator or not
-    if g:tweetvim_display_separator
-      call append(line('$') - 1, separator)
-    endif
+    call s:append_text(tweet, today)
+    call s:append_separator(separator)
   endfor
 endfunction
 "
@@ -274,8 +265,8 @@ function! s:append_tweets_with_icon(tweets, cache)
   let cmds = []
   for tweet in tweetvim#filter#execute(a:tweets)
     let a:cache[line(".")] = tweet
-    call append(line('$') - 1, s:format(tweet, today))
-    call append(line('$') - 1, separator)
+    call s:append_text(tweet, today)
+    call s:append_separator(separator)
 
     let screen_name = tweet.user.screen_name
     if has_key(tweet.user, 'profile_image_url')
@@ -308,7 +299,22 @@ function! s:append_tweets_with_icon(tweets, cache)
     endtry
   endfor
 endfunction
-"
+
+function! s:append_text(tweet, today)
+  let text = s:format(a:tweet, a:today)
+  let isfirst = 1
+  for line in split(text, "\n")
+    call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '' , '' , 'g'))
+    let isfirst = 0
+  endfor
+endfunction
+
+function! s:append_separator(separator)
+  " insert separator or not
+  if g:tweetvim_display_separator
+    call append(line('$') - 1, a:separator)
+  endif
+endfunction
 "
 "
 function! s:bufnr(buf_name)
