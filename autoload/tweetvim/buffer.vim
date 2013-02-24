@@ -265,6 +265,7 @@ function! s:append_tweets_with_icon(tweets, cache)
   let cmds = []
   for tweet in tweetvim#filter#execute(a:tweets)
     let a:cache[line(".")] = tweet
+    let row = line(".")
     call s:append_text(tweet, today)
     call s:append_separator(separator)
 
@@ -288,7 +289,7 @@ function! s:append_tweets_with_icon(tweets, cache)
     execute "cd " . current_dir
 
     call add(cmds, ":sign define tweetvim_icon_" . screen_name . " icon=" . ico_path)
-    call add(cmds, ":sign place 1 line=" . (line(".") - 2) . " name=tweetvim_icon_" . screen_name . " buffer=" . bufnr("%"))
+    call add(cmds, ":sign place 1 line=" . row . " name=tweetvim_icon_" . screen_name . " buffer=" . bufnr("%"))
   endfor
 
   for cmd in cmds
