@@ -4,7 +4,7 @@ TweetVim
 
 twitter client for vim
 
-![img](http://f.hatena.ne.jp/basyura/20130418204049)
+![img](http://cdn-ak.f.st-hatena.com/images/fotolife/b/basyura/20130418/20130418204049.png)
 
 License
 -------
