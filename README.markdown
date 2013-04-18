@@ -4,6 +4,8 @@ TweetVim
 
 twitter client for vim
 
+![img](http://cdn-ak.f.st-hatena.com/images/fotolife/b/basyura/20130325/20130325212154.png)
+
 License
 -------
 
@@ -326,6 +328,8 @@ tweetvim_say バッファにアカウント名を差し込む
 release v2.0 2013.04.18
 -----------------------
 
+- icon 表示の際に複数行表示できていなかったのを修正
+- 
 
 
 release v1.9 2013.02.06
