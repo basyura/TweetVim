@@ -13,7 +13,7 @@ endfunction
 "
 function! tweetvim#action#reload#execute(tweet)
   try
-    let title  = tweetvim#util#padding(getline(1), tweetvim#util#bufwidth() - 8)
+    let title  = tweetvim#util#padding(getline(1), tweetvim#util#bufwidth() - 10)
     let title .= '[reload]'
 
     call tweetvim#buffer#replace(1, title)
