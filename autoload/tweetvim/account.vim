@@ -1,5 +1,5 @@
-let s:consumer_key    = '8hht6fAi3wU47cwql0Cbkg'
-let s:consumer_secret = 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU'
+let s:consumer_key    = get(g:, 'tweetvim_consumer_key', '8hht6fAi3wU47cwql0Cbkg')
+let s:consumer_secret = get(g:, 'tweetvim_consumer_secret', 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU')
 
 let s:current  = ''
 " let s:user = {'screen_name' : '' , 'lists' : []}
