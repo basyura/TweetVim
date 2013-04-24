@@ -12,9 +12,6 @@ endfunction
 function! tweetvim#action#favorite#execute(tweet)
   let tweet = a:tweet
   echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.text)
-  if input('favorite ? [y/n] : ') != 'y'
-    return
-  endif
   let ret = tweetvim#request('favorite', tweet.id_str)
   redraw
   if has_key(ret, 'errors')
