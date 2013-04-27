@@ -27,7 +27,6 @@ function! tweetvim#action#in_reply_to#execute(tweet)
       break
     endif
 
-    let ret = input("")
     let guard += 1
     if guard > 10
       echohl ErrorMsg | echo 'count over' | echohl None
