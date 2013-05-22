@@ -399,6 +399,7 @@ function! s:format(tweet, ...)
       let date  = substitute(date, today, '', '')
       let str .= ' [[' . date . ']]'
     catch
+      echo v:exception
       " serch と timeline でフォーマットが違う
     endtry
   endif
