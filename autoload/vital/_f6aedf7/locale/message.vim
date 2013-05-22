@@ -6,7 +6,6 @@ set cpo&vim
 function! s:new(path)
   let obj = copy(s:Message)
   let obj.path = a:path =~# '%s' ? a:path : 'message/' . a:path . '/%s.txt'
-  call obj.load(s:get_lang())
   return obj
 endfunction
 
@@ -16,8 +15,8 @@ endfunction
 
 let s:Message = {}
 function! s:Message.get(text)
-  if self.lang !=# s:get_lang()
-    call self.load()
+  if !has_key(self, 'lang')
+    call self.load(s:get_lang())
   endif
   if has_key(self.data, a:text)
     return self.data[a:text]
@@ -27,16 +26,26 @@ function! s:Message.get(text)
 endfunction
 function! s:Message.load(lang)
   let pattern = printf(self.path, a:lang)
-  let file = get(split(globpath(&runtimepath, pattern), "\n"), 0)
+  let files = split(globpath(&runtimepath, pattern), "\n")
+  let data = {}
+  for file in files
+    if filereadable(file)
+      let lines = filter(readfile(file), 'v:val !~# "^\\s*#"')
+      sandbox let res = eval(iconv(join(lines, ''), 'utf-8', &encoding))
+      if type(res) == type(data)
+        call extend(data, res)
+      endif
+      unlet res
+    endif
+  endfor
   let self.lang = a:lang
-  sandbox let self.data = filereadable(file) ?
-  \ eval(iconv(join(readfile(file), ''), 'utf-8', &encoding))
-  \ : {}
+  let self.data = data
 endfunction
 let s:Message._ = s:Message.get
 function! s:Message.missing(text)
 endfunction
 
 let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim:set et ts=2 sts=2 sw=2 tw=0:

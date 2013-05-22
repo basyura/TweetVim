@@ -6,10 +6,28 @@ set cpo&vim
 function! s:_vital_loaded(V)
   let s:V = a:V
 
+  let s:NUM_SECONDS = 60
+  let s:NUM_MINUTES = 60
+  let s:NUM_HOURS = 24
+  let s:NUM_DAYS_OF_WEEK = 7
+  let s:NUM_MONTHS = 12
+  let s:SECONDS_OF_HOUR = s:NUM_SECONDS * s:NUM_MINUTES
+  let s:SECONDS_OF_DAY = s:SECONDS_OF_HOUR * s:NUM_HOURS
+  let s:ERA_TIME = s:_g2jd(1, 1, 1)
+  let s:EPOC_TIME = s:_g2jd(1970, 1, 1)
+
+  let s:MONTHS = map(range(1, 12),
+  \   's:from_date(1970, v:val, 1, 0, 0, 0, 0).unix_time()')
+  let s:WEEKS = map(range(4, 10),
+  \   's:from_date(1970, 1, v:val, 0, 0, 0, 0).unix_time()')
+  let s:AM_PM_TIMES = map([0, 12],
+  \   's:from_date(1970, 1, 1, v:val, 0, 0, 0).unix_time()')
+
   if s:V.is_windows()
-    let s:win_tz =
-    \  -(split(s:V.system(printf('reg query "%s" /v Bias | findstr REG_DWORD',
-    \ 'HKLM\System\CurrentControlSet\Control\TimeZoneInformation')))[-1] * 60)
+    let key = 'HKLM\System\CurrentControlSet\Control\TimeZoneInformation'
+    let regs = s:V.system(printf('reg query "%s" /v Bias', key))
+    let time = matchstr(regs, 'REG_DWORD\s*\zs0x\x\+')
+    let s:win_tz = empty(time) ? 0 : time / -s:NUM_MINUTES
   endif
 
   " default values
@@ -31,7 +49,11 @@ endfunction
 
 " Creates a DateTime object with now time.
 function! s:now(...)
-  return call('s:from_unix_time', [localtime()] + a:000)
+  let now = s:from_unix_time(localtime())
+  if a:0
+    let now = now.to(s:timezone(a:1))
+  endif
+  return now
 endfunction
 
 " Creates a DateTime object from specified unix time.
@@ -62,61 +84,75 @@ function! s:from_format(string, format, ...)
   let o = copy(s:DateTime)
   let locale = a:0 ? a:1 : ''
   let remain = a:string
+  let skip_pattern = ''
   for f in s:_split_format(a:format)
     if s:V.is_string(f)
-      let matched_len = len(f)
-      if f !=# remain[: matched_len - 1]
+      let pat = '^' . skip_pattern . '\V' . escape(f, '\')
+      let matched_len = len(matchstr(remain, pat))
+      if matched_len == 0
         throw "Vital.DateTime: Parse error:\n" .
         \     'input: ' . a:string . "\nformat: " . a:format
         break
       endif
-    elseif s:V.is_list(f)
-      let [d, flag, width] = f
-      let info = s:format_info[d]
-      let key = '_' . info[0]
-      if !has_key(o, key)
-        let key = '_'
+      let remain = remain[matched_len :]
+    else  " if s:V.is_list(f)
+      let info = f[0]
+      if info[0] ==# '#skip'
+        let skip_pattern = info[1]
+      else
+        let remain = s:_read_format(o, f, remain, skip_pattern, locale)
+        let skip_pattern = ''
       endif
-      if s:V.is_funcref(info[1])
-        let pattern = call(info[1], [locale], {})
-        if s:V.is_list(pattern)
-          let values = pattern
-          let l:['pattern'] = '\%(' . join(values, '\|') . '\)'
-        endif
-      elseif s:V.is_list(info[1])
-        if width ==# ''
-          let width = info[1][1]
-        endif
-        let pattern = '\d\{1,' . width . '}'
-        if flag == '_'
-          let pattern = '\s*' . pattern
-        endif
-      elseif s:V.is_string(info[1])
-        let pattern = info[1]
-      endif
-
-      let value = matchstr(remain, '^' . pattern)
-      let matched_len = len(value)
-
-      if exists('values')
-        let value = index(values, value)
-        unlet values
-      elseif s:V.is_list(info[1])
-        let value = str2nr(value, 10)
-      endif
-
-      if 4 <= len(info)
-        let l:['value'] = eval(info[3])
-      endif
-      if key !=# '_'
-        let o[key] = value
-      endif
-      unlet value pattern
     endif
-    let remain = remain[matched_len :]
     unlet f
   endfor
   return o._normalize()
+endfunction
+function! s:_read_format(datetime, descriptor, remain, skip_pattern, locale)
+  " "o", "key", "value" and "locale" is used by parse_conv
+  let o = a:datetime
+  let locale = a:locale  " for parse_conv
+  let [info, flag, width] = a:descriptor
+  let key = '_' . info[0]
+  if !has_key(o, key)
+    let key = '_'
+  endif
+  let Captor = info[1]
+  if s:V.is_funcref(Captor)
+    let pattern = call(Captor, [a:locale], {})
+    if s:V.is_list(pattern)
+      let candidates = pattern
+      unlet pattern
+      let pattern = '\%(' . join(candidates, '\|') . '\)'
+    endif
+  elseif s:V.is_list(Captor)
+    if width ==# ''
+      let width = Captor[1]
+    endif
+    let pattern = '\d\{1,' . width . '}'
+    if flag == '_'
+      let pattern = '\s*' . pattern
+    endif
+  else  " if s:V.is_string(Captor)
+    let pattern = Captor
+  endif
+
+  let value = matchstr(a:remain, '^' . a:skip_pattern . pattern)
+  let matched_len = len(value)
+
+  if exists('candidates')
+    let value = index(candidates, value)
+  elseif s:V.is_list(Captor)
+    let value = str2nr(value, 10)
+  endif
+
+  if 4 <= len(info)
+    let l:['value'] = eval(info[3])
+  endif
+  if key !=# '_'
+    let o[key] = value
+  endif
+  return a:remain[matched_len :]
 endfunction
 
 " Creates a DateTime object from Julian day.
@@ -139,20 +175,22 @@ function! s:timezone(...)
   if s:_is_class(info, 'TimeZone')
     return info
   endif
-  if type(info) != type(0) && empty(info)
+  if !s:V.is_number(info) && empty(info)
     unlet info
     let info = s:_default_tz()
   endif
   let tz = copy(s:TimeZone)
-  if type(info) == type(0)
-    let tz._offset = info
-  elseif info =~# '^[+-]\d\{2}:\?\d\{2}$'
-    let list = matchlist(info, '\v([+-])(\d{2})(\d{2})')
-    let tz._offset = str2nr(list[1] . '60') *
-    \                (str2nr(list[2]) * 60 + str2nr(list[3], 10))
+  if s:V.is_number(info)
+    let tz._offset = info * s:NUM_MINUTES * s:NUM_SECONDS
   else
-    " TODO: TimeZone names
-    throw 'Vital.DateTime: Unknown timezone: ' . string(info)
+    let list = matchlist(info, '\v^([+-])?(\d{1,2}):?(\d{1,2})?$')
+    if !empty(list)
+      let tz._offset = str2nr(list[1] . s:NUM_SECONDS) *
+      \                (str2nr(list[2]) * s:NUM_MINUTES + str2nr(list[3]))
+    else
+      " TODO: TimeZone names
+      throw 'Vital.DateTime: Unknown timezone: ' . string(info)
+    endif
   endif
   return tz
 endfunction
@@ -164,12 +202,12 @@ function! s:delta(...)
     return info
   endif
   let d = copy(s:TimeDelta)
-  if a:0 == 2 && type(a:1) == type(0) && type(a:2) == type(0)
+  if a:0 == 2 && s:V.is_number(a:1) && s:V.is_number(a:2)
     let d._days = a:1
     let d._time = a:2
   else
     let a = copy(a:000)
-    while 2 <= len(a) && type(a[0]) == type(0) && type(a[1]) == type('')
+    while 2 <= len(a) && s:V.is_number(a[0]) && s:V.is_string(a[1])
       let [value, unit] = remove(a, 0, 1)
       if unit =~? '^seconds\?$'
         let d._time += value
@@ -188,7 +226,7 @@ function! s:delta(...)
 endfunction
 
 function! s:compare(d1, d2)
-  return a:d1.compareTo(a:d2)
+  return a:d1.compare(a:d2)
 endfunction
 
 " Returns month names according to the current or specified locale.
@@ -227,7 +265,7 @@ function! s:_new_class(class)
   return extend({'class': a:class}, s:Class)
 endfunction
 function! s:_is_class(obj, class)
-  return type(a:obj) == type({}) && get(a:obj, 'class', '') ==# a:class
+  return s:V.is_dict(a:obj) && get(a:obj, 'class', '') ==# a:class
 endfunction
 
 " ----------------------------------------------------------------------------
@@ -251,7 +289,12 @@ function! s:DateTime.second()
   return self._second
 endfunction
 function! s:DateTime.timezone(...)
-  return a:0 ? self.to(call('s:timezone', a:000)) : self._timezone
+  if a:0
+    let dt = self._clone()
+    let dt._timezone = call('s:timezone', a:000)
+    return dt
+  endif
+  return self._timezone
 endfunction
 function! s:DateTime.day_of_week()
   if !has_key(self, '_day_of_week')
@@ -296,7 +339,8 @@ function! s:DateTime.unix_time()
       let self._unix_time = -1
     else
       let self._unix_time = (self.julian_day() - s:EPOC_TIME) *
-      \  s:SECONDS_OF_DAY + self._hour * 3600 + self._minute * 60 +
+      \  s:SECONDS_OF_DAY + self._hour * s:SECONDS_OF_HOUR +
+      \  self._minute * s:NUM_SECONDS +
       \  self._second - self._timezone.offset()
       if self._unix_time < 0
         let self._unix_time = -1
@@ -309,9 +353,9 @@ function! s:DateTime.is_leap_year()
   return s:is_leap_year(self._year)
 endfunction
 function! s:DateTime.is(dt)
-  return self.compareTo(a:dt) == 0
+  return self.compare(a:dt) == 0
 endfunction
-function! s:DateTime.compareTo(dt)
+function! s:DateTime.compare(dt)
   return self.delta(a:dt).sign()
 endfunction
 function! s:DateTime.delta(dt)
@@ -321,9 +365,10 @@ function! s:DateTime.delta(dt)
 endfunction
 function! s:DateTime.to(...)
   let dt = self._clone()
-  if a:0 && s:_is_class(a:1, 'TimeZone')
-    let dt._second += a:1.offset() - dt.timezone().offset()
-    let dt._timezone = a:1
+  if a:0 == 1 && !s:_is_class(a:1, 'TimeDelta')
+    let tz = s:timezone(a:1)
+    let dt._second += tz.offset() - dt.timezone().offset()
+    let dt._timezone = tz
     return dt._normalize()
   endif
   let delta = call('s:delta', a:000)
@@ -338,8 +383,7 @@ function! s:DateTime.format(format, ...)
     if s:V.is_string(f)
       let result .= f
     elseif s:V.is_list(f)
-      let [d, flag, width] = f
-      let info = s:format_info[d]
+      let [info, flag, width] = f
       let padding = ''
       if s:V.is_list(info[1])
         let [padding, w] = info[1]
@@ -616,6 +660,8 @@ endfunction
 " at parse:
 "   field = param name (with "_")
 "           if it doesn't exists, the descriptor can't use.
+"   field = #skip
+"           in this case, captor is a skipping pattern
 "   captor = pattern to match.
 "   captor = [flat, width] for number format.
 "   captor = a function to return a pattern or candidates.
@@ -644,7 +690,7 @@ let s:format_info = {
 \   'l': '%_I',
 \   'm': ['month', ['0', 2]],
 \   'M': ['minute', ['0', 2]],
-\   'n': ['', '\_.*', "\n"],
+\   'n': ['', '\_s*', "\n"],
 \   'p': ['hour', function('s:_am_pm_upper'),
 \         's:_am_pm_upper(locale)[value / 12]', 'o[key] + value * 12'],
 \   'P': ['hour', function('s:_am_pm_lower'),
@@ -661,10 +707,12 @@ let s:format_info = {
 \   'y': ['year', ['0', 2], 'value % 100',
 \         '(o[key] != 0 ? o[key] : (value < 69 ? 2000 : 1900)) + value'],
 \   'Y': ['year', ['0', 4]],
-\   'z': ['timezone', '[+-]\d\{4}', 'value.offset_string()', 's:timezone(value)'],
+\   'z': ['timezone', '\v[+-]?%(\d{1,2})?:?%(\d{1,2})?', 'value.offset_string()',
+\         's:timezone(empty(value) ? 0 : value)'],
+\   '*': ['#skip', '.\{-}', ''],
 \ }
 let s:format_info.h = s:format_info.b
-let s:DESCRIPTORS_PATTERN = join(keys(s:format_info), '\|')
+let s:DESCRIPTORS_PATTERN = '[' . join(keys(s:format_info), '') . ']'
 
 " 'foo%Ybar%02m' => ['foo', ['Y', '', -1], 'bar', ['m', '0', 2], '']
 function! s:_split_format(format)
@@ -687,7 +735,7 @@ function! s:_split_format(format)
     if s:V.is_string(info)
       let format = info . format
     else
-      let res += [[d, flag, width]]
+      let res += [[info, flag, width]]
     endif
     unlet info
   endwhile
@@ -704,24 +752,7 @@ else
   endfunction
 endif
 
-" ----------------------------------------------------------------------------
-let s:NUM_SECONDS = 60
-let s:NUM_MINUTES = 60
-let s:NUM_HOURS = 24
-let s:NUM_DAYS_OF_WEEK = 7
-let s:NUM_MONTHS = 12
-let s:SECONDS_OF_HOUR = s:NUM_SECONDS * s:NUM_MINUTES
-let s:SECONDS_OF_DAY = s:SECONDS_OF_HOUR * s:NUM_HOURS
-let s:ERA_TIME = s:_g2jd(1, 1, 1)
-let s:EPOC_TIME = s:_g2jd(1970, 1, 1)
-
-let s:MONTHS = map(range(1, 12),
-\   's:from_date(1970, v:val, 1, 0, 0, 0, 0).unix_time()')
-let s:WEEKS = map(range(4, 10),
-\   's:from_date(1970, 1, v:val, 0, 0, 0, 0).unix_time()')
-let s:AM_PM_TIMES = map([0, 12],
-\   's:from_date(1970, 1, 1, v:val, 0, 0, 0).unix_time()')
-
 let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim:set et ts=2 sts=2 sw=2 tw=0:
