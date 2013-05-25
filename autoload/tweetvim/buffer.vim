@@ -369,7 +369,11 @@ function! s:format(tweet, ...)
 
   let today = a:0 ? a:1 : tweetvim#util#today()
 
-  let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
+  if g:tweetvim_display_username
+    let str  = tweetvim#util#padding(tweet.user.name.' @'.tweet.user.screen_name."\n", 1)
+  else
+    let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
+  endif
   " FIXME
   if g:tweetvim_display_icon
     let str = ' ' . str
