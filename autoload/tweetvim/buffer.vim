@@ -305,7 +305,11 @@ function! s:append_text(tweet, today)
   let text = s:format(a:tweet, a:today)
   let isfirst = 1
   for line in split(text, "\n")
-    call append(line('$') - 1, (isfirst ? '' : '                  ') . substitute(line, '' , '' , 'g'))
+    let space = isfirst || g:tweetvim_display_username ? '' : '                  '
+    if !isfirst && g:tweetvim_display_icon
+      let space .= ' '
+    endif
+    call append(line('$') - 1, space . substitute(line, '' , '' , 'g'))
     let isfirst = 0
   endfor
 endfunction
@@ -370,7 +374,7 @@ function! s:format(tweet, ...)
   let today = a:0 ? a:1 : tweetvim#util#today()
 
   if g:tweetvim_display_username
-    let str  = tweetvim#util#padding(tweet.user.name.' @'.tweet.user.screen_name."\n", 1)
+    let str  = tweet.user.name.' @'.tweet.user.screen_name."\n"
   else
     let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
   endif
