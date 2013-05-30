@@ -78,12 +78,9 @@ endfunction
 function! tweetvim#buffer#append(tweet)
   set modifiable
   let today = tweetvim#util#today()
-  try
   call append(line("$"), tweetvim#util#separator('~'))
   call s:append_text(a:tweet, today)
-  catch
-    echoerr v:exception
-  endtry
+  normal G
   set nomodifiable
 endfunction
 "

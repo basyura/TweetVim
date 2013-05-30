@@ -82,7 +82,8 @@ command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccount call tweetvim#account#current(<f-args>)
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
-
+" user stream
+command! TweetVimUserStream call tweetvim#userstream()
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()

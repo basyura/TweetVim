@@ -87,7 +87,7 @@ endfunction
 
 
 function! tweetvim#userstream()
-  let s:vimproc = s:twibill().userstream()
+  let s:stream = s:twibill().userstream()
   augroup tweetvim-userstream
     autocmd!
     autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
@@ -96,22 +96,26 @@ endfunction
 
 
 function! s:receive_userstream()
-  if !s:vimproc.stdout.eof
-    let res = s:vimproc.stdout.read()
-    let res = substitute(res, '\r', '', 'g')
-    if substitute(res, '\n', '', 'g') != ''
-      try
-        let status = webapi#json#decode(res)
-        echomsg status.user.screen_name . ' : ' . status.text
-        call tweetvim#buffer#append(status)
-      catch
-        echo 'decode error'
-      endtry
-    endif
+  if s:stream.stdout.eof
+    echomsg "stream is already closed"
+    return
   endif
-  if !s:vimproc.stderr.eof
-    echo s:vimproc.stderr.read()
+
+  let res = s:stream.stdout.read()
+  let res = substitute(res, '\r', '', 'g')
+  if substitute(res, '\n', '', 'g') != ''
+    try
+      let status = webapi#json#decode(res)
+      "echomsg status.user.screen_name . ' : ' . status.text
+      call tweetvim#buffer#append(status)
+    catch
+      echo "decode error"
+      "echo v:exception
+    endtry
   endif
+  "if !s:stream.stderr.eof
+    "echo s:stream.stderr.read()
+  "endif
   "
   call feedkeys("g\<Esc>", "n")
 endfunction
@@ -144,11 +148,15 @@ function! s:twibill()
   if twibill#version() < 1.1
     throw "you must udpate to twibill 1.1"
   endif
+  if exists('s:twibill')
+    return s:twibill
+  endif
   let config = tweetvim#account#access_token()
   " TODO
   let config.cache   = 1
   let config.isAsync = g:tweetvim_async_post
-  return tweetvim#twibill#new(config)
+  let s:twibill = tweetvim#twibill#new(config)
+  return s:twibill
 endfunction
 "
 "
