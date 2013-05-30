@@ -75,6 +75,20 @@ endfunction
 "
 "
 "
+function! tweetvim#buffer#append(tweet)
+  set modifiable
+  let today = tweetvim#util#today()
+  try
+  call append(line("$"), tweetvim#util#separator('~'))
+  call s:append_text(a:tweet, today)
+  catch
+    echoerr v:exception
+  endtry
+  set nomodifiable
+endfunction
+"
+"
+"
 function! tweetvim#buffer#prepend(tweets)
   let tweets = type(a:tweets) != 3 ? [a:tweets] : a:tweets
 

@@ -85,6 +85,39 @@ function! tweetvim#request(method, args)
   return call(twibill[a:method], args, twibill)
 endfunction
 
+
+function! tweetvim#userstream()
+  let s:vimproc = s:twibill().userstream()
+  augroup tweetvim-userstream
+    autocmd!
+    autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
+  augroup END
+endfunction
+
+
+function! s:receive_userstream()
+  if !s:vimproc.stdout.eof
+    let res = s:vimproc.stdout.read()
+    let res = substitute(res, '\r', '', 'g')
+    if substitute(res, '\n', '', 'g') != ''
+      try
+        let status = webapi#json#decode(res)
+        echomsg status.user.screen_name . ' : ' . status.text
+        call tweetvim#buffer#append(status)
+      catch
+        echo 'decode error'
+      endtry
+    endif
+  endif
+  if !s:vimproc.stderr.eof
+    echo s:vimproc.stderr.read()
+  endif
+  "
+  call feedkeys("g\<Esc>", "n")
+endfunction
+
+
+
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
