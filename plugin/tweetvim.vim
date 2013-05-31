@@ -45,6 +45,7 @@ call s:set_global_variable('tweetvim_async_post'         , 0)
 call s:set_global_variable('tweetvim_silent_say'         , 0)
 call s:set_global_variable('tweetvim_expand_t_co'        , 0)
 call s:set_global_variable('tweetvim_debug'              , 0)
+call s:set_global_variable('tweetvim_updatetime'         , 500)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')

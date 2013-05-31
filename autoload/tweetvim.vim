@@ -89,9 +89,14 @@ endfunction
 function! tweetvim#userstream()
   call tweetvim#buffer#userstream()
   let s:stream = s:twibill().userstream()
+  if !exists('b:saved_tweetvim_updatetime')
+    let b:saved_tweetvim_updatetime = &updatetime
+  endif
+  let &updatetime = g:tweetvim_updatetime
   augroup tweetvim-userstream
     autocmd!
     autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
+    autocmd! BufLeave   <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
   augroup END
 endfunction
 
@@ -117,6 +122,7 @@ function! s:receive_userstream()
         echo "decode error"
       endtry
     endif
+    let &updatetime = g:tweetvim_updatetime
     call feedkeys("g\<Esc>", "n")
   end
 endfunction
