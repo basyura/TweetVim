@@ -107,9 +107,12 @@ function! s:receive_userstream()
     let res = substitute(res, '\r', '', 'g')
     if substitute(res, '\n', '', 'g') != ''
       try
-        let tweet = webapi#json#decode(res)
+        let isbottom = line(".") == line("$")
+        let tweet    = webapi#json#decode(res)
         call tweetvim#buffer#append(tweet)
-        normal G
+        if isbottom
+          normal G
+        endif
       catch
         echo "decode error"
       endtry
