@@ -10,6 +10,10 @@ let s:last_bufnr = 0
 "
 function! tweetvim#buffer#load(method, args, title, tweets, ...)
 
+  if get(b:, 'tweetvim_method', '') == 'userstream'
+    call s:backup('userstream', [], 'userstream', s:sort_values(b:tweetvim_status_cache), {})
+  endif
+
   let args = copy(a:args)
   let opt  = a:0 ? copy(a:1) : {}
 
@@ -25,6 +29,14 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
    " define syntax
    let screen_name = tweetvim#account#current().screen_name
    execute "syntax match tweetvim_reply '@" . screen_name . "'"
+endfunction
+
+function! s:sort_values(m)
+  let list = []
+  for v in keys(a:m)
+    call add(list, a:m[v])
+  endfor
+  return list
 endfunction
 "
 "
