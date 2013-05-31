@@ -79,8 +79,8 @@ function! tweetvim#buffer#append(tweet)
   set modifiable
   let today = tweetvim#util#today()
   call append(line("$"), tweetvim#util#separator('~'))
+  let b:tweetvim_status_cache[line('$')] = a:tweet
   call s:append_text(a:tweet, today)
-  normal G
   set nomodifiable
 endfunction
 "
@@ -116,6 +116,21 @@ function! tweetvim#buffer#truncate_backup(size)
   let start = len(s:backup) - a:size
   " TODO:
   let s:backup = eval('s:backup[' . string(start) . ':]')
+endfunction
+
+function! tweetvim#buffer#userstream()
+  call s:switch_buffer()
+  call s:pre_process()
+
+  let b:tweetvim_method = 'userstream'
+  let b:tweetvim_status_cache = {}
+
+  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - userstream'
+
+  call append(0, title)
+  call append(1, tweetvim#util#separator('~'))
+  delete _
+  call s:post_process()
 endfunction
 "
 "

@@ -87,6 +87,7 @@ endfunction
 
 
 function! tweetvim#userstream()
+  call tweetvim#buffer#userstream()
   let s:stream = s:twibill().userstream()
   augroup tweetvim-userstream
     autocmd!
@@ -101,23 +102,20 @@ function! s:receive_userstream()
     return
   endif
 
-  let res = s:stream.stdout.read()
-  let res = substitute(res, '\r', '', 'g')
-  if substitute(res, '\n', '', 'g') != ''
-    try
-      let status = webapi#json#decode(res)
-      "echomsg status.user.screen_name . ' : ' . status.text
-      call tweetvim#buffer#append(status)
-    catch
-      echo "decode error"
-      "echo v:exception
-    endtry
-  endif
-  "if !s:stream.stderr.eof
-    "echo s:stream.stderr.read()
-  "endif
-  "
-  call feedkeys("g\<Esc>", "n")
+  if &filetype == 'tweetvim' || get(b:, 'tweetvim_method', '') == 'userstream'
+    let res = s:stream.stdout.read()
+    let res = substitute(res, '\r', '', 'g')
+    if substitute(res, '\n', '', 'g') != ''
+      try
+        let tweet = webapi#json#decode(res)
+        call tweetvim#buffer#append(tweet)
+        normal G
+      catch
+        echo "decode error"
+      endtry
+    endif
+    call feedkeys("g\<Esc>", "n")
+  end
 endfunction
 
 
