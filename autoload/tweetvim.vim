@@ -149,14 +149,16 @@ function! s:twibill()
   if twibill#version() < 1.1
     throw "you must udpate to twibill 1.1"
   endif
-  if exists('s:twibill')
+  " check current user
+  if exists('s:twibill') && tweetvim#account#current().screen_name == s:twibill.screen_name
     return s:twibill
   endif
   let config = tweetvim#account#access_token()
-  " TODO
   let config.cache   = 1
   let config.isAsync = g:tweetvim_async_post
-  let s:twibill = tweetvim#twibill#new(config)
+
+  let s:twibill      = tweetvim#twibill#new(config)
+  let s:twibill.screen_name = tweetvim#account#current().screen_name
   return s:twibill
 endfunction
 "
