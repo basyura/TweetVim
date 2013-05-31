@@ -76,11 +76,19 @@ endfunction
 "
 "
 function! tweetvim#buffer#append(tweet)
+  let tweet  = a:tweet
   set modifiable
   let today = tweetvim#util#today()
   call append(line("$"), tweetvim#util#separator('~'))
-  let b:tweetvim_status_cache[line('$')] = a:tweet
-  call s:append_text(a:tweet, today)
+
+  let lineno = line("$")
+  let b:tweetvim_status_cache[lineno] = tweet
+  call s:append_text(tweet, today)
+
+  if g:tweetvim_display_icon
+    call s:sign(tweet, lineno)
+  endif
+
   set nomodifiable
 endfunction
 "
@@ -285,46 +293,47 @@ function! s:append_tweets_with_icon(tweets, cache)
   let separator = tweetvim#util#separator('-')
   let today = tweetvim#util#today()
 
-  let current_dir = getcwd()
-  execute "cd " . g:tweetvim_config_dir . '/ico'
-
-  let cmds = []
   for tweet in tweetvim#filter#execute(a:tweets)
     let a:cache[line(".")] = tweet
     let row = line(".")
     call s:append_text(tweet, today)
     call s:append_separator(separator)
-
-    let screen_name = tweet.user.screen_name
-    if has_key(tweet.user, 'profile_image_url')
-      let img_url = tweet.user.profile_image_url
-    else
-      let img_url = tweet.profile_image_url
-    endif
-    let ico_path = g:tweetvim_config_dir . '/ico/' . screen_name . ".ico"
-    let file_name = fnamemodify(img_url, ":t")
-
-    if !filereadable(ico_path)
-      echo "downloading ... " . img_url
-      call system("curl -L -O " . img_url)
-      call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
-      call delete(file_name)
-      redraw
-    end
-
-    execute "cd " . current_dir
-
-    call add(cmds, ":sign define tweetvim_icon_" . screen_name . " icon=" . ico_path)
-    call add(cmds, ":sign place 1 line=" . row . " name=tweetvim_icon_" . screen_name . " buffer=" . bufnr("%"))
+    call s:sign(tweet, row)
   endfor
 
-  for cmd in cmds
-    try
-      execute cmd
-    catch
-      echomsg v:errmsg
-    endtry
-  endfor
+endfunction
+
+function! s:sign(tweet, lineno)
+  let tweet = a:tweet
+  let current_dir = getcwd()
+
+  execute "cd " . g:tweetvim_config_dir . '/ico'
+
+  let screen_name = tweet.user.screen_name
+  if has_key(tweet.user, 'profile_image_url')
+    let img_url = tweet.user.profile_image_url
+  else
+    let img_url = tweet.profile_image_url
+  endif
+  let ico_path = g:tweetvim_config_dir . '/ico/' . screen_name . ".ico"
+  let file_name = fnamemodify(img_url, ":t")
+
+  if !filereadable(ico_path)
+    echo "downloading ... " . img_url
+    call system("curl -L -O " . img_url)
+    call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
+    call delete(file_name)
+    redraw
+  end
+
+  try
+    execute ":sign define tweetvim_icon_" . screen_name . " icon=" . ico_path
+    execute ":sign place 1 line=" . a:lineno . " name=tweetvim_icon_" . screen_name . " buffer=" . bufnr("%")
+  catch
+    echomsg v:errmsg
+  endtry
+
+  execute "cd " . current_dir
 endfunction
 
 function! s:append_text(tweet, today)

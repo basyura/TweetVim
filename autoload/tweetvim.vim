@@ -102,7 +102,7 @@ function! s:receive_userstream()
     return
   endif
 
-  if &filetype == 'tweetvim' || get(b:, 'tweetvim_method', '') == 'userstream'
+  if &filetype == 'tweetvim' && get(b:, 'tweetvim_method', '') == 'userstream'
     let res = s:stream.stdout.read()
     let res = substitute(res, '\r', '', 'g')
     if substitute(res, '\n', '', 'g') != ''
