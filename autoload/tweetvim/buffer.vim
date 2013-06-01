@@ -98,7 +98,9 @@ function! tweetvim#buffer#append(tweet)
   let tweet  = a:tweet
   set modifiable
   let today = tweetvim#util#today()
-  call append(line("$"), tweetvim#util#separator('~'))
+  if g:tweetvim_display_separator
+    call append(line("$"), tweetvim#util#separator('-'))
+  endif
 
   if has_key(tweet, 'event')
     call append(line("$"), tweet.event)
@@ -161,7 +163,9 @@ function! tweetvim#buffer#userstream()
 
   call append(0, title)
   call append(1, tweetvim#util#separator('~'))
-  delete _
+  if g:tweetvim_display_separator
+    delete _
+  endif
   call s:post_process()
 endfunction
 "

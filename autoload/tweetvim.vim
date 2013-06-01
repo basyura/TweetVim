@@ -89,9 +89,17 @@ endfunction
 function! tweetvim#userstream()
   call tweetvim#buffer#userstream()
 
-  for tweet in reverse(tweetvim#request('home_timeline', []))
-    call tweetvim#buffer#append(tweet)
-  endfor
+  let tweets = tweetvim#request('home_timeline', [])
+  " for rate limit
+  if type(tweets) == 4
+    if has_key(tweets, 'errors')
+      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+    endif
+  else
+    for tweet in reverse(tweets)
+      call tweetvim#buffer#append(tweet)
+    endfor
+  endif
 
   normal! G
 
