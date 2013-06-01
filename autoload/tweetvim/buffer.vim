@@ -32,11 +32,18 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
 endfunction
 
 function! s:sort_values(m)
+  let start = reltime()
   let list = []
-  for v in keys(a:m)
+  for v in sort(keys(a:m), 's:nr_comparator')
     call add(list, a:m[v])
   endfor
+  echomsg reltimestr(reltime(start))
   return list
+endfunction
+"
+"
+function! s:nr_comparator(i1, i2)
+  return a:i1 == a:i2 ? 0 : str2nr(a:i1) > str2nr(a:i2) ? 1 : -1
 endfunction
 "
 "
