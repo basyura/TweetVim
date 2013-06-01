@@ -103,7 +103,7 @@ function! tweetvim#userstream()
 
   normal! G
 
-  let s:stream = s:twibill().userstream()
+  let s:stream = s:twibill().stream('user')
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
   endif
