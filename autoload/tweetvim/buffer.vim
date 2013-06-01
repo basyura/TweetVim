@@ -103,10 +103,10 @@ function! tweetvim#buffer#append(tweet)
     call append(line("$"), tweetvim#util#separator('-'))
   endif
 
-  if has_key(tweet, 'event')
-    call append(line("$"), tweet.event)
-    return
-  endif
+  "if has_key(tweet, 'event')
+    "call append(line("$"), tweet.event)
+    "return
+  "endif
 
   let lineno = line("$")
   call s:append_text(tweet, today)
