@@ -115,7 +115,9 @@ function! tweetvim#userstream(...)
       call add(track, value)
     endif
   endfor
-  let param.track = join(track, ',')
+  if len(track) > 0
+    let param.track = join(track, ',')
+  endif
 
   let s:stream = s:twibill().stream('user', param)
   if !exists('b:saved_tweetvim_updatetime')
