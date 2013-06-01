@@ -115,7 +115,7 @@ function! s:receive_userstream()
     return
   endif
 
-  if &filetype != 'tweetvim' && get(b:, 'tweetvim_method', '') != 'userstream'
+  if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
     return
   endif
 
