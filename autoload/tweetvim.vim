@@ -88,6 +88,13 @@ endfunction
 
 function! tweetvim#userstream()
   call tweetvim#buffer#userstream()
+
+  for tweet in reverse(tweetvim#request('home_timeline', []))
+    call tweetvim#buffer#append(tweet)
+  endfor
+
+  normal! G
+
   let s:stream = s:twibill().userstream()
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
@@ -123,14 +130,14 @@ function! s:receive_userstream()
         let isbottom = line(".") == line("$")
         call tweetvim#buffer#append(tweet)
         if isbottom
-          normal G
+          normal! G
         endif
       catch
         set modifiable
         call append(line("$"), res)
         call append(line("$"), v:exception)
         set nomodifiable
-        normal G
+        normal! G
         "echo "decode error"
       endtry
     endfor
