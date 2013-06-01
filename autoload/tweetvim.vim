@@ -132,7 +132,7 @@ function! s:receive_userstream()
   if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
     for tweet in s:to_tweets(res)
       try
-        if has_key(tweet, 'friends')
+        if has_key(tweet, 'friends') || has_key(tweet, 'delete')
           continue
         endif
         let isbottom = line(".") == line("$")
