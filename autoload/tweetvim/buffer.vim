@@ -1,6 +1,7 @@
 scriptencoding utf-8
 
 let s:backup = []
+let s:signs  = {}
 
 let s:buf_name = '[tweetvim]'
 
@@ -13,6 +14,8 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
   if get(b:, 'tweetvim_method', '') == 'userstream'
     call s:backup('userstream', [], 'userstream', s:sort_values(b:tweetvim_status_cache), {})
   endif
+
+  call s:unsigns()
 
   let args = copy(a:args)
   let opt  = a:0 ? copy(a:1) : {}
@@ -32,12 +35,10 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
 endfunction
 
 function! s:sort_values(m)
-  let start = reltime()
   let list = []
   for v in sort(keys(a:m), 's:nr_comparator')
     call add(list, a:m[v])
   endfor
-  echomsg reltimestr(reltime(start))
   return list
 endfunction
 "
@@ -168,6 +169,7 @@ function! tweetvim#buffer#userstream()
   endif
   call s:post_process()
 endfunction
+
 "
 "
 "
@@ -331,6 +333,14 @@ function! s:append_tweets_with_icon(tweets, cache)
 
 endfunction
 
+
+function! s:unsigns()
+  "for name in keys(s:signs)
+    "execute ":sign undefine " . name
+  "endfor
+  let s:signs = {}
+endfunction
+
 function! s:sign(tweet, lineno)
   let tweet = a:tweet
   let current_dir = getcwd()
@@ -357,6 +367,7 @@ function! s:sign(tweet, lineno)
   try
     execute ":sign define tweetvim_icon_" . screen_name . " icon=" . ico_path
     execute ":sign place 1 line=" . a:lineno . " name=tweetvim_icon_" . screen_name . " buffer=" . bufnr("%")
+    let s:signs["tweetvim_icon_" . screen_name] = 1
   catch
     echomsg v:errmsg
   endtry
