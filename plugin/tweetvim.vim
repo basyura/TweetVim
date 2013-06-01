@@ -84,7 +84,7 @@ command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccou
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
 " user stream
-command! TweetVimUserStream call tweetvim#userstream()
+command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()

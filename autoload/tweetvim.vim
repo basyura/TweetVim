@@ -86,8 +86,9 @@ function! tweetvim#request(method, args)
 endfunction
 
 
-function! tweetvim#userstream()
-  call tweetvim#buffer#userstream()
+function! tweetvim#userstream(...)
+  let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
+  call tweetvim#buffer#userstream(title)
 
   let tweets = tweetvim#request('home_timeline', [])
   " for rate limit
@@ -102,8 +103,21 @@ function! tweetvim#userstream()
   endif
 
   normal! G
+  " create param
+  let param = {}
+  let track = []
+  for value in a:000
+    if value =~ '^lang:'
+      let param.language = split(value, 'lang:')[0]
+    elseif value =~ '^language:'
+      let param.language = split(value, 'language:')[0]
+    else
+      call add(track, value)
+    endif
+  endfor
+  let param.track = join(track, ',')
 
-  let s:stream = s:twibill().stream('user')
+  let s:stream = s:twibill().stream('user', param)
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
   endif

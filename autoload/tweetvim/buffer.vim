@@ -153,14 +153,14 @@ function! tweetvim#buffer#truncate_backup(size)
   let s:backup = eval('s:backup[' . string(start) . ':]')
 endfunction
 
-function! tweetvim#buffer#userstream()
+function! tweetvim#buffer#userstream(title)
   call s:switch_buffer()
   call s:pre_process()
 
   let b:tweetvim_method = 'userstream'
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - userstream'
+  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
 
   call append(0, title)
   call append(1, tweetvim#util#separator('~'))
@@ -357,7 +357,7 @@ function! s:sign(tweet, lineno)
   let file_name = fnamemodify(img_url, ":t")
 
   if !filereadable(ico_path)
-    echo "downloading ... " . img_url
+    "echo "downloading ... " . img_url
     call system("curl -L -O " . img_url)
     call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
     call delete(file_name)
