@@ -96,7 +96,8 @@ function! tweetvim#userstream()
   augroup tweetvim-userstream
     autocmd!
     autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
-    autocmd! BufLeave   <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
+    autocmd! BufEnter <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
+    autocmd! BufLeave <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
   augroup END
 endfunction
 
@@ -107,24 +108,35 @@ function! s:receive_userstream()
     return
   endif
 
-  if &filetype == 'tweetvim' && get(b:, 'tweetvim_method', '') == 'userstream'
-    let res = s:stream.stdout.read()
-    let res = substitute(res, '\r', '', 'g')
-    if substitute(res, '\n', '', 'g') != ''
+  if &filetype != 'tweetvim' && get(b:, 'tweetvim_method', '') != 'userstream'
+    return
+  endif
+
+  let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
+
+  if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
+    for tweet in s:to_tweets(res)
       try
+        if has_key(tweet, 'friends')
+          continue
+        endif
         let isbottom = line(".") == line("$")
-        let tweet    = webapi#json#decode(res)
         call tweetvim#buffer#append(tweet)
         if isbottom
           normal G
         endif
       catch
-        echo "decode error"
+        set modifiable
+        call append(line("$"), res)
+        call append(line("$"), v:exception)
+        set nomodifiable
+        normal G
+        "echo "decode error"
       endtry
-    endif
-    let &updatetime = g:tweetvim_updatetime
-    call feedkeys("g\<Esc>", "n")
-  end
+    endfor
+  endif
+  let &updatetime = g:tweetvim_updatetime
+  call feedkeys("g\<Esc>", "n")
 endfunction
 
 
@@ -199,4 +211,29 @@ endfunction
 "
 function! s:str_to_mb_width(str)
   return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
+endfunction
+"
+"
+"
+function! s:to_tweets(message)
+  let counter = 0
+  let start   = 0
+  let idx     = 0
+  let list    = []
+  while idx < len(a:message)
+    let s = a:message[idx]
+    if s == '{'
+      let counter += 1
+    elseif s == '}'
+      let counter -= 1
+    endif
+    if counter == 0
+      let tweet = webapi#json#decode(eval("a:message[" . start . ":" . idx . "]"))
+        call add(list, tweet)
+      let start = idx + 1
+    endif
+    let idx += 1 
+  endwhile
+
+  return list
 endfunction

@@ -93,9 +93,14 @@ function! tweetvim#buffer#append(tweet)
   let today = tweetvim#util#today()
   call append(line("$"), tweetvim#util#separator('~'))
 
+  if has_key(tweet, 'event')
+    call append(line("$"), tweet.event)
+    return
+  endif
+
   let lineno = line("$")
-  let b:tweetvim_status_cache[lineno] = tweet
   call s:append_text(tweet, today)
+  let b:tweetvim_status_cache[lineno] = tweet
 
   if g:tweetvim_display_icon
     call s:sign(tweet, lineno)
