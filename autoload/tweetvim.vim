@@ -155,6 +155,8 @@ function! s:receive_userstream()
         call tweetvim#buffer#append(tweet)
         if isbottom
           normal! G
+        else
+          execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
         endif
       catch
         set modifiable
