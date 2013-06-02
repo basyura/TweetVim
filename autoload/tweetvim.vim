@@ -159,10 +159,10 @@ function! s:receive_userstream()
           execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
         endif
       catch
-        set modifiable
+        setlocal modifiable
         call append(line("$"), res)
         call append(line("$"), v:exception)
-        set nomodifiable
+        setlocal nomodifiable
         normal! G
         "echo "decode error"
       endtry

@@ -97,7 +97,7 @@ endfunction
 "
 function! tweetvim#buffer#append(tweet)
   let tweet  = a:tweet
-  set modifiable
+  setlocal modifiable
   let today = tweetvim#util#today()
   if g:tweetvim_display_separator
     call append(line("$"), tweetvim#util#separator('-'))
@@ -116,7 +116,7 @@ function! tweetvim#buffer#append(tweet)
     call s:sign(tweet, lineno)
   endif
 
-  set nomodifiable
+  setlocal nomodifiable
 endfunction
 "
 "
