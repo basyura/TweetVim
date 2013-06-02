@@ -85,6 +85,95 @@ function! tweetvim#request(method, args)
   return call(twibill[a:method], args, twibill)
 endfunction
 
+
+function! tweetvim#userstream(...)
+  let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
+  call tweetvim#buffer#userstream(title)
+
+  let tweets = tweetvim#request('home_timeline', [])
+  " for rate limit
+  if type(tweets) == 4
+    if has_key(tweets, 'errors')
+      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+    endif
+  else
+    for tweet in reverse(tweets)
+      call tweetvim#buffer#append(tweet)
+    endfor
+  endif
+
+  normal! G
+  " create param
+  let param = {}
+  let track = []
+  for value in a:000
+    if value =~ '^lang:'
+      let param.language = split(value, 'lang:')[0]
+    elseif value =~ '^language:'
+      let param.language = split(value, 'language:')[0]
+    else
+      call add(track, value)
+    endif
+  endfor
+  if len(track) > 0
+    let param.track = join(track, ',')
+  endif
+
+  let s:stream = s:twibill().stream('user', param)
+  if !exists('b:saved_tweetvim_updatetime')
+    let b:saved_tweetvim_updatetime = &updatetime
+  endif
+  let &updatetime = g:tweetvim_updatetime
+  augroup tweetvim-userstream
+    autocmd!
+    autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
+    autocmd! BufEnter <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
+    autocmd! BufLeave <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
+  augroup END
+endfunction
+
+
+function! s:receive_userstream()
+  if s:stream.stdout.eof
+    echomsg "stream is already closed"
+    return
+  endif
+
+  if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
+    return
+  endif
+
+  let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
+
+  if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
+    for tweet in s:to_tweets(res)
+      try
+        if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event')
+          continue
+        endif
+        let isbottom = line(".") == line("$")
+        call tweetvim#buffer#append(tweet)
+        if isbottom
+          normal! G
+        else
+          execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+        endif
+      catch
+        set modifiable
+        call append(line("$"), res)
+        call append(line("$"), v:exception)
+        set nomodifiable
+        normal! G
+        "echo "decode error"
+      endtry
+    endfor
+  endif
+  let &updatetime = g:tweetvim_updatetime
+  call feedkeys("g\<Esc>", "n")
+endfunction
+
+
+
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
@@ -111,11 +200,21 @@ function! s:twibill()
   if twibill#version() < 1.1
     throw "you must udpate to twibill 1.1"
   endif
+  " check current user
+  if exists('s:twibill')
+    if tweetvim#account#current().screen_name == s:twibill.screen_name
+      return s:twibill
+    endif
+    call s:twibill.close_streams()
+  endif
+
   let config = tweetvim#account#access_token()
-  " TODO
   let config.cache   = 1
   let config.isAsync = g:tweetvim_async_post
-  return tweetvim#twibill#new(config)
+
+  let s:twibill      = tweetvim#twibill#new(config)
+  let s:twibill.screen_name = tweetvim#account#current().screen_name
+  return s:twibill
 endfunction
 "
 "
@@ -149,4 +248,29 @@ endfunction
 "
 function! s:str_to_mb_width(str)
   return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
+endfunction
+"
+"
+"
+function! s:to_tweets(message)
+  let counter = 0
+  let start   = 0
+  let idx     = 0
+  let list    = []
+  while idx < len(a:message)
+    let s = a:message[idx]
+    if s == '{'
+      let counter += 1
+    elseif s == '}'
+      let counter -= 1
+    endif
+    if counter == 0
+      let tweet = webapi#json#decode(eval("a:message[" . start . ":" . idx . "]"))
+        call add(list, tweet)
+      let start = idx + 1
+    endif
+    let idx += 1 
+  endwhile
+
+  return list
 endfunction

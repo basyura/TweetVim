@@ -35,6 +35,7 @@ endfunction
 let s:source.action_table.execute = {'description' : 'add to list'}
 function! s:source.action_table.execute.func(candidate)
   call tweetvim#account#current(a:candidate.word)
+  call tweetvim#timeline("home_timeline")
 endfunction
 
 function! s:sort_by_screen_name(i1, i2)

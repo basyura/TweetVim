@@ -107,6 +107,7 @@ function! s:tweetvim_say_settings()
   setlocal noswapfile
   setlocal modifiable
   setlocal nomodified
+  setlocal nonumber
 
   call s:update_char_count()
   augroup TweetVimSayCount

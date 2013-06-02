@@ -45,6 +45,7 @@ call s:set_global_variable('tweetvim_async_post'         , 0)
 call s:set_global_variable('tweetvim_silent_say'         , 0)
 call s:set_global_variable('tweetvim_expand_t_co'        , 0)
 call s:set_global_variable('tweetvim_debug'              , 0)
+call s:set_global_variable('tweetvim_updatetime'         , 500)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')
@@ -82,7 +83,8 @@ command! TweetVimCurrentLineSay :call tweetvim#say#current_line()
 command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccount call tweetvim#account#current(<f-args>)
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
-
+" user stream
+command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()
