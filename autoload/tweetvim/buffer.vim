@@ -100,7 +100,7 @@ function! tweetvim#buffer#append(tweet)
   setlocal modifiable
   let today = tweetvim#util#today()
   if g:tweetvim_display_separator
-    call append(line("$"), tweetvim#util#separator('-'))
+    call s:append_separator(tweetvim#util#separator('-'), 0)
   endif
 
   "if has_key(tweet, 'event')
@@ -388,10 +388,17 @@ function! s:append_text(tweet, today)
   endfor
 endfunction
 
-function! s:append_separator(separator)
+function! s:append_separator(separator, ...)
+  " TODO
+  let diff = -1
+  if a:0 > 0
+    let diff = a:1
+  endif
   " insert separator or not
-  if g:tweetvim_display_separator
-    call append(line('$') - 1, a:separator)
+  if g:tweetvim_empty_separator
+    call append(line('$') - diff, "")
+  elseif g:tweetvim_display_separator || g:tweetvim_empty_separator
+    call append(line('$') - diff, a:separator)
   endif
 endfunction
 "
