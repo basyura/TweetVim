@@ -98,7 +98,7 @@ endfunction
 function! tweetvim#buffer#append(tweet)
   let tweet  = a:tweet
   setlocal modifiable
-  let today = tweetvim#util#today()
+ let today = tweetvim#util#today()
   if g:tweetvim_display_separator
     call s:append_separator(tweetvim#util#separator('-'), 0)
   endif
@@ -497,6 +497,9 @@ function! s:format(tweet, ...)
 endfunction
 
 function! s:define_default_key_mappings()
+  if g:tweetvim_no_default_key_mappings
+    return
+  endif
   augroup tweetvim
     nmap <silent> <buffer> <CR>       <Plug>(tweetvim_action_enter)
     nmap <silent> <buffer> r  <Plug>(tweetvim_action_reply)
