@@ -396,9 +396,9 @@ function! s:append_separator(separator, ...)
   endif
   " insert separator or not
   if g:tweetvim_empty_separator
-    call append(line('$') - diff, "")
-  elseif g:tweetvim_display_separator || g:tweetvim_empty_separator
-    call append(line('$') - diff, a:separator)
+    call append(line('$') + diff, "")
+  elseif g:tweetvim_display_separator
+    call append(line('$') + diff, a:separator)
   endif
 endfunction
 "
