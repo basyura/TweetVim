@@ -112,7 +112,7 @@ function! tweetvim#buffer#append(tweet)
   call s:append_text(tweet, today)
   let b:tweetvim_status_cache[lineno] = tweet
 
-  if g:tweetvim_display_icon
+  if g:tweetvim_display_icon && has('gui_running')
     call s:sign(tweet, lineno)
   endif
 
@@ -231,7 +231,7 @@ endfunction
 "
 "
 function! s:pre_process()
-  if g:tweetvim_display_icon
+  if g:tweetvim_display_icon && has('gui_running')
     setlocal nonu
     hi Signcolumn guibg=bg
   end
@@ -285,7 +285,7 @@ function! s:process(method, args, title, tweets, opt)
     call append(line('$') - 1, tweetvim#util#separator('~'))
   endif
 
-  if g:tweetvim_display_icon
+  if g:tweetvim_display_icon && has('gui_running')
     call s:append_tweets_with_icon(a:tweets, b:tweetvim_status_cache)
   else
     call s:append_tweets(a:tweets, b:tweetvim_status_cache)
@@ -380,7 +380,7 @@ function! s:append_text(tweet, today)
   let isfirst = 1
   for line in split(text, "\n")
     let space = isfirst || g:tweetvim_display_username ? '' : '                  '
-    if !isfirst && g:tweetvim_display_icon
+    if !isfirst && g:tweetvim_display_icon && has('gui_running')
       let space .= ' '
     endif
     call append(line('$') - 1, space . substitute(line, '' , '' , 'g'))
@@ -460,7 +460,7 @@ function! s:format(tweet, ...)
     let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
   endif
   " FIXME
-  if g:tweetvim_display_icon
+  if g:tweetvim_display_icon && has('gui_running')
     let str = ' ' . str
   endif
   " TODO
