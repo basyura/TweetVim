@@ -14,8 +14,27 @@ endfunction
 function! tweetvim#action#cursor_down#execute(tweet)
   while 1
     :execute "normal! \<Down>"
-    if getline(".") !~ '^  ' && (!tweetvim#util#isCursorOnSeprator() || line(".") == line("$"))
+    if !s:is_skipable()
       break
     endif
   endwhile
+endfunction
+
+function! s:is_skipable()
+
+  if line(".") == line("$")
+    return 0
+  endif
+
+  let line = getline(".")
+
+  if line == ''
+    return 1
+  endif
+
+  if line !~ '^  ' && (!tweetvim#util#isCursorOnSeprator() || line(".") == line("$"))
+    return 0
+  endif
+
+  return 1
 endfunction
