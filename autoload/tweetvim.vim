@@ -1,6 +1,6 @@
 call tweetvim#cache#read('screen_name')
 
-let s:version = 1.9
+let s:version = 2.1
 "
 "
 function! tweetvim#version()
