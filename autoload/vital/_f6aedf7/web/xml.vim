@@ -4,10 +4,11 @@ set cpo&vim
 let s:V = vital#{expand('<sfile>:h:h:t:r')}#new()
 
 function! s:_vital_depends()
-  return ['Data.String']
+  return ['Data.String', 'Web.Http']
 endfunction
 
 let s:string = s:V.import('Data.String')
+let s:http = s:V.import('Web.Http')
 
 let s:__template = { 'name': '', 'attr': {}, 'child': [] }
 
@@ -47,9 +48,9 @@ function! s:__matchNode(node, cond)
   endif
   if type(a:cond) == 3
     let ret = 1
-    for r in a:cond
-      if !s:__matchNode(a:node, r) | let ret = 0 | endif
-      unlet r
+    for R in a:cond
+      if !s:__matchNode(a:node, R) | let ret = 0 | endif
+      unlet R
     endfor
     return ret
   endif
@@ -194,8 +195,7 @@ function! s:__parse_tree(ctx, top)
   "    7) text content of CDATA
   " 8) the remaining text after the tag (rest)
   " (These numbers correspond to the indexes in matched list m)
-  "let tag_mx = '^\(\_.\{-}\)\%(\%(<\(/\?\)\([^ !/\t\r\n>]\+\)\(\%([ \t\r\n]*[^ />\t\r\n=]\+[ \t\r\n]*\%(=[ \t\r\n]*\%([^"'' >\t]\+\|"[^"]*"\|''[^'']*''\)\)\)*\)[ \t\r\n]*\(/\?\)>\)\|\%(<!\[\(CDATA\)\[\(.\{-}\)\]\]>\)\|\(<!--.\{-}-->\)\)\(.*\)'
-  let tag_mx = '^\(\_.\{-}\)\%(\%(<\(/\?\)\([^ !/\t\r\n>]\+\)\(\%([ \t\r\n]*[^ />\t\r\n=]\+[ \t\r\n]*=[ \t\r\n]*\%([^"'' >\t]\+\|"[^"]*"\|''[^'']*''\)\|[ \t\r\n]\+[^ />\t\r\n=]\+[ \t\r\n]*\)*\)[ \t\r\n]*\(/\?\)>\)\|\%(<!\[\(CDATA\)\[\(.\{-}\)\]\]>\)\|\(<!--.\{-}-->\)\)\(.*\)'
+  let tag_mx = '^\(\_.\{-}\)\%(\%(<\(/\?\)\([^!/>[:space:]]\+\)\(\%([[:space:]]*[^/>=[:space:]]\+[[:space:]]*=[[:space:]]*\%([^"'' >\t]\+\|"[^"]*"\|''[^'']*''\)\|[[:space:]]\+[^/>=[:space:]]\+[[:space:]]*\)*\)[[:space:]]*\(/\?\)>\)\|\%(<!\[\(CDATA\)\[\(.\{-}\)\]\]>\)\|\(<!--.\{-}-->\)\)\(.*\)'
 
   while len(a:ctx['xml']) > 0
     let m = matchlist(a:ctx.xml, tag_mx)
@@ -235,7 +235,7 @@ function! s:__parse_tree(ctx, top)
 
     let node = deepcopy(s:__template)
     let node.name = tag_name
-    let attr_mx = '\([^ \t\r\n=]\+\)\s*\%(=\s*''\([^'']*\)''\|=\s*"\([^"]*\)"\|=\s*\(\w\+\)\|\)'
+    let attr_mx = '\([^=[:space:]]\+\)\s*\%(=\s*''\([^'']*\)''\|=\s*"\([^"]*\)"\|=\s*\(\w\+\)\|\)'
     while len(attrs) > 0
       let attr_match = matchlist(attrs, attr_mx)
       if len(attr_match) == 0
@@ -269,7 +269,7 @@ function! s:parse(xml)
   let oldmaxfuncdepth=&maxfuncdepth
   let &maxmempattern=2000000
   let &maxfuncdepth=2000
-  "try
+  try
     call s:__parse_tree({'xml': a:xml, 'encoding': ''}, top)
     for node in top.child
       if type(node) == 4
@@ -277,10 +277,10 @@ function! s:parse(xml)
       endif
       unlet node
     endfor
-  "catch /.*/
-  "endtry
-  let &maxmempattern=oldmaxmempattern
-  let &maxfuncdepth=oldmaxfuncdepth
+  finally
+    let &maxmempattern=oldmaxmempattern
+    let &maxfuncdepth=oldmaxfuncdepth
+  endtry
   throw "Parse Error"
 endfunction
 
@@ -289,9 +289,10 @@ function! s:parseFile(fname)
 endfunction
 
 function! s:parseURL(url)
-  return s:parse(http#get(a:url).content)
+  return s:parse(s:http.get(a:url).content)
 endfunction
 
 let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim:set et ts=2 sts=2 sw=2 tw=0:

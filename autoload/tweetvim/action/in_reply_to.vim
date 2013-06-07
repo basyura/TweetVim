@@ -22,6 +22,11 @@ function! tweetvim#action#in_reply_to#execute(tweet)
     redraw
     echo 'get ... ' . id
     let tweet = tweetvim#request('show', [id])
+    if has_key(tweet, 'errors')
+      echohl ErrorMsg | echo tweet.errors[0].message | echohl None
+      break
+    endif
+
     let guard += 1
     if guard > 10
       echohl ErrorMsg | echo 'count over' | echohl None

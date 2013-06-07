@@ -99,11 +99,13 @@ function! s:__get_map_command(type, mode, dict, lhs, rhs)
   endif
 
   let noremap = get(a:dict, 'noremap', 0)
+  let lhs = substitute(a:lhs, '\V|', '<Bar>', 'g')
+  let rhs = substitute(a:rhs, '\V|', '<Bar>', 'g')
   return join([
   \   a:mode . (noremap ? 'nore' : '') . a:type,
   \   s:options_dict2raw(a:dict),
-  \   a:lhs,
-  \   a:rhs,
+  \   lhs,
+  \   rhs,
   \])
 endfunction
 
@@ -122,28 +124,32 @@ function! s:__get_unmap_command(type, mode, dict, lhs)
     return ''
   endif
 
+  let lhs = substitute(a:lhs, '\V|', '<Bar>', 'g')
   return join([
   \   a:mode . a:type,
   \   s:options_dict2raw(a:dict),
-  \   a:lhs,
+  \   lhs,
   \])
 endfunction
 
 
+let s:ALL_MODES = 'nvoiclxs'
 function! s:get_all_modes()
-  return 'nvoiclxs'
+  return s:ALL_MODES
 endfunction
 
+let s:ALL_MODES_LIST = split(s:ALL_MODES, '\zs')
 function! s:get_all_modes_list()
-  return split(s:get_all_modes(), '\zs')
+  return copy(s:ALL_MODES_LIST)
 endfunction
 
 function! s:is_mode_char(char)
-  return a:char =~# '^['.s:get_all_modes().']$'
+  return a:char =~# '^['.s:ALL_MODES.']$'
 endfunction
 
 
 
 let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim:set et ts=2 sts=2 sw=2 tw=0:

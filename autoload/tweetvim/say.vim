@@ -107,6 +107,7 @@ function! s:tweetvim_say_settings()
   setlocal noswapfile
   setlocal modifiable
   setlocal nomodified
+  setlocal nonumber
 
   call s:update_char_count()
   augroup TweetVimSayCount
@@ -213,6 +214,9 @@ function! s:update_char_count()
 endfunction
 
 function! s:define_default_key_mappings()
+  if g:tweetvim_no_default_key_mappings
+    return
+  endif
   augroup tweetvim_say
     nnoremap <buffer> <silent> q :bd!<CR>
     nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
