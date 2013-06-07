@@ -1,6 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
-Version: 2.0
+Version: 2.1
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
@@ -155,6 +155,14 @@ COMMANDS					*tweetvim-commands*
                 :TweetVimSay
                 :TweetVimSay basyura
 <
+:TweetVimUserStream [{track words}]		*:TweetVimUserStream*
+		user stream.
+		if you want to track words, use arguments.
+		this is trial command.
+>
+		:TweetVimUserStreame
+		:TweetVimUserStream vim emacs lang:ja
+<
 :TweetVimCommandSay				*:TweetVimCommandSay*
 		tweet message at command line.
 >
@@ -294,6 +302,10 @@ g:tweetvim_display_separator                    *g:tweetvim_display_separator*
                 you can display separator of tweets.
 		default : 1
 
+g:tweetvim_empty_separator			*g:tweetvim_empty_separator*
+		separate tweets by blank line.
+		default : 0
+		
 g:tweetvim_footer                               *g:tweetvim_footer*
                 add message when you open tweetvim_say buffer.
                 default : ''
@@ -316,6 +328,21 @@ g:tweetvim_async_post                           *g:tweetvim_async_post*
 g:tweetvim_expand_t_co                          *g:tweetvim_expand_t_co*
                 expand t.co.
                 default : 0
+
+g:tweetvim_display_username			*g:tweetvim_display_username*
+		display username and screen name.
+		default : 0
+
+g:tweetvim_consumer_key				*g:tweetvim_consumer_key*
+		you can set your consumer key.
+
+g:tweetvim_consumer_secret			*g:tweetvim_consumer_secret*
+		you can set your consumer secret.
+
+g:tweetvim_no_default_key_mappings		*g:tweetvim_no_default_key_mappings*
+		no default mappings in tweetvim, tweetvim_say buffer.
+		this is trial option. not fixed.
+		default : 0
 
 ==============================================================================
 FILES						*tweetvim-files*
