@@ -265,7 +265,7 @@ function! s:to_tweets(message)
       let counter -= 1
     endif
     if counter == 0
-      let tweet = webapi#json#decode(eval("a:message[" . start . ":" . idx . "]"))
+      let tweet = twibill#json#decode(eval("a:message[" . start . ":" . idx . "]"))
         call add(list, tweet)
       let start = idx + 1
     endif

@@ -16,12 +16,7 @@ endfunction
 "
 "
 function! s:http_get(url)
-  try
-    let res = webapi#http#get(a:url)
-  catch
-    let res = http#get(a:url)
-  endtry
-  return res
+  return twibill#http#get(a:url)
 endfunction
 "
 "
