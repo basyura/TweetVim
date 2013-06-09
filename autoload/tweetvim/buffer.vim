@@ -29,9 +29,8 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
 
   let b:tweetvim_bufno = -1
 
-   " define syntax
-   let screen_name = tweetvim#account#current().screen_name
-   execute "syntax match tweetvim_reply '@" . screen_name . "'"
+  " define syntax
+  call s:apply_syntax()
 endfunction
 
 function! s:sort_values(m)
@@ -115,7 +114,7 @@ function! tweetvim#buffer#append(tweet)
   if g:tweetvim_display_icon && has('gui_running')
     call s:sign(tweet, lineno)
   endif
-
+  call s:apply_syntax()
   setlocal nomodifiable
 endfunction
 "
@@ -494,6 +493,14 @@ function! s:format(tweet, ...)
   endif
 
   return str
+endfunction
+
+function! s:apply_syntax()
+  if b:tweetvim_method == 'mentions'
+    return
+  endif
+  let screen_name = tweetvim#account#current().screen_name
+  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
 endfunction
 
 function! s:define_default_key_mappings()
