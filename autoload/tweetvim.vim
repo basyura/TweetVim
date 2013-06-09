@@ -1,6 +1,8 @@
 call tweetvim#cache#read('screen_name')
 
 let s:version = 2.1
+
+let s:stream_cache = []
 "
 "
 function! tweetvim#version()
@@ -141,44 +143,52 @@ endfunction
 function! s:receive_userstream()
   if s:stream.stdout.eof
     echomsg "stream is already closed"
-    return
-  endif
-
-  if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
-    return
+    return s:feed_keys()
   endif
 
   let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
 
   if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
-    for tweet in s:to_tweets(res)
-      try
-        if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event')
-          continue
-        endif
-        let isbottom = line(".") == line("$")
-        call tweetvim#buffer#append(tweet)
-        if isbottom
-          normal! G
-        else
-          execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
-        endif
-      catch
-        setlocal modifiable
-        call append(line("$"), res)
-        call append(line("$"), v:exception)
-        setlocal nomodifiable
-        normal! G
-        "echo "decode error"
-      endtry
-    endfor
+    call extend(s:stream_cache, s:to_tweets(res))
   endif
+
+  if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
+    return s:feed_keys()
+  endif
+
+  for tweet in s:stream_cache
+    call s:flush_tweet(tweet)
+    let s:stream_cache = []
+  endfor
+
   let &updatetime = g:tweetvim_updatetime
-  call feedkeys("g\<Esc>", "n")
+  return s:feed_keys()
 endfunction
 
-
-
+function! s:flush_tweet(tweet)
+  let tweet = a:tweet
+  try
+    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event')
+      return
+    endif
+    let isbottom = line(".") == line("$")
+    call tweetvim#buffer#append(tweet)
+    if isbottom
+      normal! G
+    else
+      execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+    endif
+  catch
+    setlocal modifiable
+    "call append(line("$"), a:tweet)
+    call append(line("$"), v:exception)
+    setlocal nomodifiable
+    normal! G
+    "echo "decode error"
+  endtry
+endfunction
+"
+"
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
@@ -262,4 +272,11 @@ function! s:to_tweets(message)
   endwhile
 
   return list
+endfunction
+"
+"
+"
+function! s:feed_keys()
+  call feedkeys("g\<Esc>", "n")
+  return 1
 endfunction
