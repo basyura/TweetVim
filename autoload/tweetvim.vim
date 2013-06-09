@@ -143,7 +143,7 @@ endfunction
 function! s:receive_userstream()
   if s:stream.stdout.eof
     echomsg "stream is already closed"
-    return s:feed_keys()
+    return
   endif
 
   let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
@@ -153,7 +153,7 @@ function! s:receive_userstream()
   endif
 
   if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
-    return s:feed_keys()
+    return
   endif
 
   for tweet in s:stream_cache
