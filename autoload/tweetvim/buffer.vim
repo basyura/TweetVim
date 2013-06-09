@@ -114,7 +114,7 @@ function! tweetvim#buffer#append(tweet)
   if g:tweetvim_display_icon && has('gui_running')
     call s:sign(tweet, lineno)
   endif
-  call s:apply_syntax()
+"  call s:apply_syntax()
   setlocal nomodifiable
 endfunction
 "
@@ -153,6 +153,7 @@ function! tweetvim#buffer#truncate_backup(size)
 endfunction
 
 function! tweetvim#buffer#userstream(title)
+
   call s:switch_buffer()
   call s:pre_process()
 
@@ -166,6 +167,8 @@ function! tweetvim#buffer#userstream(title)
   if g:tweetvim_display_separator
     delete _
   endif
+
+  call s:apply_syntax()
   call s:post_process()
 endfunction
 
@@ -230,6 +233,7 @@ endfunction
 "
 "
 function! s:pre_process()
+
   if g:tweetvim_display_icon && has('gui_running')
     setlocal nonu
     hi Signcolumn guibg=bg
@@ -496,6 +500,7 @@ function! s:format(tweet, ...)
 endfunction
 
 function! s:apply_syntax()
+  syntax clear tweetvim_reply
   if b:tweetvim_method == 'mentions'
     return
   endif

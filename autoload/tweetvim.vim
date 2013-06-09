@@ -119,6 +119,9 @@ function! tweetvim#userstream(...)
     let param.track = join(track, ',')
   endif
 
+  let screen_name = tweetvim#account#current().screen_name
+  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
+
   let s:stream = s:twibill().stream('user', param)
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
