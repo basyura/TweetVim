@@ -92,3 +92,20 @@ function! tweetvim#util#isCursorOnSeprator()
   let name = synIDattr(synID(line('.'),col('.'),1),'name')
   return name == 'tweetvim_separator' || name == 'tweetvim_separator_title'
 endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function tweetvim#util#sudden_death(str)
+  let width = s:str_to_mb_width(a:str) + 2
+  let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
+  let content = '＞　' . a:str . '　＜'
+  let bottom = '￣' . join(map(range(width), '"Ｙ"'),'') . '￣'
+  return join([top, content, bottom], "\n")
+endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function! s:str_to_mb_width(str)
+  return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
+endfunction
+"

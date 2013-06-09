@@ -21,6 +21,8 @@ function! tweetvim#timeline(method, ...)
   let st_req = reltime()
   let tweets = tweetvim#request(a:method, args)
   if empty(tweets)
+    redraw
+    echohl Error | echo tweetvim#util#sudden_death("no tweet") | sleep 1 | redraw | echohl None
     return
   endif
   let req_time = reltimestr(reltime(st_req))
@@ -30,7 +32,7 @@ function! tweetvim#timeline(method, ...)
       echohl Error | echo tweets.error | echohl None
       return
     elseif has_key(tweets, 'errors')
-      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
       return
     endif
   endif
@@ -235,22 +237,6 @@ function! s:merge_params(list_param, hash_param)
   endif
 
   return param + [a:hash_param]
-endfunction
-"
-" from suddendeath.vim - MIT License
-"
-function! s:sudden_death(str)
-  let width = s:str_to_mb_width(a:str) + 2
-  let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
-  let content = '＞　' . a:str . '　＜'
-  let bottom = '￣' . join(map(range(width), '"Ｙ"'),'') . '￣'
-  return join([top, content, bottom], "\n")
-endfunction
-"
-" from suddendeath.vim - MIT License
-"
-function! s:str_to_mb_width(str)
-  return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
 endfunction
 "
 "
