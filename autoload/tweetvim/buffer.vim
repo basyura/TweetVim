@@ -84,9 +84,21 @@ function! tweetvim#buffer#replace(lineno, tweet)
   let colno  = col('.')
   let lineno = line('.')
   setlocal modifiable
-  call cursor(a:lineno, colno)
-  delete _
-  call append(a:lineno - 1, type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet)
+  call cursor(a:lineno, 1)
+
+  normal! "_D
+
+  let word = type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet
+
+  " this copy logic is from unite.vim
+  let old_reg = [getreg('"'), getregtype('"')]
+  call setreg('"', word)
+  try
+    execute 'normal! ""p'
+  finally
+    call setreg('"', old_reg[0], old_reg[1])
+  endtry
+
   setlocal nomodified
   setlocal nomodifiable
   call cursor(lineno, colno)
