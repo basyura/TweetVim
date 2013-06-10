@@ -24,7 +24,7 @@ function! tweetvim#timeline(method, ...)
   let tweets = tweetvim#request(a:method, args)
   if empty(tweets)
     redraw
-    echohl Error | echo tweetvim#util#sudden_death("no tweet") | sleep 1 | redraw | echohl None
+    echohl Error | echo tweetvim#util#sudden_death("no tweet") | sleep 2 | redraw | echohl None
     return
   endif
   let req_time = reltimestr(reltime(st_req))
