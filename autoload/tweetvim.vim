@@ -3,6 +3,8 @@ call tweetvim#cache#read('screen_name')
 let s:version = 2.1
 
 let s:stream_cache = []
+
+let s:last_receive_stream_time = reltime()
 "
 "
 function! tweetvim#version()
@@ -158,8 +160,16 @@ function! s:receive_userstream()
 
   for tweet in s:stream_cache
     call s:flush_tweet(tweet)
-    let s:stream_cache = []
+    let s:last_receive_stream_time = reltime()
   endfor
+  let s:stream_cache = []
+  " auto reconnect
+  if reltime(s:last_receive_stream_time)[0] >= 60
+    " todo restore param
+    let s:last_receive_stream_time = reltime()
+    let s:stream = s:twibill().stream('user', {})
+    echohl Error | echo 'reconnected to userstream' | echohl None
+  endif
 
   let &updatetime = g:tweetvim_updatetime
   return s:feed_keys()
