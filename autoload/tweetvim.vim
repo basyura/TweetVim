@@ -164,7 +164,7 @@ function! s:receive_userstream()
   endfor
   let s:stream_cache = []
   " auto reconnect
-  if reltime(s:last_receive_stream_time)[0] >= 60
+  if reltime(s:last_receive_stream_time)[0] >= g:tweetvim_reconnect_seconds
     " todo restore param
     let s:last_receive_stream_time = reltime()
     let s:stream = s:twibill().stream('user', {})
