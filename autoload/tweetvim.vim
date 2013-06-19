@@ -137,9 +137,15 @@ function! tweetvim#userstream(...)
     autocmd!
     autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
     autocmd! BufEnter  <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
-    autocmd! BufLeave  <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
+    autocmd! BufLeave  <buffer> call <SID>buf_leave()
     autocmd! BufDelete <buffer> call <SID>twibill().close_streams()
   augroup END
+endfunction
+
+function! s:buf_leave()
+  if exists('b:saved_tweetvim_updatetime')
+    execute "let &updatetime=" . b:saved_tweetvim_updatetime
+  endif
 endfunction
 
 function! s:receive_userstream()
