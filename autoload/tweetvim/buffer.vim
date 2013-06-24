@@ -109,7 +109,7 @@ endfunction
 function! tweetvim#buffer#append(tweet)
   let tweet  = a:tweet
   setlocal modifiable
- let today = tweetvim#util#today()
+  let today = tweetvim#util#today()
   if g:tweetvim_display_separator
     call s:append_separator(tweetvim#util#separator('-'), 0)
   endif

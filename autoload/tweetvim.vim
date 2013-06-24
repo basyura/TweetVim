@@ -164,7 +164,7 @@ function! s:receive_userstream()
     return
   endif
 
-  for tweet in s:stream_cache
+  for tweet in tweetvim#filter#execute(s:stream_cache)
     call s:flush_tweet(tweet)
     let s:last_receive_stream_time = reltime()
   endfor
