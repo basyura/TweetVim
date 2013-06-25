@@ -307,6 +307,11 @@ function! s:process(method, args, title, tweets, opt)
   endif
   delete _
 
+  " cause remained old tweet ...
+  if !g:tweetvim_display_separator
+    call append(line('$'), '')
+  endif
+
   let line = get(a:opt, 'line', 1)
   call cursor(line, 1)
 endfunction
