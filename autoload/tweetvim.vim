@@ -103,7 +103,7 @@ function! tweetvim#userstream(...)
       echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
     endif
   else
-    for tweet in reverse(tweets)
+    for tweet in tweetvim#filter#execute(reverse(tweets))
       call tweetvim#buffer#append(tweet)
     endfor
   endif
