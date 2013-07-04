@@ -192,7 +192,11 @@ function! s:flush_tweet(tweet)
     if isbottom
       normal! G
     else
-      execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+      if has_key(tweet,'text')
+        execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+      elseif has_key(tweet,'direct_message')
+        execute "normal! " . string(len(split(tweet.direct_message.text, '\r')) + 1) . "\<C-e>"
+      endif
     endif
   catch
     setlocal modifiable

@@ -442,6 +442,7 @@ endfunction
 "
 function! s:format(tweet, ...)
   let tweet = a:tweet
+  let text = ''
   " for protected user
   if has_key(a:tweet, 'error')
     let tweet = {
@@ -453,6 +454,17 @@ function! s:format(tweet, ...)
           \ }
   endif
 
+  if has_key(tweet,'direct_message')
+    let tweet = {
+          \ 'user'       : {'screen_name' : tweet.direct_message.sender_screen_name},
+          \ 'text'       : tweet.direct_message.text,
+          \ 'favorited'  : 0,
+          \ 'source'     : '',
+          \ 'created_at' : tweet.direct_message.created_at,
+          \}
+    let text .= '[Direct Message]'
+  endif
+
   if has_key(tweet, 'retweeted_status')
     let text = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
     if stridx(tweet.retweeted_status.text, "\n") != -1
@@ -460,7 +472,7 @@ function! s:format(tweet, ...)
     endif
     let text .= tweet.retweeted_status.text
   else
-    let text = tweet.text
+    let text .= tweet.text
   endif
 
   " expand t.co url
