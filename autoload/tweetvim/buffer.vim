@@ -121,7 +121,10 @@ function! tweetvim#buffer#append(tweet)
 
   let lineno = line("$")
   call s:append_text(tweet, today)
-  let b:tweetvim_status_cache[lineno] = tweet
+  " skip direct message to avoid accidents
+  if !get(tweet, 'is_direct_message', 0)
+    let b:tweetvim_status_cache[lineno] = tweet
+  endif
 
   if g:tweetvim_display_icon && has('gui_running')
     call s:sign(tweet, lineno)
@@ -455,14 +458,17 @@ function! s:format(tweet, ...)
   endif
 
   if has_key(tweet,'direct_message')
-    let tweet = {
-          \ 'user'       : {'screen_name' : tweet.direct_message.sender_screen_name},
-          \ 'text'       : tweet.direct_message.text,
-          \ 'favorited'  : 0,
-          \ 'source'     : '',
-          \ 'created_at' : tweet.direct_message.created_at,
-          \}
-    let text .= '[Direct Message]'
+    " replace tweet properties
+    call extend(tweet, {
+          \ 'user'              : {'screen_name' : tweet.direct_message.sender_screen_name},
+          \ 'profile_image_url' : tweet.direct_message.sender.profile_image_url,
+          \ 'text'              : tweet.direct_message.text,
+          \ 'favorited'         : 0,
+          \ 'source'            : '',
+          \ 'created_at'        : tweet.direct_message.created_at,
+          \ 'is_direct_message' : 1,
+          \})
+    let text .= '[Direct Message] '
   endif
 
   if has_key(tweet, 'retweeted_status')
