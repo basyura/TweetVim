@@ -550,6 +550,7 @@ function! s:define_default_key_mappings()
   augroup tweetvim
     nmap <silent> <buffer> <CR>       <Plug>(tweetvim_action_enter)
     nmap <silent> <buffer> r  <Plug>(tweetvim_action_reply)
+    nmap <silent> <buffer> R  <Plug>(tweetvim_action_reply_to_all)
     nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
     nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
     nmap <silent> <buffer> o  <Plug>(tweetvim_action_open_links)
