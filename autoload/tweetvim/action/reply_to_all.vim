@@ -17,7 +17,7 @@ function! tweetvim#action#reply_to_all#execute(tweet)
   let matched_str = matchstr(a:tweet.text,'\(@\w\+\)',0,itr)
   while matched_str != ''
     let itr += 1
-    if (matched_str != '@' . tweetvim#account#current().screen_name) && (matchstr(reply_text,matched_str . ' ') != '')
+    if (matched_str != '@' . tweetvim#account#current().screen_name)
       let reply_text .= matched_str . ' '
     endif
     let matched_str = matchstr(a:tweet.text,'\(@\w\+\)',0,itr)
