@@ -89,6 +89,8 @@ function! tweetvim#buffer#replace(lineno, tweet)
   normal! "_D
 
   let word = type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet
+  " temporary fix
+  let word = substitute(split(word, '\n')[0], '', "", "g")
 
   " this copy logic is from unite.vim
   let old_reg = [getreg('"'), getregtype('"')]
