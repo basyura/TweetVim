@@ -81,6 +81,10 @@ endfunction
 "
 "
 function! tweetvim#buffer#previous_stream()
+  if b:tweetvim_method == 'userstream'
+    echo "already in userstream"
+    return
+  endif
   let bufno = len(s:backup) - 1
   while bufno >= 0
     let pre   = s:backup[bufno]
