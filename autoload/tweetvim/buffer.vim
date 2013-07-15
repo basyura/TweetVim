@@ -87,7 +87,7 @@ function! tweetvim#buffer#previous_stream()
     if pre.method == 'userstream'
       call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.opt)
       let s:backup = s:backup[0:bufno]
-      let b:tweetvim_bufno = bufno
+      let b:tweetvim_bufno = -1
       echo "backed to userstream"
       return
     endif
