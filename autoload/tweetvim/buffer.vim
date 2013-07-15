@@ -80,6 +80,26 @@ endfunction
 "
 "
 "
+function! tweetvim#buffer#previous_stream()
+  let bufno = len(s:backup) - 1
+  while bufno >= 0
+    let pre   = s:backup[bufno]
+    if pre.method == 'userstream'
+      call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.opt)
+      let s:backup = s:backup[0:bufno]
+      let b:tweetvim_bufno = bufno
+      echo "backed to userstream"
+      return
+    endif
+    let bufno -= 1
+  endwhile
+
+  echo "no stream buffer"
+
+endfunction
+"
+"
+"
 function! tweetvim#buffer#replace(lineno, tweet)
   let colno  = col('.')
   let lineno = line('.')
@@ -170,9 +190,13 @@ function! tweetvim#buffer#truncate_backup(size)
 endfunction
 
 function! tweetvim#buffer#userstream(title)
-
+  
   call s:switch_buffer()
   call s:pre_process()
+
+  if !exists('b:tweetvim_bufno')
+    let b:tweetvim_bufno = -1
+  endif
 
   let b:tweetvim_method = 'userstream'
   let b:tweetvim_status_cache = {}
@@ -570,6 +594,7 @@ function! s:define_default_key_mappings()
 
     nmap <silent> <buffer> H  <Plug>(tweetvim_action_buffer_previous)
     nmap <silent> <buffer> L  <Plug>(tweetvim_action_buffer_next)
+    nmap <silent> <buffer> <Leader>s <Plug>(tweetvim_action_buffer_previous_stream)
 
     nmap <silent> <buffer> j <Plug>(tweetvim_action_cursor_down)
     nmap <silent> <buffer> k <Plug>(tweetvim_action_cursor_up)

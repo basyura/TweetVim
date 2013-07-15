@@ -144,6 +144,7 @@ nnoremap <silent> <Plug>(tweetvim_action_cursor_down)     :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_favstar)         :<C-u>call tweetvim#action('favstar')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_favstar_browser) :<C-u>call tweetvim#action('favstar_browser')<CR>
 
+nnoremap <silent> <Plug>(tweetvim_action_buffer_previous_stream) :<C-u>call tweetvim#action('buffer_previous_stream')<CR>
 
 " for multi account
 
