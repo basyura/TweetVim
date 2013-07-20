@@ -184,7 +184,7 @@ endfunction
 function! s:flush_tweet(tweet)
   let tweet = a:tweet
   try
-    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event')
+    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event') || has_key(tweet,'disconnect')
       return
     endif
     let isbottom = line(".") == line("$")
