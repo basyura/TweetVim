@@ -100,7 +100,7 @@ function! tweetvim#userstream(...)
   " for rate limit
   if type(tweets) == 4
     if has_key(tweets, 'errors')
-      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
     endif
   else
     for tweet in tweetvim#filter#execute(reverse(tweets))
