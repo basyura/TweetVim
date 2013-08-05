@@ -252,7 +252,7 @@ function! s:switch_buffer()
   endwhile
   " buf is not exist
   if bufnr < 0
-    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
+    execute 'silent ' . g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
     return
   endif
@@ -265,12 +265,12 @@ function! s:switch_buffer()
   " buf is exist
   if buflisted(bufnr)
     if g:tweetvim_open_buffer_cmd =~ "split"
-      execute g:tweetvim_open_buffer_cmd
+      execute 'silent' . g:tweetvim_open_buffer_cmd
     endif
     execute 'buffer ' . bufnr
   else
     " buf is already deleted
-    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
+    execute 'silent ' . g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
   endif
 endfunction
