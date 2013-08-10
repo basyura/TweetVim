@@ -64,7 +64,7 @@ endif
 "
 command! TweetVimVersion :echo tweetvim#version()
 "
-command! TweetVimAccessToken  :call tweetvim#access_token()
+command! TweetVimAccessToken  :call tweetvim#account#access_token()
 "
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 "
