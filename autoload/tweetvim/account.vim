@@ -2,11 +2,17 @@ let s:consumer_key    = get(g:, 'tweetvim_consumer_key', '8hht6fAi3wU47cwql0Cbkg
 let s:consumer_secret = get(g:, 'tweetvim_consumer_secret', 'sbmqcNqlfwpBPk8QYdjwlaj0PIZFlbEXvSxxNrJDcAU')
 
 let s:current  = ''
-" let s:user = {'screen_name' : '' , 'lists' : []}
+
 let s:accounts = {}
 
+let s:account = {}
 
-
+function! s:account.get_lists()
+  if !has_key(self, '__lists')
+    let self.__lists = tweetvim#request('lists', self.screen_name)
+  endif
+  return copy(self.__lists)
+endfunction
 
 function! tweetvim#account#access_token(...)
 
@@ -41,7 +47,9 @@ function! tweetvim#account#access_token(...)
       \ 'access_token_secret' : tokens[1] ,
       \ }
 
-    let account    = twibill#new(config).verify_credentials()
+    let account    = deepcopy(s:account)
+    let credential = twibill#new(config).verify_credentials()
+    call extend(account, credential)
 
     let folder = g:tweetvim_config_dir . '/accounts/' . account.screen_name
     if !isdirectory(folder)
@@ -94,16 +102,8 @@ function! tweetvim#account#current(...)
     if g:tweetvim_debug | echoerr "current account is empty" | endif
     throw "AccessTokenError"
   endif
-  let account   = s:accounts[s:current]
-  try 
-    if !has_key(account, 'lists')
-      let account.lists = tweetvim#request('lists', s:current)
-    endif
-  catch
-      let account.lists = []
-  endtry
 
-  return deepcopy(account)
+  return s:accounts[s:current]
 endfunction
 
 function! tweetvim#account#add()
@@ -127,10 +127,10 @@ endfunction
 
 function! s:load_accounts()
   let list = s:account_list()
-  for account in list
-    let s:accounts[account] = {
-      \ 'screen_name' : account,
-      \ }
+  for name in list
+    let account = deepcopy(s:account)
+    let account.screen_name = name
+    let s:accounts[name] = account
   endfor
   if g:tweetvim_default_account != ''
     let s:current = g:tweetvim_default_account

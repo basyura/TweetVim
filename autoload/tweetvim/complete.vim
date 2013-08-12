@@ -25,7 +25,7 @@ endfunction
 function! tweetvim#complete#list(argLead, cmdLine, cursorPos)
   let screen_name = tweetvim#account#current().screen_name
   let slugs = []
-  for list in tweetvim#account#current().lists
+  for list in tweetvim#account#current().get_lists()
     if list.user.screen_name == screen_name
       call add(slugs, list.slug)
     endif
