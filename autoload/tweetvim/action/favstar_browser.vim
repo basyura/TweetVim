@@ -18,4 +18,5 @@ function! tweetvim#action#favstar_browser#execute(tweet)
 
   let url = 'http://favstar.fm/users/' . name . '/status/' . id
   execute "OpenBrowser " . url
+  silent execute "redraw!"
 endfunction

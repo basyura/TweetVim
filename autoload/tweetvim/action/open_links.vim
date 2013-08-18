@@ -20,4 +20,5 @@ function! tweetvim#action#open_links#execute(tweet)
     execute "OpenBrowser " . matched[0]
     let text = substitute(text , matched[0] , "" , "g")
   endwhile
+  silent execute "redraw!"
 endfunction
