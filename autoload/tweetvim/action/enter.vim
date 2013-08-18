@@ -16,6 +16,7 @@ function! tweetvim#action#enter#execute(tweet)
   let matched = matchlist(word, 'https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+')
   if len(matched) != 0
     execute "OpenBrowser " . matched[0]
+    silent execute "redraw!"
     return
   endif
 
