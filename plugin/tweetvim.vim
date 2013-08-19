@@ -83,6 +83,8 @@ command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccou
 command! TweetVimAddAccount call tweetvim#account#add()
 " user stream
 command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
+" clear icons from ~/.tweetvim/ico
+command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()
