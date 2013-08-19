@@ -4,11 +4,11 @@ set cpo&vim
 let s:V = vital#{expand('<sfile>:h:h:t:r')}#new()
 
 function! s:_vital_depends()
-  return ['Data.String', 'Web.Http']
+  return ['Data.String', 'Web.HTTP']
 endfunction
 
 let s:string = s:V.import('Data.String')
-let s:http = s:V.import('Web.Http')
+let s:http = s:V.import('Web.HTTP')
 
 let s:__template = { 'name': '', 'attr': {}, 'child': [] }
 
