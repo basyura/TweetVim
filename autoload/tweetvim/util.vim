@@ -1,7 +1,7 @@
 "
 let s:Vital    = vital#of('tweetvim')
 let s:DateTime = s:Vital.import('DateTime')
-let s:Html     = s:Vital.import('Web.Html')
+let s:Html     = s:Vital.import('Web.HTML')
 let s:List     = s:Vital.import('Data.List')
 let s:File     = s:Vital.import('System.File')
 let s:Filepath = s:Vital.import('System.Filepath')
