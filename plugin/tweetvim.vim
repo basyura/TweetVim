@@ -16,12 +16,7 @@ endfunction
 "
 "
 function! s:http_get(url)
-  try
-    let res = webapi#http#get(a:url)
-  catch
-    let res = http#get(a:url)
-  endtry
-  return res
+  return twibill#http#get(a:url)
 endfunction
 "
 "
@@ -48,6 +43,7 @@ call s:set_global_variable('tweetvim_debug'                  , 0)
 call s:set_global_variable('tweetvim_updatetime'             , 500)
 call s:set_global_variable('tweetvim_no_default_key_mappings', 0)
 call s:set_global_variable('tweetvim_empty_separator'        , 0)
+call s:set_global_variable('tweetvim_reconnect_seconds'      , 500)
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')
@@ -64,7 +60,7 @@ endif
 "
 command! TweetVimVersion :echo tweetvim#version()
 "
-command! TweetVimAccessToken  :call tweetvim#access_token()
+command! TweetVimAccessToken  :call tweetvim#account#access_token()
 "
 command! TweetVimHomeTimeline :call tweetvim#timeline('home_timeline')
 "
@@ -87,6 +83,8 @@ command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccou
 command! TweetVimAddAccount call tweetvim#account#add()
 " user stream
 command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
+" clear icons from ~/.tweetvim/ico
+command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()
@@ -127,6 +125,7 @@ endfunction
 
 nnoremap <silent> <Plug>(tweetvim_action_enter)           :<C-u>call tweetvim#action('enter')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_reply)           :<C-u>call tweetvim#action('reply')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_reply_to_all)    :<C-u>call tweetvim#action('reply_to_all')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_in_reply_to)     :<C-u>call tweetvim#action('in_reply_to')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_user_timeline)   :<C-u>call tweetvim#action('user_timeline')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_favorite)        :<C-u>call tweetvim#action('favorite')<CR>
@@ -147,6 +146,7 @@ nnoremap <silent> <Plug>(tweetvim_action_cursor_down)     :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_favstar)         :<C-u>call tweetvim#action('favstar')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_favstar_browser) :<C-u>call tweetvim#action('favstar_browser')<CR>
 
+nnoremap <silent> <Plug>(tweetvim_action_buffer_previous_stream) :<C-u>call tweetvim#action('buffer_previous_stream')<CR>
 
 " for multi account
 

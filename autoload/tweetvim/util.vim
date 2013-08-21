@@ -1,14 +1,29 @@
 "
 let s:Vital    = vital#of('tweetvim')
 let s:DateTime = s:Vital.import('DateTime')
-let s:Html     = s:Vital.import('Web.Html')
+let s:Html     = s:Vital.import('Web.HTML')
 let s:List     = s:Vital.import('Data.List')
+let s:File     = s:Vital.import('System.File')
+let s:Filepath = s:Vital.import('System.Filepath')
 "
 "
 "
 function! tweetvim#util#uniq(list)
   return s:List.uniq(a:list)
 endfunction
+
+"
+"
+"
+function! tweetvim#util#clear_icon(...)
+  let name = a:0 ? a:1 . '.ico' : ''
+  let path = s:Filepath.join(g:tweetvim_config_dir, 'ico', name)
+  call s:File.rmdir(path, 'r')
+  if !isdirectory(g:tweetvim_config_dir . '/ico')
+    call mkdir(g:tweetvim_config_dir . '/ico', 'p')
+  endif
+endfunction
+
 "
 "
 "
@@ -92,3 +107,20 @@ function! tweetvim#util#isCursorOnSeprator()
   let name = synIDattr(synID(line('.'),col('.'),1),'name')
   return name == 'tweetvim_separator' || name == 'tweetvim_separator_title'
 endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function tweetvim#util#sudden_death(str)
+  let width = s:str_to_mb_width(a:str) + 2
+  let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
+  let content = '＞　' . a:str . '　＜'
+  let bottom = '￣' . join(map(range(width), '"Ｙ"'),'') . '￣'
+  return join([top, content, bottom], "\n")
+endfunction
+"
+" from suddendeath.vim - MIT License
+"
+function! s:str_to_mb_width(str)
+  return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
+endfunction
+"

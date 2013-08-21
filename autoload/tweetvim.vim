@@ -1,6 +1,10 @@
 call tweetvim#cache#read('screen_name')
 
 let s:version = 2.1
+
+let s:stream_cache = []
+
+let s:last_receive_stream_time = reltime()
 "
 "
 function! tweetvim#version()
@@ -21,6 +25,8 @@ function! tweetvim#timeline(method, ...)
   let st_req = reltime()
   let tweets = tweetvim#request(a:method, args)
   if empty(tweets)
+    redraw
+    echohl Error | echo tweetvim#util#sudden_death("no tweet") | sleep 2 | redraw | echohl None
     return
   endif
   let req_time = reltimestr(reltime(st_req))
@@ -30,7 +36,7 @@ function! tweetvim#timeline(method, ...)
       echohl Error | echo tweets.error | echohl None
       return
     elseif has_key(tweets, 'errors')
-      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
       return
     endif
   endif
@@ -94,10 +100,10 @@ function! tweetvim#userstream(...)
   " for rate limit
   if type(tweets) == 4
     if has_key(tweets, 'errors')
-      echohl Error | echo s:sudden_death(tweets.errors[0].message) | echohl None
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
     endif
   else
-    for tweet in reverse(tweets)
+    for tweet in tweetvim#filter#execute(reverse(tweets))
       call tweetvim#buffer#append(tweet)
     endfor
   endif
@@ -119,6 +125,9 @@ function! tweetvim#userstream(...)
     let param.track = join(track, ',')
   endif
 
+  let screen_name = tweetvim#account#current().screen_name
+  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
+
   let s:stream = s:twibill().stream('user', param)
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
@@ -127,11 +136,17 @@ function! tweetvim#userstream(...)
   augroup tweetvim-userstream
     autocmd!
     autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
-    autocmd! BufEnter <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
-    autocmd! BufLeave <buffer> execute "let &updatetime=" . b:saved_tweetvim_updatetime
+    autocmd! BufEnter  <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
+    autocmd! BufLeave  <buffer> call <SID>buf_leave()
+    autocmd! BufDelete <buffer> call <SID>twibill().close_streams()
   augroup END
 endfunction
 
+function! s:buf_leave()
+  if exists('b:saved_tweetvim_updatetime')
+    execute "let &updatetime=" . b:saved_tweetvim_updatetime
+  endif
+endfunction
 
 function! s:receive_userstream()
   if s:stream.stdout.eof
@@ -139,41 +154,61 @@ function! s:receive_userstream()
     return
   endif
 
+  let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
+
+  if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
+    call extend(s:stream_cache, s:to_tweets(res))
+  endif
+
   if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
     return
   endif
 
-  let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
-
-  if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
-    for tweet in s:to_tweets(res)
-      try
-        if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event')
-          continue
-        endif
-        let isbottom = line(".") == line("$")
-        call tweetvim#buffer#append(tweet)
-        if isbottom
-          normal! G
-        else
-          execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
-        endif
-      catch
-        setlocal modifiable
-        call append(line("$"), res)
-        call append(line("$"), v:exception)
-        setlocal nomodifiable
-        normal! G
-        "echo "decode error"
-      endtry
-    endfor
+  for tweet in tweetvim#filter#execute(s:stream_cache)
+    call s:flush_tweet(tweet)
+    let s:last_receive_stream_time = reltime()
+  endfor
+  let s:stream_cache = []
+  " auto reconnect
+  if reltime(s:last_receive_stream_time)[0] >= g:tweetvim_reconnect_seconds
+    " todo restore param
+    let s:last_receive_stream_time = reltime()
+    let s:stream = s:twibill().stream('user', {})
+    echohl Error | echo 'reconnected to userstream' | echohl None
   endif
+
   let &updatetime = g:tweetvim_updatetime
-  call feedkeys("g\<Esc>", "n")
+  return s:feed_keys()
 endfunction
 
-
-
+function! s:flush_tweet(tweet)
+  let tweet = a:tweet
+  try
+    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event') || has_key(tweet,'disconnect')
+      return
+    endif
+    let isbottom = line(".") == line("$")
+    call tweetvim#buffer#append(tweet)
+    if isbottom
+      normal! G
+    else
+      if has_key(tweet,'text')
+        execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+      elseif has_key(tweet,'direct_message')
+        execute "normal! " . string(len(split(tweet.direct_message.text, '\r')) + 1) . "\<C-e>"
+      endif
+    endif
+  catch
+    setlocal modifiable
+    "call append(line("$"), a:tweet)
+    call append(line("$"), v:exception)
+    setlocal nomodifiable
+    normal! G
+    "echo "decode error"
+  endtry
+endfunction
+"
+"
 "
 function! tweetvim#update(text, param)
   return tweetvim#request('update', [a:text, a:param])
@@ -234,22 +269,6 @@ function! s:merge_params(list_param, hash_param)
   return param + [a:hash_param]
 endfunction
 "
-" from suddendeath.vim - MIT License
-"
-function! s:sudden_death(str)
-  let width = s:str_to_mb_width(a:str) + 2
-  let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
-  let content = '＞　' . a:str . '　＜'
-  let bottom = '￣' . join(map(range(width), '"Ｙ"'),'') . '￣'
-  return join([top, content, bottom], "\n")
-endfunction
-"
-" from suddendeath.vim - MIT License
-"
-function! s:str_to_mb_width(str)
-  return strlen(substitute(substitute(a:str, "[ -~｡-ﾟ]", 's', 'g'), "[^s]", 'mm', 'g')) / 2
-endfunction
-"
 "
 "
 function! s:to_tweets(message)
@@ -265,7 +284,7 @@ function! s:to_tweets(message)
       let counter -= 1
     endif
     if counter == 0
-      let tweet = webapi#json#decode(eval("a:message[" . start . ":" . idx . "]"))
+      let tweet = twibill#json#decode(eval("a:message[" . start . ":" . idx . "]"))
         call add(list, tweet)
       let start = idx + 1
     endif
@@ -273,4 +292,11 @@ function! s:to_tweets(message)
   endwhile
 
   return list
+endfunction
+"
+"
+"
+function! s:feed_keys()
+  call feedkeys("g\<Esc>", "n")
+  return 1
 endfunction

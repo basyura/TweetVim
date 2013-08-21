@@ -76,6 +76,10 @@ commands
 
     :TweetVimSay
 
+### ユーザーストリーム
+
+    :TweetVimUserStream vim emacs lang:ja
+
 メッセージ入力後、ノーマルモードの Enter でツイート。
 
 ### コマンドラインからツイート
@@ -325,6 +329,17 @@ tweetvim_say バッファにアカウント名を差し込む
     
     [basyura] :
     上記は触らなければ発言時に削除する。文字数カウントの考慮はない。
+
+セパレータの表示/非表示
+
+    let g:tweetvim_display_separator = 1
+
+空文字セパレータを表示
+
+    let g:tweetvim_empty_separator = 0
+
+    g:tweetvim_display_separator と排他的に動作
+    
 
 release v2.0 2013.04.18
 -----------------------

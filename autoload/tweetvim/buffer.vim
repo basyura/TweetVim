@@ -29,9 +29,8 @@ function! tweetvim#buffer#load(method, args, title, tweets, ...)
 
   let b:tweetvim_bufno = -1
 
-   " define syntax
-   let screen_name = tweetvim#account#current().screen_name
-   execute "syntax match tweetvim_reply '@" . screen_name . "'"
+  " define syntax
+  call s:apply_syntax()
 endfunction
 
 function! s:sort_values(m)
@@ -81,13 +80,51 @@ endfunction
 "
 "
 "
+function! tweetvim#buffer#previous_stream()
+  if b:tweetvim_method == 'userstream'
+    echo "already in userstream"
+    return
+  endif
+  let bufno = len(s:backup) - 1
+  while bufno >= 0
+    let pre   = s:backup[bufno]
+    if pre.method == 'userstream'
+      call tweetvim#buffer#load(pre.method, pre.args, pre.title, pre.tweets, pre.opt)
+      let s:backup = s:backup[0:bufno]
+      let b:tweetvim_bufno = -1
+      echo "backed to userstream"
+      return
+    endif
+    let bufno -= 1
+  endwhile
+
+  echo "no stream buffer"
+
+endfunction
+"
+"
+"
 function! tweetvim#buffer#replace(lineno, tweet)
   let colno  = col('.')
   let lineno = line('.')
   setlocal modifiable
-  call cursor(a:lineno, colno)
-  delete _
-  call append(a:lineno - 1, type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet)
+  call cursor(a:lineno, 1)
+
+  normal! "_D
+
+  let word = type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet
+  " temporary fix
+  let word = substitute(split(word, '\n')[0], '', "", "g")
+
+  " this copy logic is from unite.vim
+  let old_reg = [getreg('"'), getregtype('"')]
+  call setreg('"', word)
+  try
+    execute 'normal! ""p'
+  finally
+    call setreg('"', old_reg[0], old_reg[1])
+  endtry
+
   setlocal nomodified
   setlocal nomodifiable
   call cursor(lineno, colno)
@@ -98,7 +135,7 @@ endfunction
 function! tweetvim#buffer#append(tweet)
   let tweet  = a:tweet
   setlocal modifiable
- let today = tweetvim#util#today()
+  let today = tweetvim#util#today()
   if g:tweetvim_display_separator
     call s:append_separator(tweetvim#util#separator('-'), 0)
   endif
@@ -110,12 +147,15 @@ function! tweetvim#buffer#append(tweet)
 
   let lineno = line("$")
   call s:append_text(tweet, today)
-  let b:tweetvim_status_cache[lineno] = tweet
+  " skip direct message to avoid accidents
+  if !get(tweet, 'is_direct_message', 0)
+    let b:tweetvim_status_cache[lineno] = tweet
+  endif
 
   if g:tweetvim_display_icon && has('gui_running')
     call s:sign(tweet, lineno)
   endif
-
+"  call s:apply_syntax()
   setlocal nomodifiable
 endfunction
 "
@@ -154,8 +194,13 @@ function! tweetvim#buffer#truncate_backup(size)
 endfunction
 
 function! tweetvim#buffer#userstream(title)
+  
   call s:switch_buffer()
   call s:pre_process()
+
+  if !exists('b:tweetvim_bufno')
+    let b:tweetvim_bufno = -1
+  endif
 
   let b:tweetvim_method = 'userstream'
   let b:tweetvim_status_cache = {}
@@ -167,6 +212,8 @@ function! tweetvim#buffer#userstream(title)
   if g:tweetvim_display_separator
     delete _
   endif
+
+  call s:apply_syntax()
   call s:post_process()
 endfunction
 
@@ -205,7 +252,7 @@ function! s:switch_buffer()
   endwhile
   " buf is not exist
   if bufnr < 0
-    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
+    execute 'silent ' . g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
     return
   endif
@@ -218,12 +265,12 @@ function! s:switch_buffer()
   " buf is exist
   if buflisted(bufnr)
     if g:tweetvim_open_buffer_cmd =~ "split"
-      execute g:tweetvim_open_buffer_cmd
+      execute 'silent' . g:tweetvim_open_buffer_cmd
     endif
     execute 'buffer ' . bufnr
   else
     " buf is already deleted
-    execute g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
+    execute 'silent ' . g:tweetvim_open_buffer_cmd . ' ' . s:buf_name
     let s:last_bufnr = bufnr("")
   endif
 endfunction
@@ -231,6 +278,7 @@ endfunction
 "
 "
 function! s:pre_process()
+
   if g:tweetvim_display_icon && has('gui_running')
     setlocal nonu
     hi Signcolumn guibg=bg
@@ -291,6 +339,11 @@ function! s:process(method, args, title, tweets, opt)
     call s:append_tweets(a:tweets, b:tweetvim_status_cache)
   endif
   delete _
+
+  " cause remained old tweet ...
+  if !g:tweetvim_display_separator
+    call append(line('$'), '')
+  endif
 
   let line = get(a:opt, 'line', 1)
   call cursor(line, 1)
@@ -422,6 +475,7 @@ endfunction
 "
 function! s:format(tweet, ...)
   let tweet = a:tweet
+  let text = ''
   " for protected user
   if has_key(a:tweet, 'error')
     let tweet = {
@@ -433,6 +487,20 @@ function! s:format(tweet, ...)
           \ }
   endif
 
+  if has_key(tweet,'direct_message')
+    " replace tweet properties
+    call extend(tweet, {
+          \ 'user'              : {'screen_name' : tweet.direct_message.sender_screen_name},
+          \ 'profile_image_url' : tweet.direct_message.sender.profile_image_url,
+          \ 'text'              : tweet.direct_message.text,
+          \ 'favorited'         : 0,
+          \ 'source'            : '',
+          \ 'created_at'        : tweet.direct_message.created_at,
+          \ 'is_direct_message' : 1,
+          \})
+    let text .= '[Direct Message] '
+  endif
+
   if has_key(tweet, 'retweeted_status')
     let text = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
     if stridx(tweet.retweeted_status.text, "\n") != -1
@@ -440,7 +508,7 @@ function! s:format(tweet, ...)
     endif
     let text .= tweet.retweeted_status.text
   else
-    let text = tweet.text
+    let text .= tweet.text
   endif
 
   " expand t.co url
@@ -496,6 +564,15 @@ function! s:format(tweet, ...)
   return str
 endfunction
 
+function! s:apply_syntax()
+  syntax clear tweetvim_reply
+  if b:tweetvim_method == 'mentions'
+    return
+  endif
+  let screen_name = tweetvim#account#current().screen_name
+  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
+endfunction
+
 function! s:define_default_key_mappings()
   if g:tweetvim_no_default_key_mappings
     return
@@ -503,6 +580,7 @@ function! s:define_default_key_mappings()
   augroup tweetvim
     nmap <silent> <buffer> <CR>       <Plug>(tweetvim_action_enter)
     nmap <silent> <buffer> r  <Plug>(tweetvim_action_reply)
+    nmap <silent> <buffer> R  <Plug>(tweetvim_action_reply_to_all)
     nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
     nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
     nmap <silent> <buffer> o  <Plug>(tweetvim_action_open_links)
@@ -520,6 +598,7 @@ function! s:define_default_key_mappings()
 
     nmap <silent> <buffer> H  <Plug>(tweetvim_action_buffer_previous)
     nmap <silent> <buffer> L  <Plug>(tweetvim_action_buffer_next)
+    nmap <silent> <buffer> <Leader>s <Plug>(tweetvim_action_buffer_previous_stream)
 
     nmap <silent> <buffer> j <Plug>(tweetvim_action_cursor_down)
     nmap <silent> <buffer> k <Plug>(tweetvim_action_cursor_up)

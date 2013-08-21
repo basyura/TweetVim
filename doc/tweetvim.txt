@@ -172,6 +172,10 @@ COMMANDS					*tweetvim-commands*
 :TweetVimCurrentLineSay				*:TweetVimCurrentLineSay*
 		tweet current line in buffer.
 
+:TweetVimClearIcon [{screen_name}]		*:TweetVimClearIcon*
+		delete icon under g:tweetvim_config_dir . '/ico'
+		if screen name is not required, delete all icon.
+
 :Unite tweetvim					*:Unite-tweetvim*
 		show timeline list with unite.vim
 

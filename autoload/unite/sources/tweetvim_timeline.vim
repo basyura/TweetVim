@@ -61,7 +61,7 @@ function! s:candidates_time_lines_user()
 endfunction
 
 function! s:candidates_lists()
-  return map(tweetvim#account#current().lists, '{
+  return map(tweetvim#account#current().get_lists(), '{
         \ "word"           : v:val.full_name ,
         \ "source__method" : "list_statuses",
         \ "source__args"   : [v:val.user.screen_name, v:val.slug],

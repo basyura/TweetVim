@@ -74,7 +74,7 @@ else
   hi def link tweetvim_reload          Constant
   hi def link tweetvim_rt_count        Question
   hi def link tweetvim_rt_over         Question
-  hi def link tweetvim_reply           String
+  hi def link tweetvim_reply           PmenuSel
   hi def link tweetvim_appendix        Comment
 
 endif
