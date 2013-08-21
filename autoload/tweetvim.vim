@@ -1,6 +1,6 @@
 call tweetvim#cache#read('screen_name')
 
-let s:version = 2.1
+let s:version = 2.2
 
 let s:stream_cache = []
 

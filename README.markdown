@@ -341,6 +341,23 @@ tweetvim_say バッファにアカウント名を差し込む
     g:tweetvim_display_separator と排他的に動作
     
 
+release v2.2 2013.08.21
+-----------------------
+
+- TweetVimClearIcon {screen_name} で screen_name 指定 or 全部のアイコンを ~/.tweetvim/ico から削除するコマンドを追加
+- vital の最新化 thanks! rhysd
+- list の取得ができていなかった・・・遅延取得するように修正 (TweetVimSwitchAccount が早くなった)
+- TweetVimAccessToken で呼び出す関数名が間違っていたのを修正 thanks! alpaca-tc
+- buffer を silent で開く
+- userstream の際の sudden_death 表示時に呼び出す関数名が間違っていたのを修正 thanks! rhysd
+- userstream の際に <Leader><Leader> で再接続する
+- userstream の際に disconnect 通知でエラー表示されていたのを修正 thanks! ompugao
+- <leader>s で userstream のバッファに戻るマッピングを追加
+- R で全員に返信するマッピングを追加 thanks! ompugao
+- userstream に direct message を流す thanks! ompugao
+- userstream で filter が効いていなかったのを修正 thanks! rhysd
+- ツイートが無い場合に再接続するまでまつ時間を設定する g:tweetvim_reconnect_seconds を追加
+
 release v2.0 2013.04.18
 -----------------------
 

@@ -1,6 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
-Version: 2.1
+Version: 2.2
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
