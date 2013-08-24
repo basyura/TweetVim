@@ -16,6 +16,7 @@ function! tweetvim#action#around#execute(tweet)
         \ }])
   let after = tweetvim#request("user_timeline", [a:tweet.user.screen_name, {
         \ 'since_id' : a:tweet.id_str,
+        \ 'count'    : 200,
         \ }])
 
   let tweets = after + before
