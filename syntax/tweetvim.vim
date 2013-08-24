@@ -57,6 +57,7 @@ if get(g:, 'tweetvim_original_hi', 0)
   highlight default tweetvim_rt_over          guifg=orange
   highlight default tweetvim_reply            guifg=orange
   highlight default tweetvim_appendix         guifg=#616161
+  hi def link tweetvim_around_search   Search
 
 else
 
@@ -76,6 +77,7 @@ else
   hi def link tweetvim_rt_over         Question
   hi def link tweetvim_reply           PmenuSel
   hi def link tweetvim_appendix        Comment
+  hi def link tweetvim_around_search   Search
 
 endif
 
