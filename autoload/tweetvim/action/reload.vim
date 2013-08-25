@@ -18,6 +18,10 @@ function! tweetvim#action#reload#execute(tweet)
     return
   endif
 
+  if b:tweetvim_method == 'around_tweets'
+    return
+  endif
+
   try
     let title  = tweetvim#util#padding(getline(1), tweetvim#util#bufwidth() - 10)
     let title .= '[reload]'
