@@ -29,7 +29,7 @@ function! tweetvim#action#around#execute(tweet)
     "       get 20 tweets but not contained a:tweet
     "           case 1. got after next tweet's
     "           case 2. long term between from a:tweet to next tweet
-    if len(after) >= 10 || len(after) != 0 && after[-1].id_str >= a:tweet.id_str
+    if len(after) >= 10 || len(after) == 0 || after[-1].id_str >= a:tweet.id_str
       break
     endif
     redraw
