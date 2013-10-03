@@ -567,20 +567,18 @@ function! s:format(tweet, ...)
     if g:tweetvim_align_right
       let strsplit = split(str, '\n')
       let padding =  len(strsplit) > 1 ? strlen(s:padding_left) : 0
-      let last_width = strdisplaywidth(strsplit[-1]) + padding
       let right_width = strdisplaywidth(str_right)
       if &l:number || (exists('&relativenumber') && &l:relativenumber)
-        let number_width = max([&l:numberwidth, strlen((line('$') + 1) . '')])
+        let number_width = max([&l:numberwidth, strlen((line('$') + 1) . '')]) + 0
       else
         let number_width = 0
       endif
-      let rest_width = winwidth(0) - right_width - number_width
-      let white_width = rest_width - last_width
-      if white_width < 0
-        let str .= "\n" . repeat(' ', rest_width - strlen(s:padding_left)) . str_right
-      else
-        let str .= repeat(' ', white_width) . str_right
-      endif
+      let last_width = strdisplaywidth(strsplit[-1]) + padding + number_width
+      while last_width > winwidth(0)
+        let last_width -= winwidth(0) - number_width
+      endwhile
+      let white_width = winwidth(0) - right_width - last_width
+      let str .= repeat(' ', white_width + (white_width < 0 ? + winwidth(0) - number_width : 0)) . str_right
     else
       let str .= str_right
     endif
