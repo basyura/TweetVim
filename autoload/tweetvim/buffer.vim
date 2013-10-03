@@ -428,11 +428,12 @@ function! s:sign(tweet, lineno)
   execute "cd " . current_dir
 endfunction
 
+let s:padding_left = '                  '
 function! s:append_text(tweet, today)
   let text = s:format(a:tweet, a:today)
   let isfirst = 1
   for line in split(text, "\n")
-    let space = isfirst || g:tweetvim_display_username ? '' : '                  '
+    let space = isfirst || g:tweetvim_display_username ? '' : s:padding_left
     if !isfirst && g:tweetvim_display_icon && has('gui_running')
       let space .= ' '
     endif
@@ -540,6 +541,7 @@ function! s:format(tweet, ...)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
+  let str_right = ''
   " soruce
   if g:tweetvim_display_source
     " unescape for search api
@@ -547,18 +549,41 @@ function! s:format(tweet, ...)
     if source == ""
       let source = tweet.source
     endif
-    let str .= ' [[from ' . source . ']]'
+    let str_right .= ' [[from ' . source . ']]'
   endif
   " time
   if get(g:, 'tweetvim_display_time', 1)
     try
       let date  = tweetvim#util#format_date(tweet.created_at)
       let date  = substitute(date, today, '', '')
-      let str .= ' [[' . date . ']]'
+      let str_right .= ' [[' . date . ']]'
     catch
       echo v:exception
       " serch と timeline でフォーマットが違う
     endtry
+  endif
+
+  if strlen(str_right)
+    if g:tweetvim_align_right
+      let strsplit = split(str, '\n')
+      let padding =  len(strsplit) > 1 ? strlen(s:padding_left) : 0
+      let last_width = strdisplaywidth(strsplit[-1]) + padding
+      let right_width = strdisplaywidth(str_right)
+      if &l:number || (exists('&relativenumber') && &l:relativenumber)
+        let number_width = max([&l:numberwidth, strlen((line('$') + 1) . '')])
+      else
+        let number_width = 0
+      endif
+      let rest_width = winwidth(0) - right_width - number_width
+      let white_width = rest_width - last_width
+      if white_width < 0
+        let str .= "\n" . repeat(' ', rest_width - strlen(s:padding_left)) . str_right
+      else
+        let str .= repeat(' ', white_width) . str_right
+      endif
+    else
+      let str .= str_right
+    endif
   endif
 
   return str
