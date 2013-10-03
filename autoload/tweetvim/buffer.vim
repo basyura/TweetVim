@@ -569,16 +569,17 @@ function! s:format(tweet, ...)
       let padding =  len(strsplit) > 1 ? strlen(s:padding_left) : 0
       let right_width = strdisplaywidth(str_right)
       if &l:number || (exists('&relativenumber') && &l:relativenumber)
-        let number_width = max([&l:numberwidth, strlen((line('$') + 1) . '')])
+        let number_width = max([&l:numberwidth, strlen(line('$') . '') + 1])
       else
         let number_width = 0
       endif
       let last_width = strdisplaywidth(strsplit[-1]) + padding + number_width
-      while last_width > winwidth(0)
-        let last_width -= winwidth(0) - number_width
+      let rest_width = winwidth(0) - number_width
+      while last_width > rest_width
+        let last_width -= rest_width
       endwhile
       let white_width = winwidth(0) - right_width - last_width
-      let str .= repeat(' ', white_width + (white_width < 0 ? + winwidth(0) - number_width : 0)) . str_right
+      let str .= repeat(' ', white_width + (white_width < 0 ? rest_width : 0) - 1) . str_right
     else
       let str .= str_right
     endif
