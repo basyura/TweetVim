@@ -567,12 +567,14 @@ function! s:format(tweet, ...)
     if g:tweetvim_align_right
       let strsplit = split(str, '\n')
       let padding =  len(strsplit) > 1 ? strlen(s:padding_left) : 0
+      let padding = !!g:tweetvim_display_icon
       let right_width = strdisplaywidth(str_right)
       if &l:number || (exists('&relativenumber') && &l:relativenumber)
         let number_width = max([&l:numberwidth, strlen(line('$') . '') + 1])
       else
         let number_width = 0
       endif
+      let number_width = !!g:tweetvim_display_icon * 2
       let last_width = strdisplaywidth(strsplit[-1]) + padding + number_width
       let rest_width = winwidth(0) - number_width
       while last_width > rest_width
