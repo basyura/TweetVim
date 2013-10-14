@@ -11,7 +11,7 @@ let s:source = {
       \ }
 
 function! s:source.gather_candidates(args, context)
-  return map(tweetvim#account#current().lists , '{
+  return map(tweetvim#account#current().get_lists() , '{
              \ "word" : v:val.slug,
              \ "source__screen_name" : a:args[0],
              \ }')
@@ -27,6 +27,7 @@ function! s:source.action_table.execute.func(candidate)
   endif
   let user = tweetvim#account#current().screen_name
   call tweetvim#request("add_member_to_list", 
-        \ [user, name, {"id" : a:candidate.source__screen_name}])
+        \ [name, a:candidate.source__screen_name, user])
+  redraw
   echo 'added'
 endfunction
