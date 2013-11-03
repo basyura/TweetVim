@@ -179,9 +179,10 @@ function! s:post_tweet(text)
     return 1
   endif
   if strchars(text) > 140
-    "call unite#util#print_error("over 140 chars")
-    echohl Error | echo "over 140 chars" | echohl None
-    return
+    echohl Error
+    let ret = input("over 140 chars ... tweet ? (y/n) : ")
+    echohl None
+    redraw
   endif
   redraw | echo 'sending ... '
   try
