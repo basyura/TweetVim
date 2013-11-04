@@ -134,7 +134,7 @@ function! s:tweetvim_say_leave()
   call s:save_history_at_leave()
 endfunction
 
-function! s:show_history()
+function! tweetvim#say#show_history()
   if empty(s:tweet_history) || &filetype != 'tweetvim_say'
     return
   endif
@@ -162,7 +162,7 @@ endfunction
 "
 "
 "
-function! s:post_buffer_tweet()
+function! tweetvim#say#post_buffer_tweet()
   let text = s:get_text()
   if s:post_tweet(text)
     bd!
@@ -223,10 +223,10 @@ function! s:define_default_key_mappings()
   endif
   augroup tweetvim_say
     nnoremap <buffer> <silent> q :bd!<CR>
-    nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
-    inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
-    nnoremap <buffer> <silent> <CR>       :call <SID>post_buffer_tweet()<CR>
-    inoremap <buffer> <silent> <C-CR> <ESC>:call <SID>post_buffer_tweet()<CR>
+    nmap <buffer> <silent> <C-s>       <Plug>(tweetvim_say_show_history)
+    imap <buffer> <silent> <C-s>  <ESC><Plug>(tweetvim_say_show_history)
+    nmap <buffer> <silent> <CR>        <Plug>(tweetvim_say_post_buffer)
+    imap <buffer> <silent> <C-CR> <ESC><Plug>(tweetvim_say_post_buffer)
 
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>

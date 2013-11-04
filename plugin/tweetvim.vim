@@ -149,6 +149,9 @@ nnoremap <silent> <Plug>(tweetvim_action_favstar_browser) :<C-u>call tweetvim#ac
 
 nnoremap <silent> <Plug>(tweetvim_action_buffer_previous_stream) :<C-u>call tweetvim#action('buffer_previous_stream')<CR>
 
+nnoremap <silent> <Plug>(tweetvim_say_post_buffer)        :<C-u>call tweetvim#say#post_buffer_tweet()<CR>
+nnoremap <silent> <Plug>(tweetvim_say_show_history)       :<C-u>call tweetvim#say#show_history()<CR>
+
 " for multi account
 
 if filereadable(g:tweetvim_config_dir . '/token')
