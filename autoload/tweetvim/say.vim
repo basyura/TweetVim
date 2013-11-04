@@ -182,6 +182,9 @@ function! s:post_tweet(text)
     echohl Error
     let ret = input("over 140 chars ... tweet ? (y/n) : ")
     echohl None
+    if ret != 'y'
+      return
+    endif
     redraw
   endif
   redraw | echo 'sending ... '
