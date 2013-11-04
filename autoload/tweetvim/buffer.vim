@@ -265,7 +265,7 @@ function! s:switch_buffer()
   " buf is exist
   if buflisted(bufnr)
     if g:tweetvim_open_buffer_cmd =~ "split"
-      execute 'silent' . g:tweetvim_open_buffer_cmd
+      execute 'silent ' . g:tweetvim_open_buffer_cmd
     endif
     execute 'buffer ' . bufnr
   else
