@@ -14,13 +14,13 @@ endfunction
 function! tweetvim#action#reload#execute(tweet)
 
   if b:tweetvim_method == 'userstream'
-    TweetVimUserStream
+    execute 'TweetVimUserStream ' . join(get(b:, 'tweetvim_track', []), ' ')
     return
   endif
 
   if b:tweetvim_method == 'around_tweets'
     return
-  endif
+ endif
 
   try
     let title  = tweetvim#util#padding(getline(1), tweetvim#util#bufwidth() - 10)
