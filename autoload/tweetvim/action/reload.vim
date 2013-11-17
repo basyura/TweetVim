@@ -14,7 +14,7 @@ endfunction
 function! tweetvim#action#reload#execute(tweet)
 
   if b:tweetvim_method == 'userstream'
-    execute 'TweetVimUserStream ' . join(get(b:, 'tweetvim_track', []), ' ')
+    execute 'TweetVimUserStream ' . join(get(b:, 'tweetvim_userstream_track', []), ' ')
     return
   endif
 

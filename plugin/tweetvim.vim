@@ -83,7 +83,7 @@ command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccou
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
 " user stream
-command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
+command! -nargs=* -bang TweetVimUserStream call tweetvim#userstream(<bang>0, <f-args>)
 " clear icons from ~/.tweetvim/ico
 command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
 

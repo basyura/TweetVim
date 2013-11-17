@@ -92,23 +92,11 @@ function! tweetvim#request(method, args)
 endfunction
 
 
-function! tweetvim#userstream(...)
+function! tweetvim#userstream(bang, ...)
   let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
   call tweetvim#buffer#userstream(title)
 
   let tweets = tweetvim#request('home_timeline', [])
-  " for rate limit
-  if type(tweets) == 4
-    if has_key(tweets, 'errors')
-      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
-    endif
-  else
-    for tweet in tweetvim#filter#execute(reverse(tweets))
-      call tweetvim#buffer#append(tweet)
-    endfor
-  endif
-
-  normal! G
   " create param
   let param = {}
   let track = []
@@ -125,10 +113,24 @@ function! tweetvim#userstream(...)
     let param.track = join(track, ',')
   endif
 
+  let b:tweetvim_userstream_bang  = a:bang
+  let b:tweetvim_userstream_track = track
+  " for rate limit
+  if type(tweets) == 4
+    if has_key(tweets, 'errors')
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
+    endif
+  else
+    for tweet in tweetvim#filter#execute(reverse(tweets))
+      call tweetvim#buffer#append(tweet)
+    endfor
+  endif
+
+  normal! G
+
   let screen_name = tweetvim#account#current().screen_name
   execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
 
-  let b:tweetvim_track = track
   let s:stream = s:twibill().stream('user', param)
 
   if !exists('b:saved_tweetvim_updatetime')
