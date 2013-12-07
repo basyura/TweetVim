@@ -154,7 +154,9 @@ endfunction
 
 function! s:receive_userstream()
   if s:stream.stdout.eof
-    echomsg "stream is already closed"
+    if &filetype == 'tweetvim'
+      echomsg "stream is already closed"
+    endif
     return
   endif
 
