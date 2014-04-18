@@ -94,13 +94,6 @@ endfunction
 "
 "
 "
-"
-function! tweetvim#say#count()
-  return 140 - strchars(s:get_text())
-endfunction
-"
-"
-"
 function! s:tweetvim_say_settings()
   setlocal bufhidden=wipe
   setlocal nobuflisted
@@ -173,12 +166,11 @@ endfunction
 "
 function! s:post_tweet(text)
   let text = a:text
-  let text = substitute(text, '^\[' . tweetvim#account#current().screen_name . '\] : ', '', '')
   if text == ''
     echohl Error | echo "status is blank" | echohl None
     return 1
   endif
-  if strchars(text) > 140
+  if tweetvim#tweet#count_chars(text) < 0
     echohl Error
     let ret = input("over 140 chars ... tweet ? (y/n) : ")
     echohl None
@@ -210,11 +202,13 @@ function! s:post_tweet(text)
 endfunction
 
 function! s:get_text()
-  return matchstr(join(getline(1, '$'), "\n"), '^\_s*\zs\_.\{-}\ze\_s*$')
+  let text = matchstr(join(getline(1, '$'), "\n"), '^\_s*\zs\_.\{-}\ze\_s*$')
+  let screen_name = tweetvim#account#current().screen_name
+  return substitute(text, '^\[' . screen_name . '\] : ', '', '')
 endfunction
 
 function! s:update_char_count()
-  let b:tweetvim_say_count = '[' . tweetvim#say#count() . ']'
+  let b:tweetvim_say_count = '[' . tweetvim#tweet#count_chars(s:get_text()) . ']'
 endfunction
 
 function! s:define_default_key_mappings()
