@@ -340,6 +340,19 @@ tweetvim_say バッファにアカウント名を差し込む
     g:tweetvim_display_separator と排他的に動作
     
 
+release v2.3 2014.04.20
+-----------------------
+
+- 文字数カウント時に url 短縮を考慮 thanks! thinca
+- user stream の status_withheld  でエラーになっていたのを修正 thanks! ompugao
+- TweetVimUserStream! で track ワードにかかるツイートだけを表示
+- 140 文字を超えた場合にポストするかを確認する
+- list へのメンバ追加がこけていたのを修正
+- vital のアップデート
+- numberwith 指定時のレイアウト修正 thanks! itchyny
+- readme の改善 thanks! Masahiro Saito 
+- 該当ツイート周辺のツイートを表示する around action を追加
+
 release v2.2 2013.08.21
 -----------------------
 
