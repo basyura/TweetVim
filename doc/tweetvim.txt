@@ -337,6 +337,10 @@ g:tweetvim_display_username			*g:tweetvim_display_username*
 		display username and screen name.
 		default : 0
 
+g:tweetvim_align_right				*g:tweetvim_align_right*
+		align the source and tweet on the right
+		default : 0
+
 g:tweetvim_consumer_key				*g:tweetvim_consumer_key*
 		you can set your consumer key.
 

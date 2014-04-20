@@ -92,23 +92,11 @@ function! tweetvim#request(method, args)
 endfunction
 
 
-function! tweetvim#userstream(...)
+function! tweetvim#userstream(bang, ...)
   let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
   call tweetvim#buffer#userstream(title)
 
   let tweets = tweetvim#request('home_timeline', [])
-  " for rate limit
-  if type(tweets) == 4
-    if has_key(tweets, 'errors')
-      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
-    endif
-  else
-    for tweet in tweetvim#filter#execute(reverse(tweets))
-      call tweetvim#buffer#append(tweet)
-    endfor
-  endif
-
-  normal! G
   " create param
   let param = {}
   let track = []
@@ -125,10 +113,26 @@ function! tweetvim#userstream(...)
     let param.track = join(track, ',')
   endif
 
+  let b:tweetvim_userstream_bang  = a:bang
+  let b:tweetvim_userstream_track = track
+  " for rate limit
+  if type(tweets) == 4
+    if has_key(tweets, 'errors')
+      echohl Error | echo tweetvim#util#sudden_death(tweets.errors[0].message) | echohl None
+    endif
+  else
+    for tweet in tweetvim#filter#execute(reverse(tweets))
+      call tweetvim#buffer#append(tweet)
+    endfor
+  endif
+
+  normal! G
+
   let screen_name = tweetvim#account#current().screen_name
   execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
 
   let s:stream = s:twibill().stream('user', param)
+
   if !exists('b:saved_tweetvim_updatetime')
     let b:saved_tweetvim_updatetime = &updatetime
   endif
@@ -150,7 +154,9 @@ endfunction
 
 function! s:receive_userstream()
   if s:stream.stdout.eof
-    echomsg "stream is already closed"
+    if &filetype == 'tweetvim'
+      echomsg "stream is already closed"
+    endif
     return
   endif
 
@@ -184,7 +190,7 @@ endfunction
 function! s:flush_tweet(tweet)
   let tweet = a:tweet
   try
-    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event') || has_key(tweet,'disconnect')
+    if has_key(tweet, 'friends') || has_key(tweet, 'delete') || has_key(tweet, 'event') || has_key(tweet,'disconnect') || has_key(tweet, 'status_withheld') || has_key(tweet,'user_withheld')
       return
     endif
     let isbottom = line(".") == line("$")
@@ -262,7 +268,7 @@ function! s:merge_params(list_param, hash_param)
   let param = a:list_param
 
   if type(param[-1]) == 4
-    call extend(param[-1], a:hash_param)
+    call extend(a:hash_param, param[-1])
     return param
   endif
 

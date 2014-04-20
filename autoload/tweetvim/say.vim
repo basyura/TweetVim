@@ -94,13 +94,6 @@ endfunction
 "
 "
 "
-"
-function! tweetvim#say#count()
-  return 140 - strchars(s:get_text())
-endfunction
-"
-"
-"
 function! s:tweetvim_say_settings()
   setlocal bufhidden=wipe
   setlocal nobuflisted
@@ -134,7 +127,7 @@ function! s:tweetvim_say_leave()
   call s:save_history_at_leave()
 endfunction
 
-function! s:show_history()
+function! tweetvim#say#show_history()
   if empty(s:tweet_history) || &filetype != 'tweetvim_say'
     return
   endif
@@ -162,7 +155,7 @@ endfunction
 "
 "
 "
-function! s:post_buffer_tweet()
+function! tweetvim#say#post_buffer_tweet()
   let text = s:get_text()
   if s:post_tweet(text)
     bd!
@@ -173,15 +166,18 @@ endfunction
 "
 function! s:post_tweet(text)
   let text = a:text
-  let text = substitute(text, '^\[' . tweetvim#account#current().screen_name . '\] : ', '', '')
   if text == ''
     echohl Error | echo "status is blank" | echohl None
     return 1
   endif
-  if strchars(text) > 140
-    "call unite#util#print_error("over 140 chars")
-    echohl Error | echo "over 140 chars" | echohl None
-    return
+  if tweetvim#tweet#count_chars(text) < 0
+    echohl Error
+    let ret = input("over 140 chars ... tweet ? (y/n) : ")
+    echohl None
+    if ret != 'y'
+      return
+    endif
+    redraw
   endif
   redraw | echo 'sending ... '
   try
@@ -206,11 +202,13 @@ function! s:post_tweet(text)
 endfunction
 
 function! s:get_text()
-  return matchstr(join(getline(1, '$'), "\n"), '^\_s*\zs\_.\{-}\ze\_s*$')
+  let text = matchstr(join(getline(1, '$'), "\n"), '^\_s*\zs\_.\{-}\ze\_s*$')
+  let screen_name = tweetvim#account#current().screen_name
+  return substitute(text, '^\[' . screen_name . '\] : ', '', '')
 endfunction
 
 function! s:update_char_count()
-  let b:tweetvim_say_count = '[' . tweetvim#say#count() . ']'
+  let b:tweetvim_say_count = '[' . tweetvim#tweet#count_chars(s:get_text()) . ']'
 endfunction
 
 function! s:define_default_key_mappings()
@@ -219,10 +217,10 @@ function! s:define_default_key_mappings()
   endif
   augroup tweetvim_say
     nnoremap <buffer> <silent> q :bd!<CR>
-    nnoremap <buffer> <silent> <C-s>      :call <SID>show_history()<CR>
-    inoremap <buffer> <silent> <C-s> <ESC>:call <SID>show_history()<CR>
-    nnoremap <buffer> <silent> <CR>       :call <SID>post_buffer_tweet()<CR>
-    inoremap <buffer> <silent> <C-CR> <ESC>:call <SID>post_buffer_tweet()<CR>
+    nmap <buffer> <silent> <C-s>       <Plug>(tweetvim_say_show_history)
+    imap <buffer> <silent> <C-s>  <ESC><Plug>(tweetvim_say_show_history)
+    nmap <buffer> <silent> <CR>        <Plug>(tweetvim_say_post_buffer)
+    imap <buffer> <silent> <C-CR> <ESC><Plug>(tweetvim_say_post_buffer)
 
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>

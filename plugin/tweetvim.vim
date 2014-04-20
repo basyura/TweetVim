@@ -29,6 +29,7 @@ call s:set_global_variable('tweetvim_display_time'           , 1)
 call s:set_global_variable('tweetvim_display_separator'      , 1)
 call s:set_global_variable('tweetvim_display_icon'           , 0)
 call s:set_global_variable('tweetvim_display_username'       , 0)
+call s:set_global_variable('tweetvim_align_right'            , 0)
 call s:set_global_variable('tweetvim_log'                    , 0)
 call s:set_global_variable('tweetvim_open_buffer_cmd'        , 'edit!')
 call s:set_global_variable('tweetvim_open_say_cmd'           , 'botright split')
@@ -82,7 +83,7 @@ command! -nargs=1 -complete=custom,tweetvim#complete#account TweetVimSwitchAccou
 " add account
 command! TweetVimAddAccount call tweetvim#account#add()
 " user stream
-command! -nargs=* TweetVimUserStream call tweetvim#userstream(<f-args>)
+command! -nargs=* -bang TweetVimUserStream call tweetvim#userstream(<bang>0, <f-args>)
 " clear icons from ~/.tweetvim/ico
 command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
 
@@ -147,6 +148,9 @@ nnoremap <silent> <Plug>(tweetvim_action_favstar)         :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_favstar_browser) :<C-u>call tweetvim#action('favstar_browser')<CR>
 
 nnoremap <silent> <Plug>(tweetvim_action_buffer_previous_stream) :<C-u>call tweetvim#action('buffer_previous_stream')<CR>
+
+nnoremap <silent> <Plug>(tweetvim_say_post_buffer)        :<C-u>call tweetvim#say#post_buffer_tweet()<CR>
+nnoremap <silent> <Plug>(tweetvim_say_show_history)       :<C-u>call tweetvim#say#show_history()<CR>
 
 " for multi account
 

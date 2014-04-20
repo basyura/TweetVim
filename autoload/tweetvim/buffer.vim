@@ -265,7 +265,7 @@ function! s:switch_buffer()
   " buf is exist
   if buflisted(bufnr)
     if g:tweetvim_open_buffer_cmd =~ "split"
-      execute 'silent' . g:tweetvim_open_buffer_cmd
+      execute 'silent ' . g:tweetvim_open_buffer_cmd
     endif
     execute 'buffer ' . bufnr
   else
@@ -428,11 +428,12 @@ function! s:sign(tweet, lineno)
   execute "cd " . current_dir
 endfunction
 
+let s:padding_left = '                  '
 function! s:append_text(tweet, today)
   let text = s:format(a:tweet, a:today)
   let isfirst = 1
   for line in split(text, "\n")
-    let space = isfirst || g:tweetvim_display_username ? '' : '                  '
+    let space = isfirst || g:tweetvim_display_username ? '' : s:padding_left
     if !isfirst && g:tweetvim_display_icon && has('gui_running')
       let space .= ' '
     endif
@@ -540,6 +541,7 @@ function! s:format(tweet, ...)
   if rt_count
     let str .= ' ' . string(rt_count) . 'RT'
   endif
+  let str_right = ''
   " soruce
   if g:tweetvim_display_source
     " unescape for search api
@@ -547,18 +549,42 @@ function! s:format(tweet, ...)
     if source == ""
       let source = tweet.source
     endif
-    let str .= ' [[from ' . source . ']]'
+    let str_right .= ' [[from ' . source . ']]'
   endif
   " time
   if get(g:, 'tweetvim_display_time', 1)
     try
       let date  = tweetvim#util#format_date(tweet.created_at)
       let date  = substitute(date, today, '', '')
-      let str .= ' [[' . date . ']]'
+      let str_right .= ' [[' . date . ']]'
     catch
       echo v:exception
       " serch と timeline でフォーマットが違う
     endtry
+  endif
+
+  if strlen(str_right)
+    if g:tweetvim_align_right
+      let strsplit = split(str, '\n')
+      let icon = g:tweetvim_display_icon && has('gui_running')
+      let padding =  len(strsplit) > 1 ? strlen(s:padding_left) + icon : 0
+      let right_width = strdisplaywidth(str_right)
+      if &l:number || (exists('&relativenumber') && &l:relativenumber)
+        let number_width = max([&l:numberwidth, strlen(line('$') . '') + 1])
+      else
+        let number_width = 0
+      endif
+      let number_width += icon * 2
+      let last_width = strdisplaywidth(strsplit[-1]) + padding + number_width
+      let rest_width = winwidth(0) - number_width
+      while last_width > rest_width
+        let last_width -= rest_width
+      endwhile
+      let white_width = winwidth(0) - right_width - last_width
+      let str .= repeat(' ', white_width + (white_width < 0 ? rest_width : 0) - 1) . str_right
+    else
+      let str .= str_right
+    endif
   endif
 
   return str
