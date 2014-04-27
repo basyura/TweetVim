@@ -11,32 +11,32 @@ setlocal concealcursor=nc
 
 syntax match tweetvim_title "^\[.*" contains=tweetvim_reload
 
-syntax match tweetvim_status_id "\[\d\{-1,}\]$"
+syntax match tweetvim_status_id "\[\d\{-1,}\]$" display
 "syntax match tweetvim_created_at "- .\{-1,} \[" 
 "
-syntax match tweetvim_screen_name "^\s\=[0-9A-Za-z_]\{-1,} "
+syntax match tweetvim_screen_name "^\s\=[0-9A-Za-z_]\{-1,} " display
 
-syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+"
+syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+" display
 
 "syntax match tweetvim_link "\<https\?://\S\+"
 "syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
-syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
+syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+" display
 
-syntax match tweetvim_hash_tag "[ 　。、]\zs[#＃]\S\+"
+syntax match tweetvim_hash_tag "[ 　。、]\zs[#＃]\S\+" display
 
-syntax match tweetvim_separator       "^-\+$"
-syntax match tweetvim_separator_title "^\~\+$"
+syntax match tweetvim_separator       "^-\+$" display
+syntax match tweetvim_separator_title "^\~\+$" display
 
-syntax match tweetvim_star " ★ "
+syntax match tweetvim_star " ★ " display
 syntax match tweetvim_reload "\[reload\]"
 
-syntax match tweetvim_rt_count " [0-9]\+RT"
-syntax match tweetvim_rt_over  "'100+'RT"
+syntax match tweetvim_rt_count " [0-9]\+RT" display
+syntax match tweetvim_rt_over  "'100+'RT" display
 
-syn region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value
-syn match tweetvim_appendix_value "\[\$\ze.*\ze\$\]"
+syn region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value display
+syn match tweetvim_appendix_value "\[\$\ze.*\ze\$\]" display
 
-syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block
+syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block display
 syntax match tweetvim_appendix_block /\[\[/ contained conceal
 syntax match tweetvim_appendix_block /\]\]/ contained conceal
 
