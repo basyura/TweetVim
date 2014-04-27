@@ -20,7 +20,7 @@ syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+" display
 
 "syntax match tweetvim_link "\<https\?://\S\+"
 "syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
-syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+" display
+syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+" display
 
 syntax match tweetvim_hash_tag "[ 　。、]\zs[#＃]\S\+" display
 
@@ -30,11 +30,11 @@ syntax match tweetvim_separator_title "^\~\+$" display
 syntax match tweetvim_star " ★ " display
 syntax match tweetvim_reload "\[reload\]"
 
-syntax match tweetvim_rt_count " [0-9]\+RT" display
-syntax match tweetvim_rt_over  "'100+'RT" display
+syntax match tweetvim_rt_count " [0-9]\+RT\>" display
+syntax match tweetvim_rt_over  "'100+'RT\>" display
 
-syn region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value display
-syn match tweetvim_appendix_value "\[\$\ze.*\ze\$\]" display
+syntax region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value display
+syntax match tweetvim_appendix_value "\[\$\zs.*\ze\$\]" display
 
 syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block display
 syntax match tweetvim_appendix_block /\[\[/ contained conceal
@@ -57,7 +57,7 @@ if get(g:, 'tweetvim_original_hi', 0)
   highlight default tweetvim_rt_over          guifg=orange
   highlight default tweetvim_reply            guifg=orange
   highlight default tweetvim_appendix         guifg=#616161
-  hi def link tweetvim_around_search   Search
+  highlight def link tweetvim_around_search   Search
 
 else
 
