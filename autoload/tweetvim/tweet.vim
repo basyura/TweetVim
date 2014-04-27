@@ -686,6 +686,11 @@ function! tweetvim#tweet#count_chars(text)
   if !exists('s:twitter_configuration')
     let s:twitter_configuration = tweetvim#request('configuration', [])
   endif
+  " check old regexpengine
+  if &regexpengine == 1
+    return 140 - strchars(a:text)
+  end
+
   let conf = s:twitter_configuration
   let url_shorten_text = substitute(a:text, s:valid_url, '\=s:sub(conf)', 'g')
   return s:TWEET_LIMIT - strchars(url_shorten_text)
