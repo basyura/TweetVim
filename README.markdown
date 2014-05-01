@@ -338,7 +338,11 @@ tweetvim_say バッファにアカウント名を差し込む
     let g:tweetvim_empty_separator = 0
 
     g:tweetvim_display_separator と排他的に動作
-    
+
+v2.4 - dev
+----------
+
+- regexpengine = 1 のときは url を考慮せずに文字数でカウントする
 
 release v2.3 2014.04.20
 -----------------------
