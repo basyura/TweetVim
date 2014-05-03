@@ -268,7 +268,7 @@ function! s:merge_params(list_param, hash_param)
   let param = a:list_param
 
   if type(param[-1]) == 4
-    call extend(a:hash_param, param[-1])
+    call extend(param[-1], a:hash_param)
     return param
   endif
 
