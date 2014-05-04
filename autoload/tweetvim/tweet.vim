@@ -63,6 +63,10 @@ let s:valid_url_preceding_chars = printf(
 \   s:INVALID_CHARACTERS
 \ )
 
+let s:valid_url_without_protocol_preceding_chars = printf(
+\   '\%%([^-_.\/A-Z0-9@＠$#＃%s]\|^\)',
+\   s:INVALID_CHARACTERS
+\ )
 let s:invalid_url_without_protocol_preceding_chars = '[-_.\/]$'
 
 let s:DOMAIN_VALID_CHARS = printf(
@@ -602,7 +606,7 @@ let s:valid_ascii_domain = printf(
 let s:valid_tco_url = '\c^https\?://t\.co\/[a-z0-9]\+'
 
 let s:invalid_short_domain = printf(
-\   '^%s%s$',
+\   '%s%s',
 \   s:valid_domain_name,
 \   s:valid_ccTLD
 \ )
@@ -650,6 +654,28 @@ let s:valid_url = printf(
 \   s:valid_url_query_ending_chars
 \ )
 
+let s:valid_url_syntax = printf(
+\   '\c\%%(%s\|%s\zs%s\%%(:%s\)\?/%s*\%%(?%s*%s\)\?\|\%%(%s\zshttps\?://%s\|%s\zs\%%(\(%s\)\@=\%%(%s\)\@!\)\1\)\%%(:%s\)\?\%%(/%s*\)\?\%%(?%s*%s\)\?\)',
+\   s:valid_tco_url,
+\
+\   s:valid_url_without_protocol_preceding_chars,
+\   s:valid_ascii_domain,
+\   s:valid_port_number,
+\   s:valid_url_path,
+\   s:valid_url_query_chars,
+\   s:valid_url_query_ending_chars,
+\
+\   s:valid_url_preceding_chars,
+\   s:valid_domain,
+\   s:valid_url_without_protocol_preceding_chars,
+\   s:valid_ascii_domain,
+\   s:invalid_short_domain,
+\   s:valid_port_number,
+\   s:valid_url_path,
+\   s:valid_url_query_chars,
+\   s:valid_url_query_ending_chars
+\ )
+
 function! s:sub(conf)
   let [all, before, url, protocol, domain, port, path] = map(range(0, 6), 'submatch(v:val)')
   let after = ''
@@ -660,7 +686,7 @@ function! s:sub(conf)
     " I think the original algorithm contains a bug.  Uses other way.
     let ascii_domain = matchstr(domain, s:valid_ascii_domain . '$')
     if empty(ascii_domain) ||
-    \   (ascii_domain =~? s:invalid_short_domain && empty(path))
+    \   (ascii_domain =~? '^' . s:invalid_short_domain . '$' && empty(path))
       return all
     endif
     let cut_len = len(domain) - len(ascii_domain)
@@ -694,6 +720,10 @@ function! tweetvim#tweet#count_chars(text)
   let conf = s:twitter_configuration
   let url_shorten_text = substitute(a:text, s:valid_url, '\=s:sub(conf)', 'g')
   return s:TWEET_LIMIT - strchars(url_shorten_text)
+endfunction
+
+function! tweetvim#tweet#url_pattern()
+  return s:valid_url_syntax
 endfunction
 
 

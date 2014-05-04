@@ -1,0 +1,19 @@
+" syntax for tweetvim_say
+"
+if exists('b:current_syntax') || &regexpengine == 1
+  finish
+endif
+
+execute 'syntax match tweetvim_say_link "' . escape(tweetvim#tweet#url_pattern(), '"') . '"'
+
+if get(g:, 'tweetvim_original_hi', 0)
+
+  highlight default tweetvim_say_link guifg=#80a0ff
+
+else
+
+  highlight default link tweetvim_say_link Underlined
+
+endif
+
+let b:current_syntax = 'tweetvim_say'
