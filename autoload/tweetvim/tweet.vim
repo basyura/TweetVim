@@ -54,9 +54,98 @@ let s:LATIN_ACCENTS = join([
 \   s:regex_range(0x1e00, 0x1eff),
 \ ], '')
 
+let s:NON_LATIN_HASHTAG_CHARS = join([
+\  s:regex_range(0x0400, 0x04ff),
+\  s:regex_range(0x0500, 0x0527),
+\  s:regex_range(0x2de0, 0x2dff),
+\  s:regex_range(0xa640, 0xa69f),
+\  s:regex_range(0x0591, 0x05bf),
+\  s:regex_range(0x05c1, 0x05c2),
+\  s:regex_range(0x05c4, 0x05c5),
+\  s:regex_range(0x05c7),
+\  s:regex_range(0x05d0, 0x05ea),
+\  s:regex_range(0x05f0, 0x05f4),
+\  s:regex_range(0xfb12, 0xfb28),
+\  s:regex_range(0xfb2a, 0xfb36),
+\  s:regex_range(0xfb38, 0xfb3c),
+\  s:regex_range(0xfb3e),
+\  s:regex_range(0xfb40, 0xfb41),
+\  s:regex_range(0xfb43, 0xfb44),
+\  s:regex_range(0xfb46, 0xfb4f),
+\  s:regex_range(0x0610, 0x061a),
+\  s:regex_range(0x0620, 0x065f),
+\  s:regex_range(0x066e, 0x06d3),
+\  s:regex_range(0x06d5, 0x06dc),
+\  s:regex_range(0x06de, 0x06e8),
+\  s:regex_range(0x06ea, 0x06ef),
+\  s:regex_range(0x06fa, 0x06fc),
+\  s:regex_range(0x06ff),
+\  s:regex_range(0x0750, 0x077f),
+\  s:regex_range(0x08a0),
+\  s:regex_range(0x08a2, 0x08ac),
+\  s:regex_range(0x08e4, 0x08fe),
+\  s:regex_range(0xfb50, 0xfbb1),
+\  s:regex_range(0xfbd3, 0xfd3d),
+\  s:regex_range(0xfd50, 0xfd8f),
+\  s:regex_range(0xfd92, 0xfdc7),
+\  s:regex_range(0xfdf0, 0xfdfb),
+\  s:regex_range(0xfe70, 0xfe74),
+\  s:regex_range(0xfe76, 0xfefc),
+\  s:regex_range(0x200c, 0x200c),
+\  s:regex_range(0x0e01, 0x0e3a),
+\  s:regex_range(0x0e40, 0x0e4e),
+\  s:regex_range(0x1100, 0x11ff),
+\  s:regex_range(0x3130, 0x3185),
+\  s:regex_range(0xA960, 0xA97F),
+\  s:regex_range(0xAC00, 0xD7AF),
+\  s:regex_range(0xD7B0, 0xD7FF),
+\  s:regex_range(0xFFA1, 0xFFDC),
+\], '')
+let s:CJ_HASHTAG_CHARACTERS = join([
+\  s:regex_range(0x30A1, 0x30FA), s:regex_range(0x30FC, 0x30FE),
+\  s:regex_range(0xFF66, 0xFF9F),
+\  s:regex_range(0xFF10, 0xFF19), s:regex_range(0xFF21, 0xFF3A), s:regex_range(0xFF41, 0xFF5A),
+\  s:regex_range(0x3041, 0x3096), s:regex_range(0x3099, 0x309E),
+\  s:regex_range(0x3400, 0x4DBF),
+\  s:regex_range(0x4E00, 0x9FFF),
+\  s:regex_range(0x20000, 0x2A6DF),
+\  s:regex_range(0x2A700, 0x2B73F),
+\  s:regex_range(0x2B740, 0x2B81F),
+\  s:regex_range(0x2F800, 0x2FA1F), s:regex_range(0x3003), s:regex_range(0x3005), s:regex_range(0x303B),
+\], '')
+
 let s:PUNCTUATION_CHARS = '!"#$%&''()*+,-./:;<=>?@\[\]^_\`{|}~'
 let s:SPACE_CHARS = " \t\n\x0B\f\r"
 let s:CTRL_CHARS = "\x00-\x1F\x7F"
+
+let s:HASHTAG_ALPHA = printf(
+\   '[a-z_%s%s%s]',
+\   s:LATIN_ACCENTS,
+\   s:NON_LATIN_HASHTAG_CHARS,
+\   s:CJ_HASHTAG_CHARACTERS
+\ )
+let s:HASHTAG_ALPHANUMERIC = printf(
+\   '[a-z0-9_%s%s%s]',
+\   s:LATIN_ACCENTS,
+\   s:NON_LATIN_HASHTAG_CHARS,
+\   s:CJ_HASHTAG_CHARACTERS
+\ )
+let s:HASHTAG_BOUNDARY = printf(
+\   '^\|[^&a-z0-9_%s%s%s]',
+\   s:LATIN_ACCENTS,
+\   s:NON_LATIN_HASHTAG_CHARS,
+\   s:CJ_HASHTAG_CHARACTERS
+\ )
+
+let s:HASHTAG = printf(
+\   '\(%s\)\(#\|＃\)\(%s*%s%s*\)',
+\   s:HASHTAG_BOUNDARY,
+\   s:HASHTAG_ALPHANUMERIC,
+\   s:HASHTAG_ALPHA,
+\   s:HASHTAG_ALPHANUMERIC
+\ )
+let s:valid_hashtag = '\c' . s:HASHTAG
+let s:end_hashtag_match = '\%([#＃]\|://\)'
 
 let s:valid_url_preceding_chars = printf(
 \   '\%%([^A-Z0-9@＠$#＃%s]\|^\)',
@@ -676,6 +765,15 @@ let s:valid_url_syntax = printf(
 \   s:valid_url_query_ending_chars
 \ )
 
+let s:valid_hashtag_syntax = printf(
+\   '\c\%%(%s\)\zs\%%(#\|＃\)\%%(%s*%s%s*\)\@>%s\@!',
+\   s:HASHTAG_BOUNDARY,
+\   s:HASHTAG_ALPHANUMERIC,
+\   s:HASHTAG_ALPHA,
+\   s:HASHTAG_ALPHANUMERIC,
+\   s:end_hashtag_match
+\ )
+
 function! s:sub(conf)
   let [all, before, url, protocol, domain, port, path] = map(range(0, 6), 'submatch(v:val)')
   let after = ''
@@ -724,6 +822,10 @@ endfunction
 
 function! tweetvim#tweet#url_pattern()
   return s:valid_url_syntax
+endfunction
+
+function! tweetvim#tweet#hashtag_pattern()
+  return s:valid_hashtag_syntax
 endfunction
 
 
