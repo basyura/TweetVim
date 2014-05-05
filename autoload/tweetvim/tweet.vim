@@ -15,11 +15,23 @@ function! s:nr2char(nr)
   return iconv(nr2char(a:nr, 1), 'utf-8', &encoding)
 endfunction
 
+" Vim can not treat combining character in character class well.
+function! s:is_combining_char(ch)
+  return len(split('.' . a:ch, '.\zs')) != 2
+endfunction
+
+" XXX: Ignore the combining character
 function! s:regex_range(from, ...)
-  if a:0
-    return printf('%s-%s', s:nr2char(a:from), s:nr2char(a:1))
+  let from = s:nr2char(a:from)
+  if s:is_combining_char(from)
+    return ''
   endif
-  return s:nr2char(a:from)
+  if !a:0
+    return from
+  endif
+
+  let to = s:nr2char(a:1)
+  return s:is_combining_char(to) ? '' : printf('%s-%s', from, to)
 endfunction
 
 let s:UNICODE_SPACES =
