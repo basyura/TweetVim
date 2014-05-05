@@ -53,6 +53,10 @@ let s:LATIN_ACCENTS = join([
 \   s:regex_range(0x0300, 0x036f),
 \   s:regex_range(0x1e00, 0x1eff),
 \ ], '')
+let s:latin_accents = printf(
+\   '[%s]',
+\   s:LATIN_ACCENTS
+\ )
 
 let s:NON_LATIN_HASHTAG_CHARS = join([
 \  s:regex_range(0x0400, 0x04ff),
@@ -101,6 +105,7 @@ let s:NON_LATIN_HASHTAG_CHARS = join([
 \  s:regex_range(0xD7B0, 0xD7FF),
 \  s:regex_range(0xFFA1, 0xFFDC),
 \], '')
+
 let s:CJ_HASHTAG_CHARACTERS = join([
 \  s:regex_range(0x30A1, 0x30FA), s:regex_range(0x30FC, 0x30FE),
 \  s:regex_range(0xFF66, 0xFF9F),
@@ -146,6 +151,19 @@ let s:HASHTAG = printf(
 \ )
 let s:valid_hashtag = '\c' . s:HASHTAG
 let s:end_hashtag_match = '\%([#＃]\|://\)'
+
+let s:valid_mention_preceding_chars = '\%([^a-zA-Z0-9_!#\$%&*@＠]\|^\|[rR][tT]:?\)'
+let s:at_signs = '[@＠]'
+let s:valid_mention_or_list = printf(
+\   '\(%s\)\(%s\)\([a-zA-Z0-9_]\{1,20}\)\(\/[a-zA-Z][a-zA-Z0-9_\-]\{0,24}\)\?',
+\   s:valid_mention_preceding_chars,
+\   s:at_signs
+\ )
+let s:end_mention_match = printf(
+\   '\%(%s\|%s\|://\)',
+\   s:at_signs,
+\   s:latin_accents
+\ )
 
 let s:valid_url_preceding_chars = printf(
 \   '\%%([^A-Z0-9@＠$#＃%s]\|^\)',
@@ -774,6 +792,13 @@ let s:valid_hashtag_syntax = printf(
 \   s:end_hashtag_match
 \ )
 
+let s:valid_mention_or_list_syntax = printf(
+\   '%s\zs%s\%([a-zA-Z0-9_]\{1,20}\%(\/[a-zA-Z][a-zA-Z0-9_\-]\{0,24}\)\?\)\@>%s\@!',
+\   s:valid_mention_preceding_chars,
+\   s:at_signs,
+\   s:end_mention_match
+\ )
+
 function! s:sub(conf)
   let [all, before, url, protocol, domain, port, path] = map(range(0, 6), 'submatch(v:val)')
   let after = ''
@@ -818,6 +843,10 @@ function! tweetvim#tweet#count_chars(text)
   let conf = s:twitter_configuration
   let url_shorten_text = substitute(a:text, s:valid_url, '\=s:sub(conf)', 'g')
   return s:TWEET_LIMIT - strchars(url_shorten_text)
+endfunction
+
+function! tweetvim#tweet#mention_pattern()
+  return s:valid_mention_or_list_syntax
 endfunction
 
 function! tweetvim#tweet#url_pattern()
