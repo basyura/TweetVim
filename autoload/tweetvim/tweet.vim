@@ -688,7 +688,7 @@ function! tweetvim#tweet#count_chars(text)
   endif
   " check old regexpengine
   if &regexpengine == 1
-    return 140 - strchars(a:text)
+    return s:TWEET_LIMIT - strchars(a:text)
   end
 
   let conf = s:twitter_configuration
