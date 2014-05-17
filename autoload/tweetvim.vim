@@ -224,27 +224,36 @@ function! s:addnotif(tweet)
   let current_screen_name = tweetvim#account#current().screen_name
   if has_key(tweet, 'event') && tweet.source.screen_name != current_screen_name
     if tweet.event == 'favorite'
-      call add(s:notification_cache, ("★ " . tweet.source.screen_name . " ") . s:normalizetext(tweet.target_object.text))
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_fav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
     endif
     if tweet.event == 'unfavorite'
-      call add(s:notification_cache, ("☆ " . tweet.source.screen_name . " ") . s:normalizetext(tweet.target_object.text))
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_unfav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
     endif
   elseif has_key(tweet, 'retweeted_status')
     if tweet.retweeted_status.user.screen_name == current_screen_name
-      call add(s:notification_cache, ("RT " . tweet.user.screen_name . " ") . s:normalizetext(tweet.retweeted_status.text))
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_retweet',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet.retweeted_status,
+            \})
     endif
-  elseif has_key(tweet, 'text')
-    if tweet.text =~ '@' . current_screen_name
-      call add(s:notification_cache, ("ME " . tweet.user.screen_name . " ") . s:normalizetext(tweet.text))
+  elseif has_key(tweet, 'status')
+    if tweet.text =~ '@' . current_from
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_mention',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet,
+            \})
     endif
   endif
-endfunction
-"
-"
-"
-function! s:normalizetext(text)
-  let text=a:text
-  return substitute(text, '\v(\n|\r|)', "", "g")[0:60]
 endfunction
 "
 "
@@ -335,14 +344,7 @@ endfunction
 "
 "
 "
-function! s:feed_keys()
-  call feedkeys("g\<Esc>", "m")
-  return 1
-endfunction
-"
-"
-"
-function! tweetvim#notify()
+function! s:notify()
   if len(s:notification_cache) == 0
     return
   endif
@@ -350,20 +352,13 @@ function! tweetvim#notify()
   let notification = s:notification_cache[0]
   unlet s:notification_cache[0]
 
-  if notification =~ "^★"
-    " fav
-    echohl tweetvim_notif_fav
-  elseif notification =~ "^☆"
-    " unfav
-    echohl tweetvim_notif_unfav
-  elseif notification =~ "^RT"
-    " retweet
-    echohl tweetvim_notif_rt
-  elseif notification =~ "^ME"
-    " mention
-    echohl tweetvim_notif_mentions
-  endif
-
-  echo notification | echohl None
-
+  call tweetvim#hook#fire(notification['hook'],notification['from_user'],notification['status'])
+endfunction
+"
+"
+"
+function! s:feed_keys()
+  call feedkeys("g\<Esc>", "m")
+  call s:notify()
+  return 1
 endfunction
