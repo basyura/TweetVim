@@ -5,6 +5,8 @@ let s:version = 2.4
 let s:stream_cache = []
 
 let s:last_receive_stream_time = reltime()
+
+let s:notification_cache = []
 "
 "
 function! tweetvim#version()
@@ -171,6 +173,7 @@ function! s:receive_userstream()
   endif
 
   for tweet in tweetvim#filter#execute(s:stream_cache)
+    call s:addnotif(tweet)
     call s:flush_tweet(tweet)
     let s:last_receive_stream_time = reltime()
   endfor
@@ -213,6 +216,34 @@ function! s:flush_tweet(tweet)
     "echo "decode error"
   endtry
 endfunction
+"
+"
+"
+function! s:addnotif(tweet)
+  let tweet = a:tweet
+  let current_screen_name = tweetvim#account#current().screen_name
+  if has_key(tweet, 'event') && tweet.source.screen_name != current_screen_name
+    if tweet.event == 'favorite'
+      call add(s:notification_cache, ("★ " . tweet.source.screen_name . " ") . s:normalizetext(tweet.target_object.text))
+    endif
+    if tweet.event == 'unfavorite'
+      call add(s:notification_cache, ("☆ " . tweet.source.screen_name . " ") . s:normalizetext(tweet.target_object.text))
+    endif
+  elseif has_key(tweet, 'retweeted_status')
+    if tweet.retweeted_status.user.screen_name == current_screen_name
+      call add(s:notification_cache, ("RT " . tweet.user.screen_name . " ") . s:normalizetext(tweet.retweeted_status.text))
+    endif
+  elseif has_key(tweet, 'text')
+    if tweet.text =~ '@' . current_screen_name
+      call add(s:notification_cache, ("ME " . tweet.user.screen_name . " ") . s:normalizetext(tweet.text))
+  endif
+endfunction
+"
+"
+"
+function! s:normalizetext(text)
+  let text=a:text
+  return substitute(text, '\v(\n|\r|)', "", "g")[0:60]
 "
 "
 "
