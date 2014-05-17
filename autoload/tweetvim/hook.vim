@@ -25,6 +25,21 @@ endfunction
 "
 "
 "
+function! tweetvim#hook#remove(name, func_name)
+  if !has_key(s:hooks, a:name)
+    echoerr 'tweetvim error no hook : ' . a:name
+    return
+  endif
+  let idx = index(s:hooks[a:name], a:func_name)
+  if idx >= 0
+    call remove(s:hooks[a:name], idx)
+  else
+    echomsg 'tweetvim message no function : ' . a:func_name . ' in hook' . a:name
+  endif
+endfunction
+"
+"
+"
 function! tweetvim#hook#fire(name, ...)
   if !has_key(s:hooks, a:name)
     echoerr 'tweetvim error no hook : ' . a:name
