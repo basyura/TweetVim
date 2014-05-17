@@ -334,7 +334,7 @@ endfunction
 "
 "
 function! s:feed_keys()
-  call feedkeys("g\<Esc>", "n")
+  call feedkeys("g\<Esc>", "m")
   return 1
 endfunction
 "
