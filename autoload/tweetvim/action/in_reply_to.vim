@@ -15,7 +15,11 @@ function! tweetvim#action#in_reply_to#execute(tweet)
   let guard = 0
   while 1
     call add(list, tweet)
-    let id = get(tweet, 'in_reply_to_status_id_str', '')
+    if has_key(tweet, 'retweeted_status')
+      let id = get(tweet.retweeted_status, 'id_str', '')
+    else
+      let id = get(tweet, 'in_reply_to_status_id_str', '')
+    endif
     if id == ''
       break
     endif
