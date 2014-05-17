@@ -337,3 +337,31 @@ function! s:feed_keys()
   call feedkeys("g\<Esc>", "n")
   return 1
 endfunction
+"
+"
+"
+function! tweetvim#notify()
+  if len(s:notification_cache) == 0
+    return
+  endif
+
+  let notification = s:notification_cache[0]
+  unlet s:notification_cache[0]
+
+  if notification =~ "^★"
+    " fav
+    echohl tweetvim_notif_fav
+  elseif notification =~ "^☆"
+    " unfav
+    echohl tweetvim_notif_unfav
+  elseif notification =~ "^RT"
+    " retweet
+    echohl tweetvim_notif_rt
+  elseif notification =~ "^ME"
+    " mention
+    echohl tweetvim_notif_mentions
+  endif
+
+  echo notification | echohl None
+
+endfunction
