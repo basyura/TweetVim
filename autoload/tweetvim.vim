@@ -353,15 +353,19 @@ function! tweetvim#notify()
   if notification =~ "^★"
     " fav
     echohl tweetvim_notif_fav
+    silent doautocmd User TweetVimNotifFav
   elseif notification =~ "^☆"
     " unfav
     echohl tweetvim_notif_unfav
+    silent doautocmd User TweetVimNotifUnfav
   elseif notification =~ "^RT"
     " retweet
     echohl tweetvim_notif_rt
+    silent doautocmd User TweetVimNotifRT
   elseif notification =~ "^ME"
     " mention
     echohl tweetvim_notif_mentions
+    silent doautocmd User TweetVimNotifMention
   endif
 
   echo notification | echohl None
