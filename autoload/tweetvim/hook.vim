@@ -16,7 +16,11 @@ function! tweetvim#hook#add(name, func_name)
     echoerr 'tweetvim error no hook : ' . a:name
     return
   endif
-  call add(s:hooks[a:name], a:func_name)
+  if index(s:hooks[a:name], a:func_name) < 0
+    call add(s:hooks[a:name], a:func_name)
+  else
+    echoerr 'tweetvim error duplicated function : ' . a:func_name . ' in hook ' . a:name
+  endif
 endfunction
 "
 "
