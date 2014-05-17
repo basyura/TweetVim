@@ -3,6 +3,10 @@
 let s:hooks = {
       \ 'write_screen_name' : [],
       \ 'write_hash_tag'    : [],
+      \ 'notify_fav'        : [],
+      \ 'notify_unfav'      : [],
+      \ 'notify_retweet'    : [],
+      \ 'notify_mention'    : [],
       \ }
 "
 "
