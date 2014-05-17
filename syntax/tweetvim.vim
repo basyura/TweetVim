@@ -57,6 +57,10 @@ if get(g:, 'tweetvim_original_hi', 0)
   highlight default tweetvim_rt_over          guifg=orange
   highlight default tweetvim_reply            guifg=orange
   highlight default tweetvim_appendix         guifg=#616161
+  highlight default tweetvim_notif_rt         guifg=#88ef32
+  highlight default tweetvim_notif_fav        guifg=#e3e332
+  highlight default tweetvim_notif_unfav      guifg=#999999
+  highlight default tweetvim_notif_mentions   guifg=#e86840
   highlight def link tweetvim_around_search   Search
 
 else
@@ -78,6 +82,10 @@ else
   hi def link tweetvim_reply           PmenuSel
   hi def link tweetvim_appendix        Comment
   hi def link tweetvim_around_search   Search
+  hi def link tweetvim_notif_rt        Search
+  hi def link tweetvim_notif_fav       Constant
+  hi def link tweetvim_notif_unfav     Ignore
+  hi def link tweetvim_notif_mentions  Special
 
 endif
 
