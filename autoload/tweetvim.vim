@@ -236,6 +236,7 @@ function! s:addnotif(tweet)
   elseif has_key(tweet, 'text')
     if tweet.text =~ '@' . current_screen_name
       call add(s:notification_cache, ("ME " . tweet.user.screen_name . " ") . s:normalizetext(tweet.text))
+    endif
   endif
 endfunction
 "
@@ -244,6 +245,7 @@ endfunction
 function! s:normalizetext(text)
   let text=a:text
   return substitute(text, '\v(\n|\r|)', "", "g")[0:60]
+endfunction
 "
 "
 "
