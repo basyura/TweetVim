@@ -151,6 +151,7 @@ nnoremap <silent> <Plug>(tweetvim_action_buffer_previous_stream) :<C-u>call twee
 
 nnoremap <silent> <Plug>(tweetvim_say_post_buffer)        :<C-u>call tweetvim#say#post_buffer_tweet()<CR>
 nnoremap <silent> <Plug>(tweetvim_say_show_history)       :<C-u>call tweetvim#say#show_history()<CR>
+nnoremap <silent> <Plug>(tweetvim_notify)                 :<C-u>call tweetvim#notify()<CR>
 
 " for multi account
 
