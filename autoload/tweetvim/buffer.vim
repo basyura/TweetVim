@@ -410,10 +410,10 @@ function! s:sign(tweet, lineno)
   let file_name = fnamemodify(img_url, ":t")
 
   if !filereadable(ico_path)
-    "echo "downloading ... " . img_url
-    call system("curl -L -O " . img_url)
-    call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
-    call delete(file_name)
+    let fname = "tweetvim." + fnamemodify(img_url, ':e')
+    call system("curl -L " . img_url . " -o " . fname)
+    call system("convert " . fname . " " . ico_path)
+    call delete(fname)
     redraw
   end
 
