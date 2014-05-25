@@ -407,13 +407,12 @@ function! s:sign(tweet, lineno)
     let img_url = tweet.profile_image_url
   endif
   let ico_path = g:tweetvim_config_dir . '/ico/' . screen_name . ".ico"
-  let file_name = fnamemodify(img_url, ":t")
 
   if !filereadable(ico_path)
-    let fname = "tweetvim." + fnamemodify(img_url, ':e')
-    call system("curl -L " . img_url . " -o " . fname)
-    call system("convert " . fname . " " . ico_path)
-    call delete(fname)
+    let file_name = fnamemodify(img_url, ":t")
+    call system("curl -L -O " . img_url)
+    call system("convert " . file_name . " " . ico_path)
+    call delete(file_name)
     redraw
   end
 
@@ -465,7 +464,7 @@ function! s:expand_t_co(text, status)
   let text = a:text
   if has_key(a:status, 'entities') && !empty(a:status.entities.urls)
     for u in a:status.entities.urls
-      let text = substitute(text, '\M' . u.url, u.expanded_url, 'g')
+      let text = substitute(text, '\M' . u.url, tweetvim#util#decodeURI(u.expanded_url), 'g')
     endfor
   endif
   return text
