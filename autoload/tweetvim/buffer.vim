@@ -410,10 +410,10 @@ function! s:sign(tweet, lineno)
   let file_name = fnamemodify(img_url, ":t")
 
   if !filereadable(ico_path)
-    let fname = "tweetvim." + fnamemodify(img_url, ':e')
-    call system("curl -L " . img_url . " -o " . fname)
-    call system("convert " . fname . " " . ico_path)
-    call delete(fname)
+    "echo "downloading ... " . img_url
+    call system("curl -L -O " . img_url)
+    call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
+    call delete(file_name)
     redraw
   end
 
@@ -465,7 +465,7 @@ function! s:expand_t_co(text, status)
   let text = a:text
   if has_key(a:status, 'entities') && !empty(a:status.entities.urls)
     for u in a:status.entities.urls
-      let text = substitute(text, '\M' . u.url, u.expanded_url, 'g')
+      let text = substitute(text, '\M' . u.url, tweetvim#util#decodeURI(u.expanded_url), 'g')
     endfor
   endif
   return text
