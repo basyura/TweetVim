@@ -4,7 +4,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:is_unix = has('unix')
-let s:is_windows = has("win16") || has("win95") || has("win32") || has("win64")
+let s:is_windows = has('win16') || has('win32') || has('win64') || has('win95')
 let s:is_cygwin = has('win32unix')
 let s:is_mac = !s:is_windows && !s:is_cygwin
       \ && (has('mac') || has('macunix') || has('gui_macvim') ||
@@ -17,7 +17,9 @@ function! s:open(filename) "{{{
   " Detect desktop environment.
   if s:is_windows
     " For URI only.
-    let filename = iconv(filename, &encoding, 'char')
+    if v:version < 704 || (v:version == 704 && !has('patch122'))
+      let filename = iconv(filename, &encoding, 'char')
+    endif
     silent execute '!start rundll32 url.dll,FileProtocolHandler' filename
   elseif s:is_cygwin
     " Cygwin.
@@ -52,28 +54,62 @@ endfunction "}}}
 
 " Move a file.
 " Dispatch s:move_exe() or s:move_vim().
+" FIXME: Currently s:move_vim() does not support
+" moving a directory.
 function! s:move(src, dest) "{{{
-  if executable('mv')
+  if s:_has_move_exe() || isdirectory(a:src)
     return s:move_exe(a:src, a:dest)
   else
     return s:move_vim(a:src, a:dest)
   endif
 endfunction "}}}
 
-" Move a file.
-" Implemented by external program.
-" TODO: Support non-*nix like system.
-function! s:move_exe(src, dest)
-  if !executable('mv') | return 0 | endif
-  silent execute '!mv' shellescape(a:src) shellescape(a:dest)
-  if v:shell_error
-    return 0
-  endif
-  return 1
-endfunction
+if s:is_unix
+  function! s:_has_move_exe()
+    return executable('mv')
+  endfunction
+elseif s:is_windows
+  function! s:_has_move_exe()
+    return 1
+  endfunction
+else
+  function! s:_has_move_exe()
+    throw 'vital: System.File._has_move_exe(): your platform is not supported'
+  endfunction
+endif
 
 " Move a file.
-" Implemented by pure vimscript.
+" Implemented by external program.
+if s:is_unix
+  function! s:move_exe(src, dest)
+    if !s:_has_move_exe() | return 0 | endif
+    let [src, dest] = [a:src, a:dest]
+    call system('mv ' . shellescape(src) . ' ' . shellescape(dest))
+    return !v:shell_error
+  endfunction
+elseif s:is_windows
+  function! s:move_exe(src, dest)
+    if !s:_has_move_exe() | return 0 | endif
+    let [src, dest] = [a:src, a:dest]
+    " Normalize successive slashes to one slash.
+    let src  = substitute(src, '[/\\]\+', '\', 'g')
+    let dest = substitute(dest, '[/\\]\+', '\', 'g')
+    " src must not have trailing '\'.
+    let src  = substitute(src, '\\$', '', 'g')
+    " All characters must be encoded to system encoding.
+    let src  = iconv(src, &encoding, 'char')
+    let dest = iconv(dest, &encoding, 'char')
+    call system('move /y ' . src  . ' ' . dest)
+    return !v:shell_error
+  endfunction
+else
+  function! s:move_exe()
+    throw 'vital: System.File.move_exe(): your platform is not supported'
+  endfunction
+endif
+
+" Move a file.
+" Implemented by pure Vim script.
 function! s:move_vim(src, dest) "{{{
   return !rename(a:src, a:dest)
 endfunction "}}}
@@ -81,27 +117,53 @@ endfunction "}}}
 " Copy a file.
 " Dispatch s:copy_exe() or s:copy_vim().
 function! s:copy(src, dest) "{{{
-  if executable('cp')
+  if s:_has_copy_exe()
     return s:copy_exe(a:src, a:dest)
   else
     return s:copy_vim(a:src, a:dest)
   endif
 endfunction "}}}
 
-" Copy a file.
-" Implemented by external program.
-" TODO: Support non-*nix like system.
-function! s:copy_exe(src, dest)
-  if !executable('cp') | return 0 | endif
-  silent execute '!cp' shellescape(a:src) shellescape(a:dest)
-  if v:shell_error
-    return 0
-  endif
-  return 1
-endfunction
+if s:is_unix
+  function! s:_has_copy_exe()
+    return executable('cp')
+  endfunction
+elseif s:is_windows
+  function! s:_has_copy_exe()
+    return 1
+  endfunction
+else
+  function! s:_has_copy_exe()
+    throw 'vital: System.File._has_copy_exe(): your platform is not supported'
+  endfunction
+endif
 
 " Copy a file.
-" Implemented by pure vimscript.
+" Implemented by external program.
+if s:is_unix
+  function! s:copy_exe(src, dest)
+    if !s:_has_copy_exe() | return 0 | endif
+    let [src, dest] = [a:src, a:dest]
+    call system('cp ' . shellescape(src) . ' ' . shellescape(dest))
+    return !v:shell_error
+  endfunction
+elseif s:is_windows
+  function! s:copy_exe(src, dest)
+    if !s:_has_copy_exe() | return 0 | endif
+    let [src, dest] = [a:src, a:dest]
+    let src  = substitute(src, '/', '\', 'g')
+    let dest = substitute(dest, '/', '\', 'g')
+    call system('copy ' . src . ' ' . dest)
+    return !v:shell_error
+  endfunction
+else
+  function! s:copy_exe()
+    throw 'vital: System.File.copy_exe(): your platform is not supported'
+  endfunction
+endif
+
+" Copy a file.
+" Implemented by pure Vim script.
 function! s:copy_vim(src, dest) "{{{
   let ret = writefile(readfile(a:src, "b"), a:dest, "b")
   if ret == -1
@@ -114,7 +176,11 @@ endfunction "}}}
 " Returns true if success.
 " Returns false if failure.
 function! s:mkdir_nothrow(...) "{{{
-  silent! return call('mkdir', a:000)
+  try
+    return call('mkdir', a:000)
+  catch
+    return 0
+  endtry
 endfunction "}}}
 
 
@@ -149,7 +215,7 @@ elseif s:is_windows
   endfunction
 
 else
-  function! s:rmdir(path, ...)
+  function! s:rmdir(...)
     throw 'vital: System.File.rmdir(): your platform is not supported'
   endfunction
 endif
