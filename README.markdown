@@ -525,3 +525,8 @@ TODO
 - 次ページ、前ページ
 - fav したときに ★ を付ける
 - user 情報の表示
+
+Vitalize
+--------
+
+Vitalize --name=tweetvim DateTime Web.HTML System.Filepath System.File
