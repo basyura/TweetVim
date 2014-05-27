@@ -848,7 +848,8 @@ function! tweetvim#tweet#count_chars(text)
     let s:twitter_configuration = tweetvim#request('configuration', [])
   endif
   " check old regexpengine
-  if &regexpengine == 1
+  " check patch for iconv arguments
+  if &regexpengine == 1 || (v:version == 703 && !has('780'))
     return s:TWEET_LIMIT - strchars(a:text)
   end
 
