@@ -1,6 +1,6 @@
 " syntax for tweetvim_say
 "
-if exists('b:current_syntax') || &regexpengine == 1
+if exists('b:current_syntax') || !has('&regexpengine') || &regexpengine == 1
   finish
 endif
 

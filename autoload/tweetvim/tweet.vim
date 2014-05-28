@@ -12,7 +12,11 @@ let s:TWEET_LIMIT = 140
 " https://github.com/twitter/twitter-text-rb
 
 function! s:nr2char(nr)
-  return iconv(nr2char(a:nr, 1), 'utf-8', &encoding)
+  if !has('&regexpengine')
+    return a:nr
+  else
+    return iconv(nr2char(a:nr, 1), 'utf-8', &encoding)
+  end
 endfunction
 
 " Vim can not treat combining character in character class well.
@@ -849,7 +853,7 @@ function! tweetvim#tweet#count_chars(text)
   endif
   " check old regexpengine
   " check patch for iconv arguments
-  if &regexpengine == 1 || (v:version == 703 && !has('780'))
+  if !has('&regexpengine') || &regexpengine == 1
     return s:TWEET_LIMIT - strchars(a:text)
   end
 
