@@ -12,7 +12,7 @@ let s:TWEET_LIMIT = 140
 " https://github.com/twitter/twitter-text-rb
 
 function! s:nr2char(nr)
-  if !has('&regexpengine')
+  if !exists('&regexpengine')
     return a:nr
   else
     return iconv(nr2char(a:nr, 1), 'utf-8', &encoding)
@@ -853,7 +853,7 @@ function! tweetvim#tweet#count_chars(text)
   endif
   " check old regexpengine
   " check patch for iconv arguments
-  if !has('&regexpengine') || &regexpengine == 1
+  if !exists('&regexpengine') || &regexpengine == 1
     return s:TWEET_LIMIT - strchars(a:text)
   end
 
