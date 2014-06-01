@@ -5,6 +5,8 @@ let s:version = 2.4
 let s:stream_cache = []
 
 let s:last_receive_stream_time = reltime()
+
+let s:notification_cache = []
 "
 "
 function! tweetvim#version()
@@ -171,6 +173,7 @@ function! s:receive_userstream()
   endif
 
   for tweet in tweetvim#filter#execute(s:stream_cache)
+    call s:addnotif(tweet)
     call s:flush_tweet(tweet)
     let s:last_receive_stream_time = reltime()
   endfor
@@ -212,6 +215,45 @@ function! s:flush_tweet(tweet)
     normal! G
     "echo "decode error"
   endtry
+endfunction
+"
+"
+"
+function! s:addnotif(tweet)
+  let tweet = a:tweet
+  let current_screen_name = tweetvim#account#current().screen_name
+  if has_key(tweet, 'event') && tweet.source.screen_name != current_screen_name
+    if tweet.event == 'favorite'
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_fav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
+    endif
+    if tweet.event == 'unfavorite'
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_unfav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
+    endif
+  elseif has_key(tweet, 'retweeted_status')
+    if tweet.retweeted_status.user.screen_name == current_screen_name
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_retweet',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet.retweeted_status,
+            \})
+    endif
+  elseif has_key(tweet, 'status')
+    if tweet.text =~ '@' . current_from
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_mention',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet,
+            \})
+    endif
+  endif
 endfunction
 "
 "
@@ -302,7 +344,21 @@ endfunction
 "
 "
 "
+function! s:notify()
+  if len(s:notification_cache) == 0
+    return
+  endif
+
+  let notification = s:notification_cache[0]
+  unlet s:notification_cache[0]
+
+  call tweetvim#hook#fire(notification['hook'],notification['from_user'],notification['status'])
+endfunction
+"
+"
+"
 function! s:feed_keys()
   call feedkeys("g\<Esc>", "n")
+  call s:notify()
   return 1
 endfunction
