@@ -361,7 +361,7 @@ function! s:flush_notify()
   for notification in s:notification_cache
     if notification.hook == 'notify_fav'
       let status = deepcopy(notification.status)
-      let status.text = ('fav by ' . notification.from_user.screen_name . "\n" . status.text)
+      let status.text = ('by ' . notification.from_user.screen_name . "\n" . status.text)
       let status.favorited = 1
       call s:flush_tweet(status)
     endif
