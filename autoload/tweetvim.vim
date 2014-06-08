@@ -165,7 +165,6 @@ function! s:receive_userstream()
   let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
 
   if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
-    let t = s:to_tweets(res)
     call extend(s:stream_cache, s:to_tweets(res))
   endif
 
