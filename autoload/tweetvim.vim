@@ -165,18 +165,22 @@ function! s:receive_userstream()
   let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
 
   if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
+    let t = s:to_tweets(res)
     call extend(s:stream_cache, s:to_tweets(res))
   endif
+
 
   if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
     return
   endif
 
   for tweet in tweetvim#filter#execute(s:stream_cache)
-    call s:addnotif(tweet)
+    call s:cache_notify(tweet)
     call s:flush_tweet(tweet)
     let s:last_receive_stream_time = reltime()
   endfor
+  call s:flush_notify()
+
   let s:stream_cache = []
   " auto reconnect
   if reltime(s:last_receive_stream_time)[0] >= g:tweetvim_reconnect_seconds
@@ -188,6 +192,12 @@ function! s:receive_userstream()
 
   let &updatetime = g:tweetvim_updatetime
   return s:feed_keys()
+endfunction
+
+function! s:log(tweet)
+  :execute ":redir! >> /tmp/tweetvim.log"
+      :execute ":silent! echon " . twibill#json#encode(a:tweet)
+  :redir END
 endfunction
 
 function! s:flush_tweet(tweet)
@@ -219,7 +229,7 @@ endfunction
 "
 "
 "
-function! s:addnotif(tweet)
+function! s:cache_notify(tweet)
   let tweet = a:tweet
   let current_screen_name = tweetvim#account#current().screen_name
   if has_key(tweet, 'event') && tweet.source.screen_name != current_screen_name
@@ -344,21 +354,28 @@ endfunction
 "
 "
 "
-function! s:notify()
+function! s:flush_notify()
   if len(s:notification_cache) == 0
     return
   endif
 
-  let notification = s:notification_cache[0]
-  unlet s:notification_cache[0]
+  for notification in s:notification_cache
+    if notification.hook == 'notify_fav'
+      let status = deepcopy(notification.status)
+      let status.text = ('fav by ' . notification.from_user.screen_name . "\n" . status.text)
+      let status.favorited = 1
+      call s:flush_tweet(status)
+    endif
+    call tweetvim#hook#fire(notification.hook, notification.from_user, notification.status)
+  endfor
 
-  call tweetvim#hook#fire(notification['hook'],notification['from_user'],notification['status'])
+  let s:notification_cache = []
+
 endfunction
 "
 "
 "
 function! s:feed_keys()
   call feedkeys("g\<Esc>", "n")
-  call s:notify()
   return 1
 endfunction
