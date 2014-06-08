@@ -22,8 +22,4 @@ function! tweetvim#action#open_links#execute(tweet)
     let text = substitute(text , matched[0] , "" , "g")
     let opened = 1
   endwhile
-
-  if opened
-    call tweetvim#action#cursor_down#execute(a:tweet)
-  endif
 endfunction
