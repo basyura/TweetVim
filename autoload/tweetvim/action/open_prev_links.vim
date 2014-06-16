@@ -12,12 +12,7 @@ endfunction
 "
 "
 function! tweetvim#action#open_prev_links#execute(tweet)
-  " is bottom?
-  if line(".") == line("$")
-    :normal! k
-  else
-    call tweetvim#action#cursor_up#execute({})
-  endif
+  call tweetvim#action#cursor_up#execute({})
   let tweet = b:tweetvim_status_cache[line(".")]
   call tweetvim#action#open_links#execute(tweet)
   call tweetvim#action#cursor_down#execute({})
