@@ -19,7 +19,7 @@ FILES				|tweetvim-files|
 ==============================================================================
 NOTICE                                          *tweetvim-notice*
 
-directories under g:tweetvim_config_dir were changed.
+directories under |g:tweetvim_config_dir| were changed.
 
 before
 >
@@ -39,7 +39,7 @@ if an error occurs, try :TweetVimMigration or relocate directories manually.
 ==============================================================================
 INTRODUCTION					*tweetvim-introduction*
 
-*tweetvim* is twitter client.
+*tweetvim* is a twitter client.
 
 Latest Version:
 https://github.com/basyura/TweetVim
@@ -57,7 +57,7 @@ Requirement:
 	https://github.com/basyura/twibill.vim
 
 	open-browser.vim
-	https://github.com/tyru/open-browser.vim)
+	https://github.com/tyru/open-browser.vim
 
 	unite-outline (*)
 	https://github.com/h1mesuke/unite-outline
@@ -78,8 +78,8 @@ Related plugin:
 
 	neco-tweetvim
 	https://github.com/yomi322/neco-tweetvim
-	plugin for neocomplcache.
-	you can complete screen name and hash tag in tweetvim_say buffer.
+	a plugin for neocomplcache.
+	you can complete screen names and hash tags in tweetvim_say buffer.
 
 	unite-tweetvim
 	https://github.com/yomi322/unite-tweetvim
@@ -91,18 +91,18 @@ Related plugin:
 STARTUP						*tweetvim-startup*
 
 Thank you for using tweetvim.
-First, you must verify account.
+First, you must verify your account.
 >
 	:TweetVimHomeTimeline<CR>
 <
-If you are not verified, browser is launched by openbrowser.vim and display the number (pin).
-Then, input the number (pin) to the vim's command line.
+If you are not verified, a browser is launched by openbrowser.vim and display
+a number (pin).  Then, input the number (pin) to the vim's command line.
 >
 	Enter Twitter OAuth PIN: your number (pin)
 <
-tweetvim save token to g:tweetvim_config_dir (default : ~/.tweetvim).
+tweetvim saves a token to |g:tweetvim_config_dir| (default : ~/.tweetvim).
 
-If you want to use tweetvim conviniently, writes some key mappings in .vimrc
+If you want to use tweetvim conveniently, write some key mappings in .vimrc
 like this.
 >
 	nnoremap <silent> s  :<C-u>TweetVimSay<CR>
@@ -115,14 +115,14 @@ INTERFACE					*tweetvim-interface*
 ------------------------------------------------------------------------------
 COMMANDS					*tweetvim-commands*
 
-:TweetVimVersion                                *:TweetVimVersion*
-                display version.
+:TweetVimVersioni				*:TweetVimVersion*
+		display version.
 
-:TweetVimAddAccount                             *:TweetVimAddAccount*
-                add account.
+:TweetVimAddAccount				*:TweetVimAddAccount*
+		add an account.
 
-:TweetVimSwitchAccount [screen_name]            *:TweetVimSwitchAccount*
-                switch account to screen_name
+:TweetVimSwitchAccount [{screen_name}]		*:TweetVimSwitchAccount*
+		switch the account to {screen_name}.
 
 :TweetVimHomeTimeline				*:TweetVimHomeTimeline*
 		view home timeline.
@@ -146,17 +146,17 @@ COMMANDS					*tweetvim-commands*
 		:TweetVimSearch tweetvim
 <
 :TweetVimSay [{screen_name}]			*:TweetVimSay*
-		open buffer.
-		write message, then press enter key at normal mode to tweet.
+		open a buffer.
+		write a message, then press enter key at normal mode to tweet.
 
-		If {screen_name} is given, switch account to screen_name and
+		If {screen_name} is given, switch account to {screen_name} and
                 open buffer
 >
                 :TweetVimSay
                 :TweetVimSay basyura
 <
 :TweetVimUserStream [{track words}]		*:TweetVimUserStream*
-		user stream.
+		use user stream.
 		if you want to track words, use arguments.
 		this is trial command.
 >
@@ -164,23 +164,23 @@ COMMANDS					*tweetvim-commands*
 		:TweetVimUserStream vim emacs lang:ja
 <
 :TweetVimCommandSay				*:TweetVimCommandSay*
-		tweet message at command line.
+		tweet a message from command line.
 >
 		:TweetVimCommandSay hogehoge
 >
 
 :TweetVimCurrentLineSay				*:TweetVimCurrentLineSay*
-		tweet current line in buffer.
+		tweet the current line in buffer.
 
 :TweetVimClearIcon [{screen_name}]		*:TweetVimClearIcon*
-		delete icon under g:tweetvim_config_dir . '/ico'
-		if screen name is not required, delete all icon.
+		delete icons under |g:tweetvim_config_dir| . '/ico'
+		if {screen name} is not given, delete all icons.
 
 :Unite tweetvim					*:Unite-tweetvim*
-		show timeline list with unite.vim
+		show a timeline list with |unite.vim|.
 
 :Unite tweetvim/account                         *:Unite-tweetvim/account*
-                show account list and switch to selected.
+                show a account list and switch to selected account.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS					*tweetvim-key-mappings*
@@ -188,12 +188,12 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 
 <Plug>(tweetvim_action_enter)                   *<Plug>(tweetvim_action_enter)*
 		enter action.
-		open url under the cursor with OpenBrowser.
-		search hash tag under the cursor.
+		open a url under the cursor with |:OpenBrowser|.
+		search a hash tag under the cursor.
 		default : <CR>
 
 <Plug>(tweetvim_action_reply)                   *<Plug>(tweetvim_action_reply)*
-		open buffer to reply.
+		open a buffer to reply.
 		default : r
 
 <Plug>(tweetvim_action_in_reply_to)             *<Plug>(tweetvim_action_in_reply_to)*
@@ -205,11 +205,11 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 		default : u
 
 <Plug>(tweetvim_action_favorite)                *<Plug>(tweetvim_action_favorite)*
-		regsit favorite.
+		add a tweet under the cursor to your favorites.
 		default : <leader>f
 
 <Plug>(tweetvim_action_remove_favorite)         *<Plug>(tweetvim_action_remove_favorite)*
-		unregist favorite.
+		remove a tweet under the cursor from your favorites.
 		default : <leader>uf
 
 <Plug>(tweetvim_action_retweet)                 *<Plug>(tweetvim_action_retweet)*
@@ -217,7 +217,7 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 		default : <leader>r
 
 <Plug>(tweetvim_action_qt)                      *<Plug>(tweetvim_action_qt)*
-		qt action.
+		quoted tweet action.
 		default : <leader>q
 
 <Plug>(tweetvim_action_reload)                  *<Plug>(tweetvim_action_reload)*
@@ -241,129 +241,131 @@ KEY MAPPINGS					*tweetvim-key-mappings*
 		default : L
 
 <Plug>(tweetvim_action_open_links)              *<Plug>(tweetvim_action_open_links)*
-		open links in current line with OpenBrowser.
+		open links in current line with |:OpenBrowser|.
 		default : o
 
 <Plug>(tweetvim_action_search)                  *<Plug>(tweetvim_action_search)*
-		show search prompt.
+		show a search prompt.
 		default : q
 
 <Plug>(tweetvim_action_remove_status)           *<Plug>(tweetvim_action_remove_status)*
-		remove status.
+		remove the status.
 
 <Plug>(tweetvim_action_expand_url)		*<Plug>(tweetvim_action_expand_url)*
 		expand url by untiny (http://untiny.com/api/).
 		default : <leader>e
 
 <Plug>(tweetvim_action_cursor_up)               *<Plug>(tweetvim_action_cursor_up)*
-		cursor up. skip separator.
+		move cursor up skipping separator.
 
 <Plug>(tweetvim_action_cursor_down)             *<Plug>(tweetvim_action_cursor_down)*
-		cursor down. skip separator.
+		move cursor down skipping separator.
 
 <Plug>(tweetvim_action_favstar)                 *<Plug>(tweetvim_action_favstar)*
 		show favstar's status.
                 default : <leader>F
 
 <Plug>(tweetvim_action_favstar_browser)         *<Plug>(tweetvim_action_favstar_browser)*
-		open favstar's site by browser.
+		open favstar web site by browser.
 
 ==============================================================================
 VARIABLES 					*tweetvim-variables*
 
 g:tweetvim_tweet_per_page			*g:tweetvim_tweet_per_page*
-		tweets count of view
+		the number of tweets in a view
 		default : 20
 
-g:tweetvim_cache_size                           *g:tweetvim_cache_size*
-		buffer counts of cache.
-		you can move next, or previous cached buffer by
+g:tweetvim_cache_size				*g:tweetvim_cache_size*
+		the number of buffers in a cache.
+		you can move next or previous cached buffer by
 		<Plug>(tweetvim_action_page_next) and
 		<Plug>(tweetvim_action_buffer_previous).
 		default : 10
 
-g:tweetvim_config_dir                           *g:tweetvim_config_dir*
+g:tweetvim_config_dir				*g:tweetvim_config_dir*
 		config file's directory.
 		default : ~/.tweetvim
 
-g:tweetvim_display_source                       *g:tweetvim_display_source*
+g:tweetvim_display_source			*g:tweetvim_display_source*
 		you can display tweet's source.
 		default : 0
 
-g:tweetvim_display_time                         *g:tweetvim_display_time*
+g:tweetvim_display_time				*g:tweetvim_display_time*
 		you can display tweet's time.
 		default : 0
 
-g:tweetvim_open_buffer_cmd                      *g:tweetvim_open_buffer_cmd*
-		buffer open command.
+g:tweetvim_open_buffer_cmd			*g:tweetvim_open_buffer_cmd*
+		a command to open a buffer.
 		default : edit!
 
-g:tweetvim_open_say_cmd                         *g:tweetvim_open_say_cmd*
-		say buffer open command.
+g:tweetvim_open_say_cmd				*g:tweetvim_open_say_cmd*
+		a command to open a tweetvim_say buffer.
 		default : botright split
 
-g:tweetvim_display_separator                    *g:tweetvim_display_separator*
-                you can display separator of tweets.
+g:tweetvim_display_separator			*g:tweetvim_display_separator*
+		display separator of tweets.
 		default : 1
 
 g:tweetvim_empty_separator			*g:tweetvim_empty_separator*
 		separate tweets by blank line.
 		default : 0
-		
-g:tweetvim_footer                               *g:tweetvim_footer*
-                add message when you open tweetvim_say buffer.
-                default : ''
 
-g:tweetvim_display_icon                         *g:tweetvim_display_icon*
-                display icon by :sign.
-                ImageMagick is required.
-                default : 0
+g:tweetvim_footer				*g:tweetvim_footer*
+		add a footer message when you open tweetvim_say buffer.
+		default : ''
 
-g:tweetvim_say_insert_account                   *g:tweetvim_say_insert_account*
-                insert screen_name to say buffer.
-                if you want to know account which you say, use this option.
-                default : 0
+g:tweetvim_display_icon				*g:tweetvim_display_icon*
+		display icons by :sign.
+		ImageMagick is required.
+		default : 0
 
-g:tweetvim_async_post                           *g:tweetvim_async_post*
-                post tweet asynchronously.
-                vimproc is required.
-                default : 0
+g:tweetvim_say_insert_account			*g:tweetvim_say_insert_account*
+		insert a screen name to say buffer.
+		if you want to know which account you use, use this option.
+		default : 0
 
-g:tweetvim_expand_t_co                          *g:tweetvim_expand_t_co*
-                expand t.co.
-                default : 0
+g:tweetvim_async_post				*g:tweetvim_async_post*
+		post a tweet asynchronously.
+		|vimproc| is required.
+		default : 0
+
+g:tweetvim_expand_t_co				*g:tweetvim_expand_t_co*
+		expand t.co url.
+		default : 0
 
 g:tweetvim_display_username			*g:tweetvim_display_username*
-		display username and screen name.
+		display user name and screen name.
 		default : 0
 
 g:tweetvim_align_right				*g:tweetvim_align_right*
-		align the source and tweet on the right
+		align a tweet and its source on the right.
 		default : 0
 
 g:tweetvim_consumer_key				*g:tweetvim_consumer_key*
-		you can set your consumer key.
+		set your consumer key.
 
 g:tweetvim_consumer_secret			*g:tweetvim_consumer_secret*
-		you can set your consumer secret.
+		set your consumer secret.
 
 g:tweetvim_no_default_key_mappings		*g:tweetvim_no_default_key_mappings*
-		no default mappings in tweetvim, tweetvim_say buffer.
-		this is trial option. not fixed.
+		don't provide default mappings in tweetvim and tweetvim_say buffer.
+		this is a trial option, not fixed.
 		default : 0
 
 ==============================================================================
 FILES						*tweetvim-files*
 
-tweetvim writes files under g:tweetvim_config_dir (default : ~/.tweetvim).
+tweetvim writes below files under |g:tweetvim_config_dir|, which is defauled
+to "~/.tweetvim".
 
 token						*tweetvim-file-token*
-		certified access key and token.
+		a certified access key and token.
 
 screen_name					*tweetvim-file-screen_name*
-		screen names which displyed in timeline.
+		screen names displayed in timelines.
 
 hash_tag					*tweetvim-file-hash_tag*
-		hash tags which you input in tweetvim_say buffer.
+		hash tags which you have input in tweetvim_say buffer.
+
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
