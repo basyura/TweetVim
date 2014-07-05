@@ -139,6 +139,7 @@ nnoremap <silent> <Plug>(tweetvim_action_page_previous)   :<C-u>call tweetvim#ac
 nnoremap <silent> <Plug>(tweetvim_action_buffer_previous) :<C-u>call tweetvim#action('buffer_previous')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_buffer_next)     :<C-u>call tweetvim#action('buffer_next')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_open_links)      :<C-u>call tweetvim#action('open_links')<CR>
+nnoremap <silent> <Plug>(tweetvim_action_open_prev_links) :<C-u>call tweetvim#action('open_prev_links')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_search)          :<C-u>call tweetvim#action('search')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_remove_status)   :<C-u>call tweetvim#action('remove_status')<CR>
 nnoremap <silent> <Plug>(tweetvim_action_expand_url)      :<C-u>call tweetvim#action('expand_url')<CR>

@@ -40,6 +40,7 @@ function! s:spawn(expr, ...)
     elseif type(a:expr) is type("")
       let cmdline = a:expr
       if a:0 && a:1
+        " for :! command
         let cmdline = substitute(cmdline, '\([!%#]\|<[^<>]\+>\)', '\\\1', 'g')
       endif
     else
@@ -80,28 +81,69 @@ function! s:has_vimproc()
   return s:exists_vimproc
 endfunction
 
+" * {command} [, {input} [, {timeout}]]
+" * {command} [, {dict}]
+"   {dict} = {
+"     use_vimproc: bool,
+"     input: string,
+"     timeout: bool,
+"   }
 function! s:system(str, ...)
-  let command = a:str
-  let input = a:0 >= 1 ? a:1 : ''
-  let command = s:iconv(command, &encoding, 'char')
-  let input = s:iconv(input, &encoding, 'char')
-
-  if a:0 == 0
-    let output = s:has_vimproc() ?
-          \ vimproc#system(command) : system(command)
-  elseif a:0 == 1
-    let output = s:has_vimproc() ?
-          \ vimproc#system(command, input) : system(command, input)
+  if type(a:str) is type([])
+    let command = join(map(copy(a:str), 's:shellescape(v:val)'), ' ')
+  elseif type(a:str) is type("")
+    let command = a:str
   else
-    " ignores 3rd argument unless you have vimproc.
-    let output = s:has_vimproc() ?
-          \ vimproc#system(command, input, a:2) : system(command, input)
+    throw 'Process.system(): invalid argument (value type:'.type(a:str).')'
+  endif
+  let command = s:iconv(command, &encoding, 'char')
+  let input = ''
+  let use_vimproc = s:has_vimproc()
+  let args = [command]
+  if a:0 ==# 1
+    if type(a:1) is type({})
+      if has_key(a:1, 'use_vimproc')
+        let use_vimproc = a:1.use_vimproc
+      endif
+      if has_key(a:1, 'input')
+        let args += [s:iconv(a:1.input, &encoding, 'char')]
+      endif
+      if use_vimproc && has_key(a:1, 'timeout')
+        " ignores timeout unless you have vimproc.
+        let args += [a:1.timeout]
+      endif
+    elseif type(a:1) is type("")
+      let args += [s:iconv(a:1, &encoding, 'char')]
+    else
+      throw 'Process.system(): invalid argument (value type:'.type(a:1).')'
+    endif
+  elseif a:0 >= 2
+    let [input; rest] = a:000
+    let input = s:iconv(a:1, &encoding, 'char')
+    let args += [input] + rest
   endif
 
+  let funcname = use_vimproc ? 'vimproc#system' : 'system'
+  let output = call(funcname, args)
   let output = s:iconv(output, 'char', &encoding)
 
   return output
 endfunction
+
+function! s:get_last_status()
+  return s:has_vimproc() ?
+        \ vimproc#get_last_status() : v:shell_error
+endfunction
+
+if s:is_windows
+  function! s:shellescape(command)
+    return substitute(a:command, '[&()[\]{}^=;!''+,`~]', '^\0', 'g')
+  endfunction
+else
+  function! s:shellescape(...)
+    return call('shellescape', a:000)
+  endfunction
+endif
 
 
 let &cpo = s:save_cpo

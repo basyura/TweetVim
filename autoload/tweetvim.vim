@@ -1,10 +1,12 @@
 call tweetvim#cache#read('screen_name')
 
-let s:version = 2.3
+let s:version = 2.4
 
 let s:stream_cache = []
 
 let s:last_receive_stream_time = reltime()
+
+let s:notification_cache = []
 "
 "
 function! tweetvim#version()
@@ -166,14 +168,18 @@ function! s:receive_userstream()
     call extend(s:stream_cache, s:to_tweets(res))
   endif
 
+
   if &filetype != 'tweetvim' || get(b:, 'tweetvim_method', '') != 'userstream'
     return
   endif
 
   for tweet in tweetvim#filter#execute(s:stream_cache)
+    call s:cache_notify(tweet)
     call s:flush_tweet(tweet)
     let s:last_receive_stream_time = reltime()
   endfor
+  call s:flush_notify()
+
   let s:stream_cache = []
   " auto reconnect
   if reltime(s:last_receive_stream_time)[0] >= g:tweetvim_reconnect_seconds
@@ -185,6 +191,12 @@ function! s:receive_userstream()
 
   let &updatetime = g:tweetvim_updatetime
   return s:feed_keys()
+endfunction
+
+function! s:log(tweet)
+  :execute ":redir! >> /tmp/tweetvim.log"
+      :execute ":silent! echon " . twibill#json#encode(a:tweet)
+  :redir END
 endfunction
 
 function! s:flush_tweet(tweet)
@@ -212,6 +224,45 @@ function! s:flush_tweet(tweet)
     normal! G
     "echo "decode error"
   endtry
+endfunction
+"
+"
+"
+function! s:cache_notify(tweet)
+  let tweet = a:tweet
+  let current_screen_name = tweetvim#account#current().screen_name
+  if has_key(tweet, 'event') && tweet.source.screen_name != current_screen_name
+    if tweet.event == 'favorite'
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_fav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
+    endif
+    if tweet.event == 'unfavorite'
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_unfav',
+            \ 'from_user'   : tweet.source,
+            \ 'status'      : tweet.target_object,
+            \})
+    endif
+  elseif has_key(tweet, 'retweeted_status')
+    if tweet.retweeted_status.user.screen_name == current_screen_name
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_retweet',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet.retweeted_status,
+            \})
+    endif
+  elseif has_key(tweet, 'status')
+    if tweet.text =~ '@' . current_from
+      call add(s:notification_cache, {
+            \ 'hook'        : 'notify_mention',
+            \ 'from_user'   : tweet.user,
+            \ 'status'      : tweet,
+            \})
+    endif
+  endif
 endfunction
 "
 "
@@ -268,7 +319,7 @@ function! s:merge_params(list_param, hash_param)
   let param = a:list_param
 
   if type(param[-1]) == 4
-    call extend(a:hash_param, param[-1])
+    call extend(param[-1], a:hash_param)
     return param
   endif
 
@@ -298,6 +349,27 @@ function! s:to_tweets(message)
   endwhile
 
   return list
+endfunction
+"
+"
+"
+function! s:flush_notify()
+  if len(s:notification_cache) == 0
+    return
+  endif
+
+  for notification in s:notification_cache
+    if notification.hook == 'notify_fav'
+      let status = deepcopy(notification.status)
+      let status.text = ('by ' . notification.from_user.screen_name . "\n" . status.text)
+      let status.favorited = 1
+      call s:flush_tweet(status)
+    endif
+    call tweetvim#hook#fire(notification.hook, notification.from_user, notification.status)
+  endfor
+
+  let s:notification_cache = []
+
 endfunction
 "
 "

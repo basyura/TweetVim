@@ -11,32 +11,31 @@ setlocal concealcursor=nc
 
 syntax match tweetvim_title "^\[.*" contains=tweetvim_reload
 
-syntax match tweetvim_status_id "\[\d\{-1,}\]$"
+syntax match tweetvim_status_id "\[\d\{-1,}\]$" display
 "syntax match tweetvim_created_at "- .\{-1,} \[" 
 "
-syntax match tweetvim_screen_name "^\s\=[0-9A-Za-z_]\{-1,} "
+syntax match tweetvim_screen_name "^\s\=\w\{-1,} " display
 
-syntax match tweetvim_at_screen_name "@[0-9A-Za-z_]\+"
+syntax match tweetvim_at_screen_name "@\w\+" display
 
 "syntax match tweetvim_link "\<https\?://\S\+"
-"syntax match tweetvim_link "\<https\?://[0-9A-Za-z_#?~=\-+%]+"
-syntax match tweetvim_link "https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+"
+"syntax match tweetvim_link "\<https\?://[[:alnum:]_#?~=\-+%]+"
+syntax match tweetvim_link "\<https\?://[[:alnum:]_#?~=\-+%\.\/:@]\+" contains=NONE display
 
-syntax match tweetvim_hash_tag "[ 　。、]\zs[#＃][^ ].\{-1,}\ze[ \n]"
+syntax match tweetvim_hash_tag "[ 　。、，．]\zs[#＃]\S\+" display
 
-syntax match tweetvim_separator       "^-\+$"
-syntax match tweetvim_separator_title "^\~\+$"
+syntax match tweetvim_separator       "^-\+$" display
+syntax match tweetvim_separator_title "^\~\+$" display
 
-syntax match tweetvim_star " ★ "
+syntax match tweetvim_star " ★ " display
 syntax match tweetvim_reload "\[reload\]"
 
-syntax match tweetvim_rt_count " [0-9]\+RT"
-syntax match tweetvim_rt_over  "'100+'RT"
+syntax match tweetvim_rt_count " [0-9]\+RT\>" display
 
-syn region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value
-syn match tweetvim_appendix_value "\[\$\ze.*\ze\$\]"
+syntax region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value display
+syntax match tweetvim_appendix_value "\[\$\zs.*\ze\$\]" display
 
-syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block
+syntax match tweetvim_appendix "\[\[.\{-1,}\]\]" contains=tweetvim_appendix_block display
 syntax match tweetvim_appendix_block /\[\[/ contained conceal
 syntax match tweetvim_appendix_block /\]\]/ contained conceal
 
@@ -57,7 +56,11 @@ if get(g:, 'tweetvim_original_hi', 0)
   highlight default tweetvim_rt_over          guifg=orange
   highlight default tweetvim_reply            guifg=orange
   highlight default tweetvim_appendix         guifg=#616161
-  hi def link tweetvim_around_search   Search
+  highlight default tweetvim_notify_rt        guifg=#88ef32
+  highlight default tweetvim_notify_fav       guifg=#e3e332
+  highlight default tweetvim_notify_unfav     guifg=#999999
+  highlight default tweetvim_notify_mentions  guifg=#e86840
+  highlight def link tweetvim_around_search   Search
 
 else
 
@@ -78,6 +81,10 @@ else
   hi def link tweetvim_reply           PmenuSel
   hi def link tweetvim_appendix        Comment
   hi def link tweetvim_around_search   Search
+  hi def link tweetvim_notify_rt       Search
+  hi def link tweetvim_notify_fav      Constant
+  hi def link tweetvim_notify_unfav    Ignore
+  hi def link tweetvim_notify_mentions Special
 
 endif
 

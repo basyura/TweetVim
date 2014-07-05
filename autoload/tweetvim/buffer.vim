@@ -407,12 +407,11 @@ function! s:sign(tweet, lineno)
     let img_url = tweet.profile_image_url
   endif
   let ico_path = g:tweetvim_config_dir . '/ico/' . screen_name . ".ico"
-  let file_name = fnamemodify(img_url, ":t")
 
   if !filereadable(ico_path)
-    "echo "downloading ... " . img_url
+    let file_name = fnamemodify(img_url, ":t")
     call system("curl -L -O " . img_url)
-    call system("convert " . fnamemodify(img_url, ":t") . " " . ico_path)
+    call system("convert " . file_name . " " . ico_path)
     call delete(file_name)
     redraw
   end
@@ -465,7 +464,7 @@ function! s:expand_t_co(text, status)
   let text = a:text
   if has_key(a:status, 'entities') && !empty(a:status.entities.urls)
     for u in a:status.entities.urls
-      let text = substitute(text, '\M' . u.url, u.expanded_url, 'g')
+      let text = substitute(text, '\M' . u.url, tweetvim#util#decodeURI(u.expanded_url), 'g')
     endfor
   endif
   return text
@@ -596,7 +595,8 @@ function! s:apply_syntax()
     return
   endif
   let screen_name = tweetvim#account#current().screen_name
-  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
+  execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '.\{-}\ze\s\[\["'
+  execute 'syntax match tweetvim_reply "\zs.* : ★ by .*\ze"'
 endfunction
 
 function! s:define_default_key_mappings()
@@ -610,6 +610,7 @@ function! s:define_default_key_mappings()
     nmap <silent> <buffer> i  <Plug>(tweetvim_action_in_reply_to)
     nmap <silent> <buffer> u  <Plug>(tweetvim_action_user_timeline)
     nmap <silent> <buffer> o  <Plug>(tweetvim_action_open_links)
+    nmap <silent> <buffer> O  <Plug>(tweetvim_action_open_prev_links)
     nmap <silent> <buffer> q  <Plug>(tweetvim_action_search)
     nmap <silent> <buffer> <leader>f  <Plug>(tweetvim_action_favorite)
     nmap <silent> <buffer> <leader>uf <Plug>(tweetvim_action_remove_favorite)
