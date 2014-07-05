@@ -339,10 +339,19 @@ tweetvim_say バッファにアカウント名を差し込む
 
     g:tweetvim_display_separator と排他的に動作
 
-v2.4 - dev
+v2.5 - dev
 ----------
 
-- regexpengine = 1 のときは url を考慮せずに文字数でカウントする
+
+release v2.4 2014.07.06
+-----------------------
+
+- イベント通知 hook を追加 thanks! tokoro10g
+- UserStream に fav を表示
+- regexpengine = 1 or vim 7.3 のときは url を考慮せずに文字数でカウントする
+- typo とか hilight の改善、url 展開の改善とかたくさん tanks! rhysd
+- say バッファでタグメンションをハイライト thanks! thinca
+- vital のアップデート
 
 release v2.3 2014.04.20
 -----------------------

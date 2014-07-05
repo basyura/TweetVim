@@ -15,6 +15,7 @@ INTERFACE			|tweetvim-interface|
   KEY MAPPINGS			  |tweetvim-key-mappings|
 VARIABLES			|tweetvim-variables|
 FILES				|tweetvim-files|
+HOOKS				|tweetvim-hooks|
 
 ==============================================================================
 NOTICE                                          *tweetvim-notice*
@@ -366,6 +367,32 @@ screen_name					*tweetvim-file-screen_name*
 
 hash_tag					*tweetvim-file-hash_tag*
 		hash tags which you have input in tweetvim_say buffer.
+
+==============================================================================
+HOOKS						*tweetvim-hooks*
+
+You can use hooks by tweetvim#hook#add(name, func_name).
+
+notify_fav
+		favorite event in userstraem
+
+write_screen_name
+
+		write screen name to cache file
+
+write_hash_tag
+		write hash tag to cache file
+------------------------------------------------------------------------------
+WORK IN PROGRESS
+
+notify_unfav
+		unfavorite event in userstraem
+
+notify_retweet
+		retweet event in userstraem
+
+notify_mention
+		mentions event in userstream
 
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
