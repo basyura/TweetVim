@@ -20,7 +20,7 @@ syntax match tweetvim_at_screen_name "@\w\+" display
 
 "syntax match tweetvim_link "\<https\?://\S\+"
 "syntax match tweetvim_link "\<https\?://[[:alnum:]_#?~=\-+%]+"
-syntax match tweetvim_link "\<https\?://[[:alnum:]_#?~=\-+%\.\/:@]\+" contains=NONE display
+syntax match tweetvim_link "\<https\?://[[:alnum:]_#!?~=\-+%\.\/:@]\+" contains=NONE display
 
 syntax match tweetvim_hash_tag "[ 　。、，．]\zs[#＃]\S\+" display
 
