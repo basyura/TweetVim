@@ -162,7 +162,7 @@ function! s:receive_userstream()
     return
   endif
 
-  let res = substitute(s:stream.stdout.read_line(), '', '', 'g')
+  let res = substitute(s:stream.stdout.read_line(1000, 0), '', '', 'g')
 
   if substitute(res, '\n', '', 'g') != '' && res[0] == '{'
     call extend(s:stream_cache, s:to_tweets(res))
@@ -176,8 +176,8 @@ function! s:receive_userstream()
   for tweet in tweetvim#filter#execute(s:stream_cache)
     call s:cache_notify(tweet)
     call s:flush_tweet(tweet)
-    let s:last_receive_stream_time = reltime()
   endfor
+  let s:last_receive_stream_time = reltime()
   call s:flush_notify()
 
   let s:stream_cache = []
