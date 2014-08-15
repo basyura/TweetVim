@@ -61,7 +61,7 @@ commands
 
 ### Mention を表示する
 
-    :TwetVimMentions
+    :TweetVimMentions
 
 ### リストを表示する
 
