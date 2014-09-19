@@ -131,7 +131,7 @@ function! tweetvim#userstream(bang, ...)
   normal! G
 
   let screen_name = tweetvim#account#current().screen_name
-  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '.\{-}\ze\s\[\["'
+  execute 'syntax match tweetvim_reply "\zs.*@' . screen_name . '\_.\{-}\ze\s\[\["'
 
   let s:stream = s:twibill().stream('user', param)
 
