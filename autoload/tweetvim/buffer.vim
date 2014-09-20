@@ -595,7 +595,7 @@ function! s:apply_syntax()
     return
   endif
   let screen_name = tweetvim#account#current().screen_name
-  execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '.\{-}\ze\s\[\["'
+  execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '\_.\{-}\ze\s\[\["'
   execute 'syntax match tweetvim_reply "\zs.* : ★ by .*\ze"'
 endfunction
 
