@@ -591,10 +591,10 @@ endfunction
 
 function! s:apply_syntax()
   syntax clear tweetvim_reply
-  if b:tweetvim_method == 'mentions'
+  let screen_name = tweetvim#account#current().screen_name
+  if b:tweetvim_method == 'mentions' || (b:tweetvim_method == 'user_timeline' && b:tweetvim_args[0] == screen_name)
     return
   endif
-  let screen_name = tweetvim#account#current().screen_name
   execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '\_.\{-}\ze\s\[\["'
   execute 'syntax match tweetvim_reply "\zs.* : ★ by .*\ze"'
 endfunction
