@@ -353,6 +353,10 @@ g:tweetvim_no_default_key_mappings		*g:tweetvim_no_default_key_mappings*
 		this is a trial option, not fixed.
 		default : 0
 
+g:tweetvim_buffer_name				*g:tweetvim_buffer_name*
+		a buffer name for tweetvim buffer.
+		default : [tweetvim]
+
 ==============================================================================
 FILES						*tweetvim-files*
 

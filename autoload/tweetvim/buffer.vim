@@ -3,7 +3,7 @@ scriptencoding utf-8
 let s:backup = []
 let s:signs  = {}
 
-let s:buf_name = '[tweetvim]'
+let s:buf_name = g:tweetvim_buffer_name
 
 let s:last_bufnr = 0
 "
@@ -205,7 +205,7 @@ function! tweetvim#buffer#userstream(title)
   let b:tweetvim_method = 'userstream'
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
+  let title = s:buf_name . ' - ' . tweetvim#account#current().screen_name . ' - ' . a:title
 
   call append(0, title)
   call append(1, tweetvim#util#separator('~'))
@@ -300,7 +300,7 @@ function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
+  let title = s:buf_name . ' - ' . tweetvim#account#current().screen_name . ' - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
     let page = get(a:args[-1], 'page', 1)
