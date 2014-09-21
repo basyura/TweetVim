@@ -3,7 +3,7 @@ scriptencoding utf-8
 let s:backup = []
 let s:signs  = {}
 
-let s:buf_name = '[tweetvim]'
+let s:buf_name = '\[tweetvim\]'
 
 let s:last_bufnr = 0
 "
