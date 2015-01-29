@@ -631,6 +631,7 @@ function! s:define_default_key_mappings()
     nmap <silent> <buffer> k <Plug>(tweetvim_action_cursor_up)
 
     nnoremap <silent> <buffer> a :call unite#sources#tweetvim_action#start()<CR>
+    nnoremap <silent> <buffer> p :call ctrlp#init(ctrlp#tweetvim#tweetvim#id())<CR>
     nnoremap <silent> <buffer> t :call unite#sources#tweetvim_timeline#start()<CR>
     nnoremap <silent> <buffer> <leader>a :call unite#sources#tweetvim_switch_account#start()<CR>
   augroup END
