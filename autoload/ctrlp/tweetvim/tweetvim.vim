@@ -52,9 +52,10 @@ function! ctrlp#tweetvim#tweetvim#init()
 endfunc
 
 function! ctrlp#tweetvim#tweetvim#accept(mode, str)
-  let Fn = function('tweetvim#action#' . a:str . '#execute')
-  call Fn(s:current_tweet)
+  let current_tweet = s:current_tweet
   call ctrlp#exit()
+  let Fn = function('tweetvim#action#' . a:str . '#execute')
+  call Fn(current_tweet)
 endfunction
 
 function! ctrlp#tweetvim#tweetvim#exit()
