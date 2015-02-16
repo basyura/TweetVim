@@ -3,7 +3,11 @@
 if exists('g:loaded_ctrlp_tweetvim') && g:loaded_ctrlp_tweetvim
   finish
 endif
+if !exists(":CtrlP")
+    finish
+endif
 let g:loaded_ctrlp_tweetvim = 1
+
 
 let s:tweetvim_var = {
             \ 'init': 'ctrlp#tweetvim#tweetvim#init()',

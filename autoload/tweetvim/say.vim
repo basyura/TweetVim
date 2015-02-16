@@ -224,8 +224,10 @@ function! s:define_default_key_mappings()
 
     inoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
     nnoremap <buffer> <silent> <C-i> <ESC>:call unite#sources#tweetvim_tweet_history#start()<CR>
-    inoremap <buffer> <silent> <C-o> <ESC>:call ctrlp#init(ctrlp#tweetvim#tweet_history#id())<CR>
-    nnoremap <buffer> <silent> <C-o> <ESC>:call ctrlp#init(ctrlp#tweetvim#tweet_history#id())<CR>
+    if exists(":CtrlP")
+        inoremap <buffer> <silent> <C-o> <ESC>:call ctrlp#init(ctrlp#tweetvim#tweet_history#id())<CR>
+        nnoremap <buffer> <silent> <C-o> <ESC>:call ctrlp#init(ctrlp#tweetvim#tweet_history#id())<CR>
+    endif
     if exists(':TweetVimBitly')
       inoremap <buffer> <C-x><C-d> <ESC>:TweetVimBitly<CR>
     endif

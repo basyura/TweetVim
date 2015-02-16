@@ -1,6 +1,9 @@
 if exists('g:loaded_ctrlp_tweetvim_tweet_history') && g:loaded_ctrlp_tweetvim_tweet_history
   finish
 endif
+if !exists(":CtrlP")
+    finish
+endif
 let g:loaded_ctrlp_tweetvim_tweet_history = 1
 
 let s:tweet_history_var = {
