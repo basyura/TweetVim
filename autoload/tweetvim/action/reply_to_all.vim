@@ -22,5 +22,5 @@ function! tweetvim#action#reply_to_all#execute(tweet)
     endif
     let screen_name = matchstr(a:tweet.text,'\(@\w\+\)',0,itr)
   endwhile
-  call tweetvim#say#open(join(receivers, ' '), param)
+  call tweetvim#say#open(join(receivers, ' ') . ' ', param)
 endfunction
