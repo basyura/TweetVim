@@ -403,7 +403,7 @@ release v1.8 2012.11.03
 - API の変更
   - tweetvim#current_account → tweetvim#account#current
   - tweetvim#add_hook → tweetvim#hook#add
-  - tweetvim#complete_XXXX → twetvim#complete#XXXX
+  - tweetvim#complete_XXXX → tweetvim#complete#XXXX
 - inoremap C-CR でツイートするようにしてみた
 - j or k でセパレータを飛ばして移動するようにした
 - 検索の際に日時が出ていなかったのを修正
