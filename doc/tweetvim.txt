@@ -116,7 +116,7 @@ INTERFACE					*tweetvim-interface*
 ------------------------------------------------------------------------------
 COMMANDS					*tweetvim-commands*
 
-:TweetVimVersioni				*:TweetVimVersion*
+:TweetVimVersion				*:TweetVimVersion*
 		display version.
 
 :TweetVimAddAccount				*:TweetVimAddAccount*
@@ -161,7 +161,7 @@ COMMANDS					*tweetvim-commands*
 		if you want to track words, use arguments.
 		this is trial command.
 >
-		:TweetVimUserStreame
+		:TweetVimUserStream
 		:TweetVimUserStream vim emacs lang:ja
 <
 :TweetVimCommandSay				*:TweetVimCommandSay*
