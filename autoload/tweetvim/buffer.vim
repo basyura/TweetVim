@@ -532,9 +532,9 @@ function! s:format(tweet, isquoted, ...)
     let str  = tweet.user.name.' @'.tweet.user.screen_name."\n"
   elseif a:isquoted == 1
     if tweet.user.name != tweet.user.screen_name
-      let str = tweetvim#util#padding('', 15) . ' : ' . tweet.user.name . ' @' . tweet.user.screen_name . "\n"
+      let str = tweetvim#util#padding('', 18) . tweet.user.name . ' @' . tweet.user.screen_name . "\n"
     else
-      let str = tweetvim#util#padding('', 15) . ' : ' . tweet.user.screen_name . "\n"
+      let str = tweetvim#util#padding('', 18) . tweet.user.screen_name . "\n"
     endif
   else
     let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
