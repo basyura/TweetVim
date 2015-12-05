@@ -427,13 +427,12 @@ function! s:sign(tweet, lineno)
   execute "cd " . current_dir
 endfunction
 
-let s:padding_left = '                  '
 function! s:append_text(tweet, today, ...)
   let isquoted = a:0 > 0 ? a:1 : 0
   let text = s:format(a:tweet, isquoted, a:today)
   let isfirst = 1
   for line in split(text, "\n")
-    let space = isfirst || g:tweetvim_display_username ? '' : s:padding_left
+    let space = isfirst || g:tweetvim_display_username ? '' : g:tweetvim_padding_left
     if !isfirst && g:tweetvim_display_icon && has('gui_running')
       let space .= ' '
     endif
@@ -481,7 +480,7 @@ endfunction
 "
 function! s:format(tweet, isquoted, ...)
   let tweet = a:tweet
-  let text = ''
+
   " for protected user
   if has_key(a:tweet, 'error')
     let tweet = {
@@ -504,81 +503,112 @@ function! s:format(tweet, isquoted, ...)
           \ 'created_at'        : tweet.direct_message.created_at,
           \ 'is_direct_message' : 1,
           \})
-    let text .= '[Direct Message] '
+    let tweet['text'] .= '[Direct Message] '
   endif
 
+  " text
   if has_key(tweet, 'retweeted_status')
-    let text = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
+    let tweet['text'] = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
     if stridx(tweet.retweeted_status.text, "\n") != -1
-      let text .= "\n"
+      let tweet['text'] .= "\n"
     endif
-    let text .= tweet.retweeted_status.text
-  else
-    let text .= tweet.text
+    let tweet['text'] .= tweet.retweeted_status.text
   endif
-
-  " expand t.co url
   if g:tweetvim_expand_t_co
-    let text = s:expand_t_co(text,
-                \ has_key(tweet, 'retweeted_status') ? tweet.retweeted_status : tweet)
+    let tweet['text'] = s:expand_t_co(tweet.text, has_key(tweet, 'retweeted_status') ? tweet.retweeted_status : tweet)
   end
-  "let text = substitute(text , '' , '' , 'g')
-  "let text = substitute(text , '\n' , '' , 'g')
-  let text = tweetvim#util#unescape(text)
+  " let tweet['text'] = substitute(tweet.text , '' , '' , 'g')
+  " let tweet['text'] = substitute(tweet.text , '\n' , '' , 'g')
+  let tweet['text'] = tweetvim#util#unescape(tweet.text)
 
   let today = a:0 ? a:1 : tweetvim#util#today()
 
+  " username: TweetVim default format of user names
   if g:tweetvim_display_username
-    let str  = tweet.user.name.' @'.tweet.user.screen_name."\n"
+    let tweet['username'] = tweet.user.name.' @'.tweet.user.screen_name."\n"
   elseif a:isquoted == 1
     if tweet.user.name != tweet.user.screen_name
-      let str = tweetvim#util#padding('', 18) . tweet.user.name . ' @' . tweet.user.screen_name . "\n"
+      let tweet['username'] = tweetvim#util#padding('', 18) . tweet.user.name . ' @' . tweet.user.screen_name . "\n"
     else
-      let str = tweetvim#util#padding('', 18) . tweet.user.screen_name . "\n"
+      let tweet['username'] = tweetvim#util#padding('', 18) . tweet.user.screen_name . "\n"
     endif
   else
-    let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
+    let tweet['username'] = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
   endif
-  " FIXME
+
+  " icon: FIXME
   if g:tweetvim_display_icon && has('gui_running')
-    let str = ' ' . str
+    let tweet['icon'] = ' '
+  else
+    let tweet['icon'] = ''
   endif
-  " TODO
+
+  " favorited: TODO
   if tweet.favorited && !has_key(tweet, 'retweeted_status')
-    let str .= '★ '
+    let tweet['favorited'] = g:tweetvim_favorited_sign
+  else
+    let tweet['favorited'] = g:tweetvim_unfavorited_sign
   endif
-  let str .= text
-  let rt_count = get(tweet, 'retweet_count', 0)
-  if rt_count
-    let str .= ' ' . string(rt_count) . 'RT'
+
+  " retweet_count
+  let tweet['retweet_count'] = get(tweet, 'retweet_count', 0)
+
+  " rt: TweetVim default format for RT
+  if tweet.retweet_count
+    let tweet['rt'] = ' ' . string(tweet.retweet_count) . 'RT'
+  else
+    let tweet['rt'] = ''
   endif
-  let str_right = ''
-  " soruce
+
+  " source
+  " unescape for search api
+  let tweet['source'] = matchstr(tweetvim#util#unescape(tweet.source), '>\zs.*\ze<')
+  if tweet.source == ""
+    let tweet['source'] = tweet.source
+  endif
+
+  " from: TweetVim default format for source
   if g:tweetvim_display_source
-    " unescape for search api
-    let source = matchstr(tweetvim#util#unescape(tweet.source), '>\zs.*\ze<')
-    if source == ""
-      let source = tweet.source
-    endif
-    let str_right .= ' [[from ' . source . ']]'
+    let tweet['from'] = ' [[from ' . source . ']]'
+  else
+    let tweet['from'] = ''
   endif
-  " time
+
+  " created_at
+  let tweet['created_at'] = tweetvim#util#format_date(tweet.created_at)
+
+  " time: TweetVim default format for created_at
   if get(g:, 'tweetvim_display_time', 1)
     try
-      let date  = tweetvim#util#format_date(tweet.created_at)
-      let date  = substitute(date, today, '', '')
-      let str_right .= ' [[' . date . ']]'
+      let date = tweet.created_at
+      let date = substitute(date, today, '', '')
+      let tweet['time'] = ' [[' . date . ']]'
     catch
       echo v:exception
       " serch と timeline でフォーマットが違う
+      let tweet['time'] = ''
     endtry
   endif
+
+  let str = g:tweetvim_format_left
+  let str_right = g:tweetvim_format_right
+  for dictionary in [tweet, tweet.user]
+    for key in keys(dictionary)
+      if type(get(dictionary, key)) == type("")
+        let value = get(dictionary, key)
+      else
+        let value = string(get(dictionary, key))
+      endif
+      let str = substitute(str, '{' . key . '}', value, 'g')
+      let str_right = substitute(str_right, '{' . key . '}', value, 'g')
+    endfor
+  endfor
 
   if strlen(str_right)
     if g:tweetvim_align_right
       let strsplit = split(str, '\n')
       let icon = g:tweetvim_display_icon && has('gui_running')
-      let padding =  len(strsplit) > 1 ? strlen(s:padding_left) + icon : 0
+      let padding = len(strsplit) > 1 ? strlen(get(g:, 'tweetvim_padding_left')) + icon : 0
       let right_width = strdisplaywidth(str_right)
       if &l:number || (exists('&relativenumber') && &l:relativenumber)
         let number_width = max([&l:numberwidth, strlen(line('$') . '') + 1])

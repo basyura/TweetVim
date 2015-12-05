@@ -35,7 +35,7 @@ function! tweetvim#util#format_date(date)
     else
       let date_time = s:DateTime.from_format(a:date,'%a %b %d %H:%M:%S %z %Y', 'C')
     endif
-    return date_time.strftime("%m/%d %H:%M")
+    return date_time.strftime(get(g:, 'tweetvim_datetime_format'))
   catch
     return a:date
   endtry
@@ -117,7 +117,7 @@ endfunction
 "
 " from suddendeath.vim - MIT License
 "
-function tweetvim#util#sudden_death(str)
+function! tweetvim#util#sudden_death(str)
   let width = s:str_to_mb_width(a:str) + 2
   let top = '＿' . join(map(range(width), '"人"'),'') . '＿'
   let content = '＞　' . a:str . '　＜'

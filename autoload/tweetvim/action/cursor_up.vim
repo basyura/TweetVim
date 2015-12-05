@@ -15,7 +15,7 @@ function! tweetvim#action#cursor_up#execute(tweet)
   while 1
     :execute "normal! \<Up>"
     let line = getline(".")
-    if (line !~ '^  ' && line != '' && !tweetvim#util#isCursorOnSeprator()) || line(".") == 1
+    if (stridx(line, g:tweetvim_padding_left) != 0 && line != '' && !tweetvim#util#isCursorOnSeprator()) || line(".") == 1
       break
     endif
   endwhile

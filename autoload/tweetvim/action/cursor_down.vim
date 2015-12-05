@@ -32,7 +32,7 @@ function! s:is_skipable()
     return 1
   endif
 
-  if line !~ '^  ' && (!tweetvim#util#isCursorOnSeprator() || line(".") == line("$"))
+  if stridx(line, g:tweetvim_padding_left) != 0 && (!tweetvim#util#isCursorOnSeprator() || line(".") == line("$"))
     return 0
   endif
 

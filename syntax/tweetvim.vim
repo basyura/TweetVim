@@ -30,7 +30,7 @@ syntax match tweetvim_separator_title "^\~\+$" display
 syntax match tweetvim_star " ★ " display
 syntax match tweetvim_reload "\[reload\]"
 
-syntax match tweetvim_rt_count " [0-9]\+RT\>" display
+syntax match tweetvim_rt_count "\<[0-9]\+RT\>" display
 
 syntax region tweetvim_appendix  start="\[\$" end="\$\]" contains=tweetvim_appendix_value display
 syntax match tweetvim_appendix_value "\[\$\zs.*\ze\$\]" display
