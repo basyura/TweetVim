@@ -92,9 +92,9 @@ endfunction
 "
 "
 function! tweetvim#util#bufwidth()
-  let width = winwidth(0)
+  let width = winwidth(0) - &foldcolumn
   if &l:number || &l:relativenumber
-    let width = width - (&numberwidth + 1)
+    let width = width - (&numberwidth + 1) - (&foldcolumn)
   endif
   return width
 endfunction

@@ -31,7 +31,9 @@ function! tweetvim#action#reload#execute(tweet)
     let ret   = call('tweetvim#timeline', [b:tweetvim_method] + b:tweetvim_args)
     
   catch
-    echo v:exception
-    echohl ErrorMsg | echo 'can not reload' | echohl None
+    echohl ErrorMsg
+    echomsg v:exception . " in " . v:throwpoint
+    echomsg 'can not reload'
+    echohl None
   endtry
 endfunction

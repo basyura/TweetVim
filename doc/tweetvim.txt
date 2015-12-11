@@ -1,6 +1,6 @@
 *tweetvim.txt*	Twitter client.
 
-Version: 2.4
+Version: 2.5
 Author: basyura <basyura+tweetvim@gmail.com>
 License: MIT License
 
@@ -116,7 +116,7 @@ INTERFACE					*tweetvim-interface*
 ------------------------------------------------------------------------------
 COMMANDS					*tweetvim-commands*
 
-:TweetVimVersioni				*:TweetVimVersion*
+:TweetVimVersion				*:TweetVimVersion*
 		display version.
 
 :TweetVimAddAccount				*:TweetVimAddAccount*
@@ -161,7 +161,7 @@ COMMANDS					*tweetvim-commands*
 		if you want to track words, use arguments.
 		this is trial command.
 >
-		:TweetVimUserStreame
+		:TweetVimUserStream
 		:TweetVimUserStream vim emacs lang:ja
 <
 :TweetVimCommandSay				*:TweetVimCommandSay*
@@ -352,6 +352,10 @@ g:tweetvim_no_default_key_mappings		*g:tweetvim_no_default_key_mappings*
 		don't provide default mappings in tweetvim and tweetvim_say buffer.
 		this is a trial option, not fixed.
 		default : 0
+
+g:tweetvim_buffer_name				*g:tweetvim_buffer_name*
+		a buffer name for tweetvim buffer.
+		default : [tweetvim]
 
 ==============================================================================
 FILES						*tweetvim-files*

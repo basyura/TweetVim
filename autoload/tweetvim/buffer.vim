@@ -3,7 +3,7 @@ scriptencoding utf-8
 let s:backup = []
 let s:signs  = {}
 
-let s:buf_name = '[tweetvim]'
+let s:buf_name = g:tweetvim_buffer_name
 
 let s:last_bufnr = 0
 "
@@ -112,7 +112,7 @@ function! tweetvim#buffer#replace(lineno, tweet)
 
   normal! "_D
 
-  let word = type(a:tweet) == 4 ? s:format(a:tweet) : a:tweet
+  let word = type(a:tweet) == 4 ? s:format(a:tweet, 0) : a:tweet
   " temporary fix
   let word = substitute(split(word, '\n')[0], '', "", "g")
 
@@ -205,7 +205,7 @@ function! tweetvim#buffer#userstream(title)
   let b:tweetvim_method = 'userstream'
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
+  let title = s:buf_name . ' - ' . tweetvim#account#current().screen_name . ' - ' . a:title
 
   call append(0, title)
   call append(1, tweetvim#util#separator('~'))
@@ -300,7 +300,7 @@ function! s:process(method, args, title, tweets, opt)
   let b:tweetvim_args   = a:args
   let b:tweetvim_status_cache = {}
 
-  let title = '[tweetvim]  - ' . tweetvim#account#current().screen_name . ' - ' . a:title
+  let title = s:buf_name . ' - ' . tweetvim#account#current().screen_name . ' - ' . a:title
   " add page no
   if !empty(a:args) && type(a:args[-1]) == 4
     let page = get(a:args[-1], 'page', 1)
@@ -428,8 +428,9 @@ function! s:sign(tweet, lineno)
 endfunction
 
 let s:padding_left = '                  '
-function! s:append_text(tweet, today)
-  let text = s:format(a:tweet, a:today)
+function! s:append_text(tweet, today, ...)
+  let isquoted = a:0 > 0 ? a:1 : 0
+  let text = s:format(a:tweet, isquoted, a:today)
   let isfirst = 1
   for line in split(text, "\n")
     let space = isfirst || g:tweetvim_display_username ? '' : s:padding_left
@@ -439,6 +440,11 @@ function! s:append_text(tweet, today)
     call append(line('$') - 1, space . substitute(line, '' , '' , 'g'))
     let isfirst = 0
   endfor
+  " added auoted statuses
+  if has_key(a:tweet, 'quoted_status')
+    call append(line('$') - 1, '')
+    call s:append_text(a:tweet.quoted_status, a:today, 1)
+  end
 endfunction
 
 function! s:append_separator(separator, ...)
@@ -473,7 +479,7 @@ endfunction
 "
 "
 "
-function! s:format(tweet, ...)
+function! s:format(tweet, isquoted, ...)
   let tweet = a:tweet
   let text = ''
   " for protected user
@@ -524,6 +530,12 @@ function! s:format(tweet, ...)
 
   if g:tweetvim_display_username
     let str  = tweet.user.name.' @'.tweet.user.screen_name."\n"
+  elseif a:isquoted == 1
+    if tweet.user.name != tweet.user.screen_name
+      let str = tweetvim#util#padding('', 18) . tweet.user.name . ' @' . tweet.user.screen_name . "\n"
+    else
+      let str = tweetvim#util#padding('', 18) . tweet.user.screen_name . "\n"
+    endif
   else
     let str  = tweetvim#util#padding(tweet.user.screen_name, 15) . ' : '
   endif
@@ -591,11 +603,11 @@ endfunction
 
 function! s:apply_syntax()
   syntax clear tweetvim_reply
-  if b:tweetvim_method == 'mentions'
+  let screen_name = tweetvim#account#current().screen_name
+  if b:tweetvim_method == 'mentions' || (b:tweetvim_method == 'user_timeline' && b:tweetvim_args[0] == screen_name)
     return
   endif
-  let screen_name = tweetvim#account#current().screen_name
-  execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '.\{-}\ze\s\[\["'
+  execute 'syntax match tweetvim_reply "\zs.*\c@' . screen_name . '\_.\{-}\ze\s\[\["'
   execute 'syntax match tweetvim_reply "\zs.* : ★ by .*\ze"'
 endfunction
 
