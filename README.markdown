@@ -342,9 +342,9 @@ tweetvim_say バッファにアカウント名を差し込む
 release v2.5 2016.01.16
 -----------------------
 
-- highlight の改善 thanks! rhysd, pocke, 839, ryunix
+- highlight の改善 thanks! rhysd, pocke, 839
 - エラーメッセージの改善 thanks! rhysd
-- ドキュメントの改善 thanks! todashuta
+- ドキュメントの改善 thanks! todashuta, ryunix
 - バッファ名設定 (`g:tweetvim_buffer_name`) の追加 thanks! kamichidu
 - tweetvim say バッファでのユーザ名補完候補のソート改善 thanks! rhysd
 - replay-to-all アクションでの宛先が重複しないように改善 thanks! rhysd
