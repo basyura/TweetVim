@@ -339,9 +339,17 @@ tweetvim_say バッファにアカウント名を差し込む
 
     g:tweetvim_display_separator と排他的に動作
 
-v2.5 - dev
-----------
+release v2.5 2016.01.16
+-----------------------
 
+- highlight の改善 thanks! rhysd, pocke, 839, ryunix
+- エラーメッセージの改善 thanks! rhysd
+- ドキュメントの改善 thanks! todashuta
+- バッファ名設定 (`g:tweetvim_buffer_name`) の追加 thanks! kamichidu
+- tweetvim say バッファでのユーザ名補完候補のソート改善 thanks! rhysd
+- replay-to-all アクションでの宛先が重複しないように改善 thanks! rhysd
+- foldcolumn 指定時のセパレータの長さを改善 thanks! Chris Weyl
+- ツイート内のツイート url サポート
 
 release v2.4 2014.07.06
 -----------------------
@@ -349,7 +357,7 @@ release v2.4 2014.07.06
 - イベント通知 hook を追加 thanks! tokoro10g
 - UserStream に fav を表示
 - regexpengine = 1 or vim 7.3 のときは url を考慮せずに文字数でカウントする
-- typo とか hilight の改善、url 展開の改善とかたくさん tanks! rhysd
+- typo とか hilight の改善、url 展開の改善とかたくさん thanks! rhysd
 - say バッファでタグメンションをハイライト thanks! thinca
 - vital のアップデート
 
