@@ -66,7 +66,6 @@ function! s:candidates_lists()
         \ "source__method" : "list_statuses",
         \ "source__args"   : [v:val.user.screen_name, v:val.slug],
         \ }')
-  endfor
 endfunction
 
 let s:source.action_table.execute = {'description' : 'show timeline'}
