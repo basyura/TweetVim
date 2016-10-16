@@ -16,6 +16,12 @@ endfunction
 "
 "
 function! tweetvim#timeline(method, ...)
+
+  if v:version < 800
+    echohl Error | echo tweetvim#util#sudden_death('requires vim 8') | echohl None
+    return
+  endif
+
   let start = reltime()
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
@@ -96,6 +102,12 @@ endfunction
 
 
 function! tweetvim#userstream(bang, ...)
+
+  if v:version < 800
+    echohl Error | echo tweetvim#util#sudden_death('requires vim 8') | echohl None
+    return
+  endif
+
   let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
   call tweetvim#buffer#userstream(title)
 
