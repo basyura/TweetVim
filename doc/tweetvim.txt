@@ -293,7 +293,7 @@ g:tweetvim_display_source			*g:tweetvim_display_source*
 
 g:tweetvim_display_time				*g:tweetvim_display_time*
 		you can display tweet's time.
-		default : 0
+		default : 1
 
 g:tweetvim_open_buffer_cmd			*g:tweetvim_open_buffer_cmd*
 		a command to open a buffer.
