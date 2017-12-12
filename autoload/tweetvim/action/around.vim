@@ -49,9 +49,9 @@ function! tweetvim#action#around#execute(tweet)
         \ {})
 
   call cursor(1,1)
-  call search(split(a:tweet.text, '\n')[0])
+  call search(split(a:tweet.full_text, '\n')[0])
   
-  exec "syn match tweetvim_around_search '" . split(a:tweet.text, '\n')[0] . "'"
+  exec "syn match tweetvim_around_search '" . split(a:tweet.full_text, '\n')[0] . "'"
 endfunction
 
 " add num to str which over number range.

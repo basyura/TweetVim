@@ -13,7 +13,7 @@ function! tweetvim#filter#userstream#execute(tweets)
   let ret = []
   for tweet in a:tweets
     for word in b:tweetvim_userstream_track
-      if has_key(tweet, 'text') && tweet.text =~? word
+      if has_key(tweet, 'full_text') && tweet.full_text =~? word
         call add(ret, tweet)
       endif
     endfor

@@ -79,6 +79,7 @@ function! tweetvim#request(method, args)
   let args  = type(a:args) == 3 ? a:args : [a:args]
   let param = {'per_page' : g:tweetvim_tweet_per_page,
               \'count'    : g:tweetvim_tweet_per_page,
+              \'tweet_mode': 'extended',
               \'include_entities' : 1}
   let param.include_rts = get(g:, 'tweetvim_include_rts', 1)
   let args  = s:merge_params(args, param)
@@ -210,10 +211,10 @@ function! s:flush_tweet(tweet)
     if isbottom
       normal! G
     else
-      if has_key(tweet,'text')
-        execute "normal! " . string(len(split(tweet.text, '\r')) + 1) . "\<C-e>"
+      if has_key(tweet,'full_text')
+        execute "normal! " . string(len(split(tweet.full_text, '\r')) + 1) . "\<C-e>"
       elseif has_key(tweet,'direct_message')
-        execute "normal! " . string(len(split(tweet.direct_message.text, '\r')) + 1) . "\<C-e>"
+        execute "normal! " . string(len(split(tweet.direct_message.full_text, '\r')) + 1) . "\<C-e>"
       endif
     endif
   catch
@@ -255,7 +256,7 @@ function! s:cache_notify(tweet)
             \})
     endif
   elseif has_key(tweet, 'status')
-    if tweet.text =~ '@' . current_from
+    if tweet.full_text =~ '@' . current_from
       call add(s:notification_cache, {
             \ 'hook'        : 'notify_mention',
             \ 'from_user'   : tweet.user,
