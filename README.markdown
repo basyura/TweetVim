@@ -339,6 +339,10 @@ tweetvim_say バッファにアカウント名を差し込む
 
     g:tweetvim_display_separator と排他的に動作
 
+To modify the tweet length do:
+
+	let g:tweetvim_tweet_limit = 280
+
 release v2.5 2016.01.16
 -----------------------
 

@@ -3,7 +3,6 @@ set cpo&vim
 
 scriptencoding utf-8
 
-let s:TWEET_LIMIT = 140
 
 " Referred the following software to implement this code.  Thanks!
 "
@@ -854,12 +853,12 @@ function! tweetvim#tweet#count_chars(text)
   " check old regexpengine
   " check patch for iconv arguments
   if !exists('&regexpengine') || &regexpengine == 1
-    return s:TWEET_LIMIT - strchars(a:text)
+    return g:tweetvim_tweet_limit - strchars(a:text)
   end
 
   let conf = s:twitter_configuration
   let url_shorten_text = substitute(a:text, s:valid_url, '\=s:sub(conf)', 'g')
-  return s:TWEET_LIMIT - strchars(url_shorten_text)
+  return g:tweetvim_tweet_limit - strchars(url_shorten_text)
 endfunction
 
 function! tweetvim#tweet#mention_pattern()
