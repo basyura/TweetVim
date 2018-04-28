@@ -172,7 +172,7 @@ function! s:post_tweet(text)
   endif
   if tweetvim#tweet#count_chars(text) < 0
     echohl Error
-    let ret = input("over 140 chars ... tweet ? (y/n) : ")
+    let ret = input("over ".g:tweetvim_tweet_limit." chars ... tweet ? (y/n) : ")
     echohl None
     if ret != 'y'
       return
