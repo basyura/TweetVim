@@ -7,6 +7,7 @@ let s:stream_cache = []
 let s:last_receive_stream_time = reltime()
 
 let s:notification_cache = []
+let s:timer = 0
 "
 "
 function! tweetvim#version()
@@ -15,6 +16,12 @@ endfunction
 "
 "
 function! tweetvim#timeline(method, ...)
+
+  if v:version < 800
+    echohl Error | echo tweetvim#util#sudden_death('requires vim 8') | echohl None
+    return
+  endif
+
   let start = reltime()
   " TODO - for list_statuses at tweetvim/timeline action
   let args = (a:0 == 1 && type(a:1) == 3) ? a:1 : a:000
@@ -95,6 +102,12 @@ endfunction
 
 
 function! tweetvim#userstream(bang, ...)
+
+  if v:version < 800
+    echohl Error | echo tweetvim#util#sudden_death('requires vim 8') | echohl None
+    return
+  endif
+
   let title = a:0 > 0 ? 'userstream track : ' . join(a:000, ',') : 'userstream'
   call tweetvim#buffer#userstream(title)
 
@@ -135,26 +148,23 @@ function! tweetvim#userstream(bang, ...)
 
   let s:stream = s:twibill().stream('user', param)
 
-  if !exists('b:saved_tweetvim_updatetime')
-    let b:saved_tweetvim_updatetime = &updatetime
-  endif
-  let &updatetime = g:tweetvim_updatetime
+  if s:timer != 0
+    call timer_stop(s:timer)
+  end
+  let s:timer = timer_start(g:tweetvim_updatetime, function('s:receive_userstream'), {'repeat' : -1})
   augroup tweetvim-userstream
     autocmd!
-    autocmd! CursorHold,CursorHoldI * call s:receive_userstream()
-    autocmd! BufEnter  <buffer> execute "let &updatetime=" . g:tweetvim_updatetime
-    autocmd! BufLeave  <buffer> call <SID>buf_leave()
     autocmd! BufDelete <buffer> call <SID>twibill().close_streams()
+    autocmd! BufDelete <buffer> call <SID>close_stream()
   augroup END
 endfunction
 
-function! s:buf_leave()
-  if exists('b:saved_tweetvim_updatetime')
-    execute "let &updatetime=" . b:saved_tweetvim_updatetime
-  endif
+function! s:close_stream()
+  call timer_stop(s:timer)
 endfunction
 
-function! s:receive_userstream()
+function! s:receive_userstream(timer)
+
   if s:stream.stdout.eof
     if &filetype == 'tweetvim'
       echomsg "stream is already closed"
@@ -189,8 +199,6 @@ function! s:receive_userstream()
     echohl Error | echo 'reconnected to userstream' | echohl None
   endif
 
-  let &updatetime = g:tweetvim_updatetime
-  return s:feed_keys()
 endfunction
 
 function! s:log(tweet)
@@ -371,10 +379,4 @@ function! s:flush_notify()
   let s:notification_cache = []
 
 endfunction
-"
-"
-"
-function! s:feed_keys()
-  call feedkeys("g\<Esc>", "n")
-  return 1
-endfunction
+

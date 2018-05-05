@@ -343,6 +343,15 @@ To modify the tweet length do:
 
 	let g:tweetvim_tweet_limit = 280
 
+release v2.6 2018.05.05
+-----------------------
+
+- vim 8 対応 - g:updatetime の使用をやめて timer を使う - basyura
+- fix syntax error - haya14busa
+- Fix changelog - ryunix
+- Fix default value in doc - ryunix
+- Adding support for 280 characters - Mateus Furquim
+
 release v2.5 2016.01.16
 -----------------------
 
