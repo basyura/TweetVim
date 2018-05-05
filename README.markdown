@@ -339,6 +339,15 @@ tweetvim_say バッファにアカウント名を差し込む
 
     g:tweetvim_display_separator と排他的に動作
 
+release v2.5 2018.05.05
+-----------------------
+
+- vim 8 対応 - g:updatetime の使用をやめて timer を使う - basyura
+- fix syntax error - haya14busa
+- Fix changelog - ryunix
+- Fix default value in doc - ryunix
+- Adding support for 280 characters - Mateus Furquim
+
 release v2.5 2016.01.16
 -----------------------
 
