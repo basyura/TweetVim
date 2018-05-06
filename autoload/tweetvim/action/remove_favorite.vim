@@ -11,7 +11,7 @@ endfunction
 "
 function! tweetvim#action#remove_favorite#execute(tweet)
   let tweet = a:tweet
-  echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.text)
+  echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.full_text)
   let ret = tweetvim#request('remove_favorite', tweet.id_str)
   redraw
   if has_key(ret, 'errors')

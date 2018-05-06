@@ -14,7 +14,7 @@ function! tweetvim#action#expand_url#execute(tweet)
   let untiny_api = 'http://untiny.me/api/1.0/extract?url='
   let pattern    = 'https\?://[0-9A-Za-z_#?~=\-+%\.\/:]\+'
 
-  let text = a:tweet.text
+  let text = a:tweet.full_text
 
   let list = []
 
@@ -27,7 +27,7 @@ function! tweetvim#action#expand_url#execute(tweet)
     call add(list, url)
   endwhile
 
-  let text = a:tweet.text
+  let text = a:tweet.full_text
   for v in list
     let ret  = twibill#http#get(untiny_api . v . '&format=text')
     if ret.content =~ '^error' || ret.content =~ '<response'
@@ -37,6 +37,6 @@ function! tweetvim#action#expand_url#execute(tweet)
   endfor
   " replace
   let tweet = a:tweet
-  let tweet.text = text
+  let tweet.full_text = text
   call tweetvim#buffer#replace(line("."), tweet)
 endfunction

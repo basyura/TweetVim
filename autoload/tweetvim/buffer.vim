@@ -486,7 +486,7 @@ function! s:format(tweet, isquoted, ...)
   if has_key(a:tweet, 'error')
     let tweet = {
           \ 'user'       : {'screen_name' : 'unknown'},
-          \ 'text'       : tweet.error,
+          \ 'full_text'       : tweet.error,
           \ 'favorited'  : 0,
           \ 'source'     : '',
           \ 'created_at' : '',
@@ -498,7 +498,7 @@ function! s:format(tweet, isquoted, ...)
     call extend(tweet, {
           \ 'user'              : {'screen_name' : tweet.direct_message.sender_screen_name},
           \ 'profile_image_url' : tweet.direct_message.sender.profile_image_url,
-          \ 'text'              : tweet.direct_message.text,
+          \ 'full_text'              : tweet.direct_message.full_text,
           \ 'favorited'         : 0,
           \ 'source'            : '',
           \ 'created_at'        : tweet.direct_message.created_at,
@@ -509,12 +509,12 @@ function! s:format(tweet, isquoted, ...)
 
   if has_key(tweet, 'retweeted_status')
     let text = 'RT @' . tweet.retweeted_status.user.screen_name . ': '
-    if stridx(tweet.retweeted_status.text, "\n") != -1
+    if stridx(tweet.retweeted_status.full_text, "\n") != -1
       let text .= "\n"
     endif
-    let text .= tweet.retweeted_status.text
+    let text .= tweet.retweeted_status.full_text
   else
-    let text .= tweet.text
+    let text .= tweet.full_text
   endif
 
   " expand t.co url

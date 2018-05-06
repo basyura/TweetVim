@@ -17,7 +17,7 @@ function! tweetvim#action#remove_status#execute(tweet)
     return
   endif
 
-  echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.text)
+  echo tweet.user.screen_name . ' ' . tweetvim#util#unescape(tweet.full_text)
   if input('remove this status ? [y/n] : ') != 'y'
     return
   endif
@@ -26,7 +26,7 @@ function! tweetvim#action#remove_status#execute(tweet)
   if has_key(ret, 'errors')
     echohl ErrorMsg | echo ret.errors | echohl None
   else
-    let  tweet.text = "this status was removed"
+    let  tweet.full_text = "this status was removed"
     call tweetvim#buffer#replace(line("."), tweet)
     redraw
     echo 'removed tatus'

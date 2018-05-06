@@ -8,7 +8,7 @@ function! tweetvim#filter#ngword#execute(tweets)
 
   let ret = []
   for tweet in a:tweets
-    if tweet.text =~ g:tweetvim_ng_word
+    if tweet.full_text =~ g:tweetvim_ng_word
       continue
     endif
     call add(ret, tweet)
