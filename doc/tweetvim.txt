@@ -173,6 +173,21 @@ COMMANDS					*tweetvim-commands*
 :TweetVimCurrentLineSay				*:TweetVimCurrentLineSay*
 		tweet the current line in buffer.
 
+:TweetVimDefaultHashtag                         *:TweetVimDefaultHashtag*
+                set a default hashtag which automatically added to all tweets.
+                This affects both 'TweetVimCommandSay' and 'TweetVimSay'
+                but not 'TweetVimCurrentLineSay'
+
+                `:TweetVimDefaultHashtag <hashtag> <hashtag> ...`
+
+                You can unset it by giving 'Reset' or no args.
+
+                
+                `:TweetVimDefaultHashtag`
+                `:TweetVimDefaultHashtag Reset`
+
+
+
 :TweetVimClearIcon [{screen_name}]		*:TweetVimClearIcon*
 		delete icons under |g:tweetvim_config_dir| . '/ico'
 		if {screen name} is not given, delete all icons.
@@ -356,6 +371,11 @@ g:tweetvim_no_default_key_mappings		*g:tweetvim_no_default_key_mappings*
 g:tweetvim_buffer_name				*g:tweetvim_buffer_name*
 		a buffer name for tweetvim buffer.
 		default : [tweetvim]
+
+g:tweetvim_default_hashtag                      *g:tweetvim_default_hashtag*
+                default hashtags which will be automatically added to all tweets.
+                If it empty, this feature will be ignored.
+                default : ''
 
 ==============================================================================
 FILES						*tweetvim-files*
