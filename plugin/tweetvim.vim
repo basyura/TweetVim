@@ -89,6 +89,8 @@ command! TweetVimAddAccount call tweetvim#account#add()
 command! -nargs=* -bang TweetVimUserStream call tweetvim#userstream(<bang>0, <f-args>)
 " clear icons from ~/.tweetvim/ico
 command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
+" Set/Reset default hashtag
+command! -nargs=* -complete=custom,tweetvim#complete#default_hashtag TweetVimDefaultHashtag let g:tweetvim_default_hashtag = empty("<args>") || "<args>" =~ "^Reset.*" ? '' : "<args>"
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()
