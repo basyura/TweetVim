@@ -47,6 +47,7 @@ call s:set_global_variable('tweetvim_no_default_key_mappings', 0)
 call s:set_global_variable('tweetvim_empty_separator'        , 0)
 call s:set_global_variable('tweetvim_reconnect_seconds'      , 500)
 call s:set_global_variable('tweetvim_tweet_limit'            , 140)
+call s:set_global_variable('tweetvim_default_hashtag'        , '')
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')
