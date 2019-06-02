@@ -69,7 +69,13 @@ endfunction
 " say with command line
 "
 function! tweetvim#say#command(...)
-  let msg = a:0 ? a:1 : input('tweet : ')
+  if g:tweetvim_default_hashtag != ""
+    let s:input_prompt =  'tweet (' .  g:tweetvim_default_hashtag . '): '
+  else
+    let s:input_prompt =  'tweet: '
+  endif
+
+  let msg = (a:0 ? a:1 : input(s:input_desc))
   " check msg
   if msg == ''
     redraw | echo '' | return
