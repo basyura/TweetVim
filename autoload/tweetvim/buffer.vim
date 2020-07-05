@@ -112,8 +112,11 @@ function! tweetvim#buffer#replace(lineno, tweet)
 
   normal! "_D
 
+  " TODO: replace whole tweet
   let word = type(a:tweet) == 4 ? s:format(a:tweet, 0) : a:tweet
   " temporary fix
+  
+  let words = split(word, '\n')
   let word = substitute(split(word, '\n')[0], '', "", "g")
 
   " this copy logic is from unite.vim
@@ -128,6 +131,8 @@ function! tweetvim#buffer#replace(lineno, tweet)
   setlocal nomodified
   setlocal nomodifiable
   call cursor(lineno, colno)
+
+  return word
 endfunction
 "
 "

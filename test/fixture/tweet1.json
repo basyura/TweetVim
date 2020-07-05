@@ -1,0 +1,102 @@
+{
+  "retweeted": 0,
+  "lang": "en",
+  "source": "<a href='https://github.com/basyura/TweetVim' rel='nofollow'>tweetvim</a>",
+  "user": {
+    "profile_link_color": "1DA1F2",
+    "protected": 0,
+    "profile_background_tile": 0,
+    "description": "Java から C# メインになって WPF で開発をしようとしている Ruby 好きっ子。",
+    "profile_image_url": "http://pbs.twimg.com/profile_images/39637572/self_normal.PNG",
+    "profile_sidebar_border_color": "C0DEED",
+    "time_zone": 0,
+    "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+    "favourites_count": 1738,
+    "listed_count": 68,
+    "entities": {
+      "url": {
+        "urls": [
+          {
+            "url": "http://t.co/CYSrhjm5",
+            "display_url": "blog.basyura.org",
+            "expanded_url": "http://blog.basyura.org/",
+            "indices": [
+              0,
+              20
+            ]
+          }
+        ]
+      },
+      "description": {
+        "urls": []
+      }
+    },
+    "is_translation_enabled": 0,
+    "id": 11049362,
+    "utc_offset": 0,
+    "url": "http://t.co/CYSrhjm5",
+    "statuses_count": 41274,
+    "name": "ばしゅら",
+    "notifications": 0,
+    "following": 0,
+    "created_at": "Tue Dec 11 13:56:02 +0000 2007",
+    "default_profile": 1,
+    "profile_sidebar_fill_color": "DDEEF6",
+    "is_translator": 0,
+    "default_profile_image": 0,
+    "follow_request_sent": 0,
+    "translator_type": "none",
+    "geo_enabled": 0,
+    "profile_text_color": "333333",
+    "profile_use_background_image": 1,
+    "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+    "friends_count": 335,
+    "has_extended_profile": 0,
+    "location": "",
+    "screen_name": "basyura",
+    "id_str": "11049362",
+    "contributors_enabled": 0,
+    "profile_background_color": "C0DEED",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/39637572/self_normal.PNG",
+    "lang": 0,
+    "verified": 0,
+    "followers_count": 900
+  },
+  "text": "test https://t.co/otkI4XOxLN",
+  "entities": {
+    "urls": [
+      {
+        "url": "https://t.co/otkI4XOxLN",
+        "display_url": "google.com",
+        "expanded_url": "https://www.google.com/",
+        "indices": [
+          5,
+          28
+        ]
+      }
+    ],
+    "symbols": [],
+    "user_mentions": [],
+    "hashtags": []
+  },
+  "is_quote_status": 0,
+  "id": 1279602725378912300,
+  "geo": 0,
+  "created_at": "Sun Jul 05 02:27:18 +0000 2020",
+  "place": 0,
+  "coordinates": 0,
+  "retweet_count": 0,
+  "possibly_sensitive": 0,
+  "in_reply_to_user_id": 0,
+  "truncated": 0,
+  "favorited": 0,
+  "in_reply_to_status_id": 0,
+  "in_reply_to_status_id_str": 0,
+  "favorite_count": 0,
+  "in_reply_to_user_id_str": 0,
+  "id_str": "1279602725378912257",
+  "contributors": 0,
+  "possibly_sensitive_appealable": 0,
+  "in_reply_to_screen_name": 0
+}
+
