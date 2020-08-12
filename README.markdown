@@ -97,6 +97,19 @@ commands
 
     :TweetVimSearch tweetvim
 
+### デフォルトのハッシュタグを設定
+
+全てのツイートに自動的に追加されるハッシュタグの設定
+空白区切で複数選択可
+
+    :TweetVimDefaultHashtag #tweetvim
+
+### デフォルトのハッシュタグをなくす
+
+    :TweetVimDefaultHashtag Reset
+    :TweetVimDefaultHashtag
+
+
 定義済みバッファキーマップ
 --------------------------
 

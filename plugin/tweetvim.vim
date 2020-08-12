@@ -47,6 +47,7 @@ call s:set_global_variable('tweetvim_no_default_key_mappings', 0)
 call s:set_global_variable('tweetvim_empty_separator'        , 0)
 call s:set_global_variable('tweetvim_reconnect_seconds'      , 500)
 call s:set_global_variable('tweetvim_tweet_limit'            , 140)
+call s:set_global_variable('tweetvim_default_hashtag'        , '')
 
 if !isdirectory(g:tweetvim_config_dir)
   call mkdir(g:tweetvim_config_dir, 'p')
@@ -88,6 +89,8 @@ command! TweetVimAddAccount call tweetvim#account#add()
 command! -nargs=* -bang TweetVimUserStream call tweetvim#userstream(<bang>0, <f-args>)
 " clear icons from ~/.tweetvim/ico
 command! -nargs=? TweetVimClearIcon call tweetvim#util#clear_icon(<f-args>)
+" Set/Reset default hashtag
+command! -nargs=* -complete=custom,tweetvim#complete#default_hashtag TweetVimDefaultHashtag let g:tweetvim_default_hashtag = empty("<args>") || "<args>" =~ "^Reset.*" ? '' : "<args>"
 
 if globpath(&runtimepath, 'autoload/bitly.vim') != ''
   command! TweetVimBitly :call <SID>shorten_url()

@@ -33,3 +33,10 @@ function! tweetvim#complete#list(argLead, cmdLine, cursorPos)
 
   return join(sort(slugs), "\n")
 endfunction
+"
+"
+"
+function! tweetvim#complete#default_hashtag(...)
+  let tags = tweetvim#cache#get('hash_tag')
+  return "Reset\n" . join(map(sort(tags), '"#" . v:val'), "\n")
+endfunction

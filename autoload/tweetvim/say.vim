@@ -9,7 +9,7 @@ endfunction
 " say with opened buffer
 "
 function! tweetvim#say#open(...)
-  let text  = a:0 > 0 ? a:1 : ''
+  let text  = (a:0 > 0 ? a:1 . ' ' : '') . g:tweetvim_default_hashtag . ' '
   let param = a:0 > 1 ? a:2 : {}
   
   let bufnr = bufwinnr('tweetvim_say')
@@ -69,7 +69,13 @@ endfunction
 " say with command line
 "
 function! tweetvim#say#command(...)
-  let msg = a:0 ? a:1 : input('tweet : ')
+  if g:tweetvim_default_hashtag != ""
+    let s:input_prompt =  'tweet (' .  g:tweetvim_default_hashtag . '): '
+  else
+    let s:input_prompt =  'tweet: '
+  endif
+
+  let msg = (a:0 ? a:1 : input(s:input_desc))
   " check msg
   if msg == ''
     redraw | echo '' | return
@@ -83,7 +89,7 @@ function! tweetvim#say#command(...)
     endif
   endif
   " post
-  call s:post_tweet(msg)
+  call s:post_tweet(msg . ' ' . g:tweetvim_default_hashtag)
 endfunction
 "
 " say from current line
